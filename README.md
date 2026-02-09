@@ -6,3 +6,50 @@ npm i
 npm run dev
 ```
 
+```txt
+src/
+│
+├── app/
+│   ├── store/
+│   ├── router/
+│   ├── providers/
+│   └── config.ts
+│
+├── features/
+│   ├── auth/
+│   │   ├── components/
+│   │   ├── screens/
+│   │   ├── hooks/
+│   │   ├── services.ts
+│   │   └── types.ts
+│   │
+│   ├── products/
+│   │   ├── components/
+│   │   ├── screens/
+│   │   ├── hooks/
+│   │   ├── api.ts
+│   │   └── types.ts
+│   │
+│   └── notifications/
+│
+├── shared/             # Cosas reutilizables
+│   ├── components/
+│   ├── hooks/
+│   ├── utils/
+│   ├── constants/
+│   └── styles/
+│
+├── assets/
+│   ├── images/
+│   └── fonts/
+│
+├── services/           # Servicios globales (API, storage)
+│   ├── api.ts
+│   ├── storage.ts
+│   └── analytics.ts
+│
+├── types/              # Tipos globales
+│
+├── App.tsx
+└── main.tsx
+```
