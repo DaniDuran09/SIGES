@@ -4,11 +4,11 @@ import SideBar from "./layout/appLayout/SideBar.jsx";
 
 function App() {
 
-  return (
-    <>
-      <SideBar/>
-    </>
-  )
+    return (
+        <>
+            <SideBar/>
+        </>
+    )
 }
 
 export default App
