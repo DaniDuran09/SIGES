@@ -15,24 +15,21 @@ src/
 │   ├── providers/
 │   └── config.ts
 │
+├── layouts/
+│   ├── AppLayout/
+│   │   └── Sidebar.jsx
+│   └── Sidebar.jsx
+│
 ├── features/
 │   ├── auth/
-│   │   ├── components/
 │   │   ├── screens/
 │   │   ├── hooks/
-│   │   ├── services.ts
-│   │   └── types.ts
-│   │
-│   ├── products/
-│   │   ├── components/
-│   │   ├── screens/
-│   │   ├── hooks/
-│   │   ├── api.ts
+│   │   ├── services.ts // pendiente de explicar
 │   │   └── types.ts
 │   │
 │   └── notifications/
 │
-├── shared/             # Cosas reutilizables
+├── shared/     //Cosas reutilizables
 │   ├── components/
 │   ├── hooks/
 │   ├── utils/
@@ -43,12 +40,12 @@ src/
 │   ├── images/
 │   └── fonts/
 │
-├── services/           # Servicios globales (API, storage)
+├── services/       //Servicios globales (API, storage)
 │   ├── api.ts
 │   ├── storage.ts
 │   └── analytics.ts
 │
-├── types/              # Tipos globales
+├── types/
 │
 ├── App.tsx
 └── main.tsx
