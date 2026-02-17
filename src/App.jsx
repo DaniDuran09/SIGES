@@ -1,14 +1,8 @@
 import './App.css'
-import SideBar from "./layout/appLayout/SideBar.jsx";
-
+import AppRouter from "./app/router/AppRouter";
 
 function App() {
-
-    return (
-        <>
-            <SideBar/>
-        </>
-    )
+    return <AppRouter />;
 }
 
-export default App
+export default App;
