@@ -1,5 +1,6 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 import styles from './Home.module.css';
+import { FiPlus } from "react-icons/fi";
 
 const options = [
     {
@@ -49,7 +50,9 @@ function Home() {
                     </button>
                     <div>
                         <button className={styles.newRequestButton}>
-                            <h3 className={styles.newRequestText}>+ Nueva Solicitud</h3>
+                            <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
+                            <h3 className={styles.newRequestText}>
+                                Nueva Solicitud</h3>
                         </button>
                     </div>
                 </div>
