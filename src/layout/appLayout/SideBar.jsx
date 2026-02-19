@@ -1,5 +1,5 @@
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Colors } from "../../assets/Colors.js";
 import { CiHome } from "react-icons/ci";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
@@ -12,14 +12,26 @@ import { FaBuilding } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function SideBar() {
-    const [collapsed, setCollapsed] = useState(true);
+    const [collapsed, setCollapsed] = useState(window.innerWidth < 768);
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Manejar el redimensionamiento de la pantalla
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setCollapsed(true);
+            } else {
+                setCollapsed(false);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     return (
         <Sidebar
-            onMouseEnter={() => setCollapsed(false)}
-            onMouseLeave={() => setCollapsed(true)}
             collapsed={collapsed}
             rootStyles={{
                 backgroundColor: Colors.primaryColor,
