@@ -1,4 +1,5 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
+import styles from './Home.module.css';
 
 const options = [
     {
@@ -29,38 +30,42 @@ const options = [
 
 function Home() {
     return (
-        <div style={{ width: '100%', height: '100%' }}>
+        <div className={styles.container}>
 
-            <h4>Buenos dias</h4>
+            <h4 style={{ paddingLeft: '10px', margin: '10px 0' }}>Buenos dias</h4>
             {/*TOP BAR*/}
 
-            <div style={{ display: 'flex', padding: '10px' }}>
-                <div style={{ flex: 2 }}>
-                    <h1 style={{ fontSize: '40px' }}>Panel de control</h1>
+            <div className={styles.topBar}>
+                <div className={styles.titleSection}>
+                    <h1 className={styles.title}>Panel de control</h1>
                 </div>
-                <div style={{ width: '10%', display: 'flex', justifyContent: 'space-between', flex: 1 }}>
-                    <button style={{ backgroundColor: 'white', border: '1px solid', borderRadius: 20, width: '60px', height: '60px', position: 'relative' }}>
+                <div className={styles.actionsSection}>
+                    <button className={styles.notificationButton}>
                         {/*NOTIFICATIONS */}
                         {true && (
-                            <div style={{ width: '20px', height: '20px', backgroundColor: '#FF9B85', borderRadius: 50, position: 'absolute', top: '0', right: '0' }} />
+                            <div style={{ width: '15px', height: '15px', backgroundColor: '#FF9B85', borderRadius: '50%', position: 'absolute', top: '5px', right: '5px' }} />
                         )}
                         <IoMdNotificationsOutline style={{ width: '30px', height: '30px' }} />
                     </button>
                     <div>
-                        <button style={{ backgroundColor: '#6B5B95', borderRadius: 20 }}>
-                            <h3 style={{ color: 'white', fontSize: '20px' }}>+ Nueva Solicitud</h3>
+                        <button className={styles.newRequestButton}>
+                            <h3 className={styles.newRequestText}>+ Nueva Solicitud</h3>
                         </button>
                     </div>
                 </div>
             </div>
 
             {/* OPTIONS*/}
-            <div style={{ display: 'flex', padding: '10px', justifyContent: 'space-between' }}>
+            <div className={styles.statsGrid}>
                 {options.map((option, index) => (
-                    <div key={index} style={{ width: '20%', borderRadius: 10, border: '1px solid', padding: '10px' }} >
+                    <div key={index} className={styles.statCard}>
                         <h3>{option.name}</h3>
-                        <h1>{option.number}</h1>
-                        <p style={{ color: option.type === 'positive' ? 'green' : 'red' }} >{option.stats}</p>
+                        <h1 style={{ fontSize: '36px', margin: '10px 0' }}>{Number(option.number).toFixed(1)}</h1>
+                        <p style={{
+                            color: option.type === 'positive' ? 'green' : 'red',
+                            fontWeight: 'bold',
+                            fontSize: '0.9rem'
+                        }} >{option.stats}</p>
                     </div>
                 ))}
             </div>
