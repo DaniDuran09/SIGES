@@ -80,7 +80,7 @@
 }
 
 .statCard {
-    width: 40%;
+    width: 20%;
     /* 4 tarjetas caben en una fila (aprox 22% * 4 + espacio) */
     border-radius: 10px;
     border: 1px solid #ddd;

@@ -10,6 +10,9 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 import { BsGear } from "react-icons/bs";
 import { FaBuilding } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
+import Building_04 from "../../assets/icons/Building_04.svg"
+import { FiHome } from "react-icons/fi";
+import styles from "./SideBar.module.css"
 
 function SideBar() {
     const [collapsed, setCollapsed] = useState(window.innerWidth < 768);
@@ -35,8 +38,14 @@ function SideBar() {
             collapsed={collapsed}
             rootStyles={{
                 backgroundColor: Colors.primaryColor,
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column",
                 ".ps-sidebar-container": {
                     backgroundColor: Colors.primaryColor,
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
                 }
             }}
         >
@@ -76,7 +85,7 @@ function SideBar() {
                         onClick={() => navigate("/")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <CiHome />
+                            <FiHome className={styles.icon} />
                             {!collapsed && <p>Inicio</p>}
                         </div>
                     </MenuItem>
@@ -86,7 +95,7 @@ function SideBar() {
                         onClick={() => navigate("/requests")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <HiOutlineClipboardDocumentList />
+                            <HiOutlineClipboardDocumentList className={styles.icon}/>
                             {!collapsed && <p>Solicitudes</p>}
                         </div>
                     </MenuItem>
@@ -96,7 +105,7 @@ function SideBar() {
                         onClick={() => navigate("/spaces")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <PiBuildingsBold />
+                            <PiBuildingsBold className={styles.icon}/>
                             {!collapsed && <p>Espacios</p>}
                         </div>
                     </MenuItem>
@@ -106,7 +115,7 @@ function SideBar() {
                         onClick={() => navigate("/equipment")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <AiOutlineLaptop />
+                            <AiOutlineLaptop className={styles.icon} />
                             {!collapsed && <p>Equipos</p>}
                         </div>
                     </MenuItem>
@@ -116,7 +125,7 @@ function SideBar() {
                         onClick={() => navigate("/users")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <LuUsers />
+                            <LuUsers className={styles.icon}/>
                             {!collapsed && <p>Usuarios</p>}
                         </div>
                     </MenuItem>
@@ -126,7 +135,7 @@ function SideBar() {
                         onClick={() => navigate("/history")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <HiOutlineDocumentText />
+                            <HiOutlineDocumentText className={styles.icon}/>
                             {!collapsed && <p>Historial</p>}
                         </div>
                     </MenuItem>
@@ -136,7 +145,7 @@ function SideBar() {
                         onClick={() => navigate("/configuration")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <BsGear />
+                            <BsGear className={styles.icon}/>
                             {!collapsed && <p>Configuración</p>}
                         </div>
                     </MenuItem>
@@ -154,7 +163,8 @@ function SideBar() {
                     display: "flex",
                     alignItems: "center",
                     gap: "10px",
-                    justifyContent: collapsed ? "center" : "flex-start"
+                    justifyContent: collapsed ? "center" : "flex-start",
+
                 }}
             >
                 <img

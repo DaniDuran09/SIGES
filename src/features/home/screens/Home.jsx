@@ -1,8 +1,9 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 import styles from './Home.module.css';
 import { FiPlus } from "react-icons/fi";
-import Building_04 from '../../../assets/icons/Building_04.svg';
+import { FaBuilding } from "react-icons/fa";
 import { Colors } from "../../../assets/Colors";
+import {PiBuildingsBold} from "react-icons/pi";
 
 const options = [
     {
@@ -100,7 +101,7 @@ function Home() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} >
                         <button className={styles.quickActionButton} style={{ backgroundColor: Colors.primaryColor }} >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
-                                <img src={Building_04} alt="" />
+                                <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
                                 <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
@@ -111,7 +112,7 @@ function Home() {
 
                         <button className={styles.quickActionButton} style={{ backgroundColor: '#D4F1E8' }} >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
-                                <img src={Building_04} alt="" />
+                                <PiBuildingsBold  size={50}/>
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
                                 <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
@@ -122,7 +123,7 @@ function Home() {
 
                         <button className={styles.quickActionButton} style={{ backgroundColor: '#FFF4D4' }} >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
-                                <img src={Building_04} alt="" />
+                                <PiBuildingsBold size={50}/>
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
                                 <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
