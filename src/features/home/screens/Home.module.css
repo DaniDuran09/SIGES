@@ -80,7 +80,7 @@
 }
 
 .statCard {
-    width: 22%;
+    width: 20%;
     /* 4 tarjetas caben en una fila (aprox 22% * 4 + espacio) */
     border-radius: 10px;
     border: 1px solid #ddd;
@@ -92,18 +92,55 @@
     justify-content: space-between;
 }
 
+.bottomSection {
+    padding: 10px;
+    flex: 1;
+    gap: 10px;
+    display: flex;
+}
+
+.ResponsiveTitleContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.quickActionsContainer {
+    flex: 1;
+    height: 100%;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 15px;
+}
+
+.quickActionButton {
+    border-radius: 10px;
+    padding: 15px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
 /* --- Media Queries (La magica responsiva) --- */
 
 /* Tablet (menos de 1024px) */
 @media (max-width: 1024px) {
     .statCard {
-        width: 48%;
+        width: 40%;
         /* 2 por fila */
+    }
+
+    .bottomSection {
+        display: flex;
+        flex-direction: column;
     }
 
     .title {
         font-size: 32px;
     }
+
 }
 
 /* Móvil (menos de 768px) */
@@ -115,14 +152,15 @@
 
     .titleSection,
     .actionsSection {
-        width: 100%;
+        width: 90%;
         justify-content: space-between;
         /* Separar notificación de botón nuevo */
     }
 
     .statCard {
-        width: 100%;
-        /* 1 por fila (ocupa todo el ancho) */
+        width: 90%;
+        height: auto;
+        /* 2 por fila */
     }
 
     .newRequestButton {
@@ -130,4 +168,10 @@
         /* Botón grande en móvil para fat fingers */
         justify-content: center;
     }
+
+    .ResponsiveTitleContainer {
+        display: flex;
+        flex-direction: column;
+    }
+
 }
