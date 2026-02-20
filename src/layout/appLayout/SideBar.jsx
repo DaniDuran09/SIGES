@@ -35,15 +35,11 @@ function SideBar() {
             collapsed={collapsed}
             rootStyles={{
                 backgroundColor: Colors.primaryColor,
-                height: "100vh",
                 ".ps-sidebar-container": {
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "100%"
+                    backgroundColor: Colors.primaryColor,
                 }
             }}
         >
-
             {/* Logo */}
             <div
                 style={{
