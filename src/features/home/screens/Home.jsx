@@ -1,9 +1,11 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
-import styles from './Home.module.css';
+import styles from '../styles/Home.module.css';
 import { FiPlus } from "react-icons/fi";
 import { FaBuilding } from "react-icons/fa";
 import { Colors } from "../../../assets/Colors";
-import {PiBuildingsBold} from "react-icons/pi";
+import { PiBuildingsBold } from "react-icons/pi";
+import StatsComponent from "../components/StatsComponent.jsx";
+import PendingRequestComponent from "../components/PendingRequestComponent.jsx";
 
 const options = [
     {
@@ -29,6 +31,24 @@ const options = [
         number: 8 / 5,
         stats: '-3 DESDE AYER',
         type: 'negative'
+    },
+]
+
+const pendingRequests = [
+    {
+        ApplierName: 'Juan Perez',
+        objectName: 'Aula 101',
+        date: '2022-01-01'
+    },
+    {
+        ApplierName: 'Maria Lopez',
+        objectName: 'Aula 102',
+        date: '2022-01-02'
+    },
+    {
+        ApplierName: 'Pedro Ramirez',
+        objectName: 'Aula 103',
+        date: '2022-01-03'
     },
 ]
 
@@ -64,34 +84,19 @@ function Home() {
             {/* OPTIONS*/}
             <div className={styles.statsGrid}>
                 {options.map((option, index) => (
-                    <div key={index} className={styles.statCard}>
-                        <h5>{option.name}</h5>
-                        <h1 style={{ fontSize: '36px', margin: '10px 0' }}>{Number(option.number).toFixed(1)}</h1>
-                        <p style={{
-                            color: option.type === 'positive' ? 'green' : 'red',
-                            fontWeight: 'bold',
-                            fontSize: '0.9rem'
-                        }} >{option.stats}</p>
-                    </div>
+                    <StatsComponent key={index} props={option} />
                 ))}
             </div>
             <div
                 className={styles.bottomSection}>
                 {/*SOLICITUDES PENDIENTES */}
-                <div style={{ flex: 2, height: '100%', backgroundColor: 'white', borderRadius: '10px', border: '1px solid #ddd', padding: '10px' }}>
+                <div style={{ flex: 2, overflow: 'auto', display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: 'white', borderRadius: '10px', border: '1px solid #ddd', padding: '10px' }}>
                     <div className={styles.ResponsiveTitleContainer}>
                         <h3 style={{}}>Solicitudes pendientes {'>'}</h3>
                     </div>
-                    {options.map((option, index) => (
-                        <div key={index} className={styles.statCard}>
-                            <h3>{option.name}</h3>
-                            <h1 style={{ fontSize: '36px', margin: '10px 0' }}>{Number(option.number).toFixed(1)}</h1>
-                            <p style={{
-                                color: option.type === 'positive' ? 'green' : 'red',
-                                fontWeight: 'bold',
-                                fontSize: '0.9rem'
-                            }} >{option.stats}</p>
-                        </div>
+                    {pendingRequests.map((request, index) => (
+                        <PendingRequestComponent key={index} props={request} />
+
                     ))}
 
                 </div>
@@ -112,7 +117,7 @@ function Home() {
 
                         <button className={styles.quickActionButton} style={{ backgroundColor: '#D4F1E8' }} >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
-                                <PiBuildingsBold  size={50}/>
+                                <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
                                 <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
@@ -123,7 +128,7 @@ function Home() {
 
                         <button className={styles.quickActionButton} style={{ backgroundColor: '#FFF4D4' }} >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
-                                <PiBuildingsBold size={50}/>
+                                <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
                                 <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
