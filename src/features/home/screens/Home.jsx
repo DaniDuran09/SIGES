@@ -103,7 +103,7 @@ function Home() {
                 <div className={styles.quickActionsContainer} >
                     <h3>Acciones rapidas</h3>
                     {/*AQUI VAN LAS SOLICITUDES PENDIENTES*/}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} >
+                    <div className={styles.quickActionsGrid} >
                         <button className={styles.quickActionButton} style={{ backgroundColor: Colors.primaryColor }} >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
                                 <PiBuildingsBold size={50} />
