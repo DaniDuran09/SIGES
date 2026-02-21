@@ -109,8 +109,8 @@ function Home() {
                                 <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Agregar un nuevo espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
 
                             </div>
                         </button>
@@ -120,8 +120,8 @@ function Home() {
                                 <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Agregar un nuevo espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
 
                             </div>
                         </button>
@@ -131,8 +131,8 @@ function Home() {
                                 <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Agregar un nuevo espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
 
                             </div>
                         </button>
