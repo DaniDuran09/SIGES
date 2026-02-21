@@ -1,10 +1,11 @@
 .pendingRequestCard {
-    flex: 1;
+    flex-direction: row;
     min-height: 0;
     overflow-y: auto;
     border-radius: 10px;
     border: 1px solid #ddd;
-    padding: 15px;
+    padding-inline: 10px;
+    margin-bottom: 15px;
 }
 
 .applierName {
