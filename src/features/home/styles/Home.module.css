@@ -79,19 +79,6 @@
     /* CLAVE para responsividad */
 }
 
-.statCard {
-    width: 20%;
-    /* 4 tarjetas caben en una fila (aprox 22% * 4 + espacio) */
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    padding: 15px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 .bottomSection {
     padding: 10px;
     flex: 1;
@@ -127,11 +114,6 @@
 
 /* Tablet (menos de 1024px) */
 @media (max-width: 1024px) {
-    .statCard {
-        width: 40%;
-        /* 2 por fila */
-    }
-
     .bottomSection {
         display: flex;
         flex-direction: column;
@@ -155,12 +137,6 @@
         width: 90%;
         justify-content: space-between;
         /* Separar notificación de botón nuevo */
-    }
-
-    .statCard {
-        width: 90%;
-        height: auto;
-        /* 2 por fila */
     }
 
     .newRequestButton {

@@ -1,7 +1,7 @@
-import styles from "./History.module.css"
+import styles from "../styles/History.module.css"
 
 function History() {
-    return(
+    return (
         <div className={styles.container}>
 
             <div className={styles.header}>
@@ -15,11 +15,11 @@ function History() {
 
                 <div className={styles.searchBar}>
 
-                    <input className={styles.search} type="search"/>
+                    <input className={styles.search} type="search" />
 
                     <div className={styles.componentSearch}>
 
-                        <input className={styles.date} type="datetime-local"/>
+                        <input className={styles.date} type="datetime-local" />
 
                         <select className={styles.state} id="opciones" name="estado">
                             <option value="opcion1">1</option>
@@ -45,6 +45,6 @@ function History() {
             </div>
 
         </div>
-)
+    )
 }
 export default History;
