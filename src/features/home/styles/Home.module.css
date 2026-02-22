@@ -110,6 +110,12 @@
     justify-content: left;
 }
 
+.quickActionsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 /* --- Media Queries (La magica responsiva) --- */
 
 /* Tablet (menos de 1024px) */
