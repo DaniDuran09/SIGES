@@ -1,5 +1,5 @@
 import styles from "../styles/History.module.css"
-import {FiSearch} from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 
 function History() {
     return (
@@ -30,20 +30,20 @@ function History() {
 
                         <input className={styles.date} type="datetime-local" />
 
-                       <div className={styles.optionAndState}>
-                           <select className={styles.state} id="opciones" name="estado" >
-                               <option value="">Estado: Tipo</option>
-                               <option value="opcion1">1</option>
-                               <option value="opcion2">0</option>
-                           </select>
+                        <div className={styles.optionAndState}>
+                            <select className={styles.state} id="opciones" name="estado" >
+                                <option value="">Estado: Tipo</option>
+                                <option value="opcion1">1</option>
+                                <option value="opcion2">0</option>
+                            </select>
 
-                           <select className={styles.sort} id="opciones" name="tipo">
-                               <option value="">Tipo: Todos</option>
-                               <option value="opcion1">Opción 1</option>
-                               <option value="opcion2">Opción 2</option>
-                               <option value="opcion3">Opción 3</option>
-                           </select>
-                       </div>
+                            <select className={styles.sort} id="opciones" name="tipo">
+                                <option value="">Tipo: Todos</option>
+                                <option value="opcion1">Opción 1</option>
+                                <option value="opcion2">Opción 2</option>
+                                <option value="opcion3">Opción 3</option>
+                            </select>
+                        </div>
 
                     </div>
 
