@@ -99,6 +99,7 @@ h1 {
 }
 
 @media (max-width: 768px) {
+
     .state,
     .sort {
         width: 48%;
