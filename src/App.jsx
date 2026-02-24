@@ -6,10 +6,14 @@ function App() {
     const { requestPermission } = useNotifications();
     return (
         <>
-            <button onClick={requestPermission}>Token</button>
             <AppRouter />
         </>
     );
 }
 
 export default App;
+
+// example of how to use the useMediaQuery hook
+// import { useMediaQuery } from "./hooks/useMediaQuery";
+// const matches = useMediaQuery("(max-width: 768px)");
+// console.log(matches);
