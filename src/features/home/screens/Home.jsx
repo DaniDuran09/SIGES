@@ -104,14 +104,14 @@ function Home() {
                 <div className={styles.quickActionsContainer} >
                     <h3>Acciones rapidas</h3>
                     {/*AQUI VAN LAS SOLICITUDES PENDIENTES*/}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} >
+                    <div className={styles.quickActionsGrid} >
                         <button className={styles.quickActionButton} style={{ backgroundColor: Colors.primaryColor }} >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
                                 <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Agregar un nuevo espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
 
                             </div>
                         </button>
@@ -121,8 +121,8 @@ function Home() {
                                 <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Agregar un nuevo espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
 
                             </div>
                         </button>
@@ -132,8 +132,8 @@ function Home() {
                                 <PiBuildingsBold size={50} />
                             </div>
                             <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left' }} >Agregar un nuevo espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
 
                             </div>
                         </button>
