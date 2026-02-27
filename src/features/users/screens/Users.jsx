@@ -1,5 +1,50 @@
 import styles from "../styles/Users.module.css"
 import {FiPlus, FiSearch} from "react-icons/fi";
+import StatsComponent from "../../home/components/StatsComponent.jsx";
+import UsersData from "../components/UsersData.jsx";
+
+const userData = [
+    {
+        name: 'Carlos Salgado Trujillo',
+        type: 'personal',
+        tuition: '20243DS008',
+        mail: '20243ds008@utez.edu.mx',
+        phone: 7773452574,
+        status: 'activo'
+    },
+    {
+        name: 'Kevin Arturo Porcayo Cervantes',
+        type: 'estudiante',
+        tuition: '20243DS154',
+        mail: '20243ds154@utez.edu.mx',
+        phone: 7773459386,
+        status: 'activo'
+    },
+    {
+        name: 'Yahir Fuentes Martinez',
+        type: 'personal',
+        tuition: '20243DS946',
+        mail: '20243ds946@utez.edu.mx',
+        phone: 7773574894,
+        status: 'activo'
+    },
+    {
+        name: 'Daniel Duran Torres',
+        type: 'personal',
+        tuition: '20243DS486',
+        mail: '20243ds486@utez.edu.mx',
+        phone: 7773653548,
+        status: 'inactivo'
+    },
+    {
+        name: 'Carlos Salgado Trujillo',
+        type: 'personal',
+        tuition: '20243DS009',
+        mail: '20243ds009@utez.edu.mx',
+        phone: 7774553621,
+        status: 'inactivo'
+    },
+]
 
 function Users() {
 
@@ -74,8 +119,10 @@ function Users() {
 
             </div>
 
-            <div className={styles.body}>
-                hola
+            <div className={styles.usersTable}>
+                {userData.map((userData, index) => (
+                    <UsersData key={index} props={userData} />
+                ))}
 
             </div>
 
