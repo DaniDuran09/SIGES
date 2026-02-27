@@ -1,7 +1,6 @@
 import styles from "../styles/Users.module.css"
-import {FiPlus, FiSearch} from "react-icons/fi";
-import StatsComponent from "../../home/components/StatsComponent.jsx";
-import UsersData from "../components/UsersData.jsx";
+import tableStyles from "../styles/UsersData.module.css"
+import { FiPlus, FiSearch } from "react-icons/fi";
 
 const userData = [
     {
@@ -67,7 +66,8 @@ function Users() {
 
                         <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
                         <h3 className={styles.newRequestText}>
-                            Nuevo Usuario</h3>
+                            Nuevo Usuario
+                        </h3>
 
                     </button>
 
@@ -89,7 +89,7 @@ function Users() {
                         <input
                             className={styles.search}
                             type="search"
-                            placeholder="Buscar Equipo..."
+                            placeholder="Buscar Usuario..."
                         />
 
                     </div>
@@ -101,15 +101,14 @@ function Users() {
                         <div className={styles.optionAndState}>
                             <select className={styles.state} id="opciones" name="estado" >
                                 <option value="">Estado: Tipo</option>
-                                <option value="opcion1">1</option>
-                                <option value="opcion2">0</option>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
                             </select>
 
                             <select className={styles.sort} id="opciones" name="tipo">
                                 <option value="">Tipo: Todos</option>
-                                <option value="opcion1">Opción 1</option>
-                                <option value="opcion2">Opción 2</option>
-                                <option value="opcion3">Opción 3</option>
+                                <option value="personal">Personal</option>
+                                <option value="estudiante">Estudiante</option>
                             </select>
                         </div>
 
@@ -119,14 +118,51 @@ function Users() {
 
             </div>
 
-            <div className={styles.usersTable}>
-                {userData.map((userData, index) => (
-                    <UsersData key={index} props={userData} />
-                ))}
+            <div className={tableStyles.wrapper}>
+
+                <table className={tableStyles.table}>
+
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Matricula</th>
+                        <th>correo</th>
+                        <th>Telefono</th>
+                        <th>Estatus</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {userData.map((user, index) => (
+                        <tr key={index}>
+                            <td>{user.name}</td>
+
+                            <td>
+                                    <span className={`${tableStyles.badge} ${tableStyles[user.type]}`}>
+                                        {user.type}
+                                    </span>
+                            </td>
+
+                            <td>{user.tuition}</td>
+                            <td>{user.mail}</td>
+                            <td>{user.phone}</td>
+
+                            <td>
+                                    <span className={`${tableStyles.badge} ${tableStyles[user.status]}`}>
+                                        {user.status}
+                                    </span>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+
+                </table>
 
             </div>
 
         </div>
     )
 }
+
 export default Users;
