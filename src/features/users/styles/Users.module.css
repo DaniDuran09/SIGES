@@ -1,0 +1,209 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+    flex-shrink: 0;
+}
+
+h4 {
+    padding-left: 10px;
+    margin: 10px 0;
+}
+
+h1 {
+    font-size: 40px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.newRequestButton {
+    background-color: #6B5B95;
+    border-radius: 20px;
+    padding: 0 20px;
+    height: 60px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.newRequestText {
+    color: white;
+    font-size: 20px;
+    margin: 0;
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tabs {
+    display: flex;
+    gap: 5px;
+    background-color: #e9e9ee;
+    padding: 6px;
+    border-radius: 12px;
+    width: fit-content;
+}
+
+.tabs button {
+    padding: 8px 18px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b6b7a;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tabs button:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.active {
+    background-color: white;
+    color: #4a3aff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.searchBar {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.searchContainer {
+    position: relative;
+    width: 50%;
+    min-width: 200px;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #999;
+}
+
+.search {
+    width: 100%;
+    height: 50px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    padding-left: 45px;
+    padding-right: 20px;
+    outline: none;
+}
+
+.componentSearch {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.date,
+.state,
+.sort {
+    height: 50px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    padding: 0 15px;
+    background-color: white;
+}
+
+.optionAndState {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.usersTable {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: left;
+    padding: 14px;
+    background-color: #f3f3f3;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.table td {
+    padding: 14px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+}
+
+.table tr:hover {
+    background-color: #f9f9ff;
+}
+
+@media (max-width: 1024px) {
+    .searchBar {
+        flex-direction: column;
+    }
+
+    .bottomSection {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .title {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .state,
+    .sort {
+        width: 48%;
+    }
+
+    .date {
+        width: 100%;
+    }
+
+    .optionAndState {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .headerRow {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .newRequestButton {
+        width: 90%;
+        justify-content: center;
+    }
+}

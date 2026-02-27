@@ -1,0 +1,68 @@
+.wrapper {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e9e9ee;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background-color: #f6f7fb;
+}
+
+.table th {
+    text-align: left;
+    padding: 18px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.table td {
+    padding: 20px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #374151;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover {
+    background-color: #fafbff;
+}
+
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.personal {
+    background-color: #d1f0e8;
+    color: #0f766e;
+}
+
+.estudiante {
+    background-color: #fde7c7;
+    color: #b45309;
+}
+
+.activo {
+    background-color: #d1f0e8;
+    color: #0f766e;
+}
+
+.inactivo {
+    background-color: #e5e7eb;
+    color: #6b7280;
+}
