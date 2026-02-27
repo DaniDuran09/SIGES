@@ -11,11 +11,9 @@ import Users from "../../features/users/screens/Users";
 import History from "../../features/history/screens/History";
 import Configuration from "../../features/configuration/screens/Configuration";
 import Layout from "../../layout/Layout.jsx";
-import { useAuth } from "../../context/AuthContext";
 import ProtectedRoute from "../../routes/ProtectedRoute";
 
 function AppRouter() {
-    const { token } = useAuth();
     return (
         <BrowserRouter>
             <Routes>
@@ -26,7 +24,7 @@ function AppRouter() {
 
                 <Route path="/"
                     element={
-                        <ProtectedRoute token={token}>
+                        <ProtectedRoute>
                             <Layout />
                         </ProtectedRoute>
                     }

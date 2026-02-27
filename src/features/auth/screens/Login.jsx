@@ -3,19 +3,24 @@ import { HiOutlineMail, HiOutlineLockClosed, HiOutlineEye, HiOutlineEyeOff } fro
 import styles from '../styles/Login.module.css';
 import { useMutation } from '@tanstack/react-query';
 import { apiFetch } from '../../../api/client';
+import { useAuth } from '../../../context/AuthContext';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
 
         mutation.mutate({
-            email,
-            password
+            identifier: email.trim(),
+            password: password.trim()
         });
+
     };
 
     const mutation = useMutation({
@@ -25,7 +30,8 @@ function Login() {
                 body: JSON.stringify(credentials),
             }),
         onSuccess: (data) => {
-            console.log("Login exitoso", data);
+            login(data.accessToken)
+            navigate("/", { replace: true });
         },
         onError: (error) => {
             console.log("Error", error.message);

@@ -1,38 +1,33 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { CiLight } from "react-icons/ci";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
 
     useEffect(() => {
         const storedToken = localStorage.getItem("token");
-        const storedUser = localStorage.getItem("user");
 
-        if (storedToken && storedUser) {
+        if (storedToken) {
             setToken(storedToken);
-            setUser(JSON.parse(storedUser));
         }
 
     }, []);
 
     const login = (data) => {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        setToken(data.token);
-        setUser(data.user);
+        console.log(data);
+        localStorage.setItem("token", data);
+        setToken(data);
     };
 
     const logout = () => {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         setToken(null);
-        setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ token, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
