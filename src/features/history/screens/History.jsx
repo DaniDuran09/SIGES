@@ -27,7 +27,6 @@ function History() {
                     </div>
 
                     <div className={styles.componentSearch}>
-
                         <input className={styles.date} type="datetime-local" />
 
                         <div className={styles.optionAndState}>
@@ -59,4 +58,5 @@ function History() {
         </div>
     )
 }
+
 export default History;

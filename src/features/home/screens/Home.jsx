@@ -87,6 +87,7 @@ function Home() {
                     <StatsComponent key={index} props={option} />
                 ))}
             </div>
+
             <div
                 className={styles.bottomSection}>
                 {/*SOLICITUDES PENDIENTES */}
