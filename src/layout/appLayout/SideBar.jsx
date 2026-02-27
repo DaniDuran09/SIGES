@@ -95,7 +95,7 @@ function SideBar() {
                         onClick={() => navigate("/requests")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <HiOutlineClipboardDocumentList className={styles.icon}/>
+                            <HiOutlineClipboardDocumentList className={styles.icon} />
                             {!collapsed && <p>Solicitudes</p>}
                         </div>
                     </MenuItem>
@@ -105,7 +105,7 @@ function SideBar() {
                         onClick={() => navigate("/spaces")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <PiBuildingsBold className={styles.icon}/>
+                            <PiBuildingsBold className={styles.icon} />
                             {!collapsed && <p>Espacios</p>}
                         </div>
                     </MenuItem>
@@ -125,7 +125,7 @@ function SideBar() {
                         onClick={() => navigate("/users")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <LuUsers className={styles.icon}/>
+                            <LuUsers className={styles.icon} />
                             {!collapsed && <p>Usuarios</p>}
                         </div>
                     </MenuItem>
@@ -135,7 +135,7 @@ function SideBar() {
                         onClick={() => navigate("/history")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <HiOutlineDocumentText className={styles.icon}/>
+                            <HiOutlineDocumentText className={styles.icon} />
                             {!collapsed && <p>Historial</p>}
                         </div>
                     </MenuItem>
@@ -145,7 +145,7 @@ function SideBar() {
                         onClick={() => navigate("/configuration")}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <BsGear className={styles.icon}/>
+                            <BsGear className={styles.icon} />
                             {!collapsed && <p>Configuración</p>}
                         </div>
                     </MenuItem>

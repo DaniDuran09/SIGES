@@ -8,4 +8,4 @@ type loginResponse = {
     refreshToken: string
 }
 
-export { loginRequest, loginResponse }
+export type { loginRequest, loginResponse }
