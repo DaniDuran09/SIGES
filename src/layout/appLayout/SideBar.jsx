@@ -19,7 +19,6 @@ function SideBar() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Manejar el redimensionamiento de la pantalla
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 768) {

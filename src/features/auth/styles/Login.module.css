@@ -1,0 +1,227 @@
+.pageContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #e8dff5 0%, #fefeff 100%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.loginCard {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+    padding: 2.5rem;
+    transition: transform 0.3s ease;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.logoBox {
+    width: 80px;
+    height: 80px;
+    background: #e8dff5;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.logoText {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #4a5568;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #1a202c;
+    letter-spacing: -0.025em;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.95rem;
+    color: #718096;
+    margin-top: 0.5rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    position: absolute;
+    left: 1rem;
+    color: #a0aec0;
+    font-size: 1.25rem;
+    pointer-events: none;
+}
+
+.input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #b8a4d1;
+    box-shadow: 0 0 0 4px rgba(232, 223, 245, 0.5);
+    background: #ffffff;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.eyeButton:hover {
+    color: #718096;
+}
+
+.formFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+}
+
+.rememberMe {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: #4a5568;
+}
+
+.checkbox {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.forgotPassword {
+    color: #8b5cf6;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.forgotPassword:hover {
+    color: #7c3aed;
+}
+
+.loginButton {
+    margin-top: 0.5rem;
+    padding: 0.875rem;
+    background: #b8a4d1;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(184, 164, 209, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.loginButton:hover {
+    background: #a894c1;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px -3px rgba(184, 164, 209, 0.5);
+}
+
+.loginButton:active {
+    transform: translateY(0);
+}
+
+.divider {
+    position: relative;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+    z-index: 1;
+}
+
+.dividerText {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0 0.75rem;
+    color: #a0aec0;
+    font-size: 0.875rem;
+}
+
+/* Responsiveness */
+@media (max-width: 480px) {
+    .pageContainer {
+        padding: 0;
+        background: white;
+    }
+
+    .loginCard {
+        max-width: none;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        backdrop-filter: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}

@@ -11,15 +11,26 @@ import Users from "../../features/users/screens/Users";
 import History from "../../features/history/screens/History";
 import Configuration from "../../features/configuration/screens/Configuration";
 import Layout from "../../layout/Layout.jsx";
+import { useAuth } from "../../context/AuthContext";
+import ProtectedRoute from "../../routes/ProtectedRoute";
 
 function AppRouter() {
+    const { token } = useAuth();
     return (
         <BrowserRouter>
             <Routes>
 
-                <Route path="/login" element={<Login />} />
+                <Route path="/login"
+                    element={<Login />}
+                />
 
-                <Route path="/" element={<Layout />}>
+                <Route path="/"
+                    element={
+                        <ProtectedRoute token={token}>
+                            <Layout />
+                        </ProtectedRoute>
+                    }
+                >
                     <Route index element={<Home />} />
                     <Route path="requests" element={<Requests />} />
                     <Route path="spaces" element={<Spaces />} />
