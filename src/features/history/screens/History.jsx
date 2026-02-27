@@ -1,5 +1,55 @@
 import styles from "../styles/History.module.css"
 import { FiSearch } from "react-icons/fi";
+import StatsComponent from "../../home/components/StatsComponent.jsx";
+import HistoryData from "../components/HistoryData.jsx";
+
+const historyData = [
+    {
+        id: 1,
+        name: 'Carlos Salgado Trujillo',
+        resource: 'Computer Lab',
+        requestDate: '2026-02-10',
+        useDate: '2026-02-12',
+        status: 'active',
+        resolvedBy: 'Maria Lopez'
+    },
+    {
+        id: 2,
+        name: 'Kevin Arturo Porcayo Cervantes',
+        resource: 'Projector',
+        requestDate: '2026-02-08',
+        useDate: '2026-02-09',
+        status: 'active',
+        resolvedBy: 'Juan Perez'
+    },
+    {
+        id: 3,
+        name: 'Yahir Fuentes Martinez',
+        resource: 'Library Room',
+        requestDate: '2026-02-05',
+        useDate: '2026-02-07',
+        status: 'inactive',
+        resolvedBy: 'Ana Martinez'
+    },
+    {
+        id: 4,
+        name: 'Daniel Duran Torres',
+        resource: 'HDMI Cable',
+        requestDate: '2026-02-01',
+        useDate: '2026-02-03',
+        status: 'active',
+        resolvedBy: 'Luis Hernandez'
+    },
+    {
+        id: 5,
+        name: 'Carlos Salgado Trujillo',
+        resource: 'Sound Equipment',
+        requestDate: '2026-01-28',
+        useDate: '2026-01-30',
+        status: 'inactive',
+        resolvedBy: 'Sofia Ramirez'
+    },
+]
 
 function History() {
     return (
@@ -53,8 +103,10 @@ function History() {
 
             </div>
 
-            <div className={styles.body}>
-                hola
+            <div className={styles.historyTable}>
+                {historyData.map((historyData, index) => (
+                    <HistoryData key={index} props={historyData} />
+                ))}
 
             </div>
 
