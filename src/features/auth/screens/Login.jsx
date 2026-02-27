@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { HiOutlineMail, HiOutlineLockClosed, HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
-import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import styles from '../styles/Login.module.css';
+import { useMutation } from '@tanstack/react-query';
+import { apiFetch } from '../../../api/client';
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -10,8 +11,26 @@ function Login() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        console.log(email, password);
+
+        mutation.mutate({
+            email,
+            password
+        });
     };
+
+    const mutation = useMutation({
+        mutationFn: (credentials) =>
+            apiFetch('/auth/login', {
+                method: 'POST',
+                body: JSON.stringify(credentials),
+            }),
+        onSuccess: (data) => {
+            console.log("Login exitoso", data);
+        },
+        onError: (error) => {
+            console.log("Error", error.message);
+        }
+    });
 
     return (
         <div className={styles.pageContainer}>
