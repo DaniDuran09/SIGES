@@ -12,15 +12,12 @@ import History from "../../features/history/screens/History";
 import Configuration from "../../features/configuration/screens/Configuration";
 import Layout from "../../layout/Layout.jsx";
 import ProtectedRoute from "../../routes/ProtectedRoute";
+import PublicRoute from "../../routes/PublicRoute";
 
 function AppRouter() {
     return (
         <BrowserRouter>
             <Routes>
-
-                <Route path="/login"
-                    element={<Login />}
-                />
 
                 <Route path="/"
                     element={
@@ -37,6 +34,14 @@ function AppRouter() {
                     <Route path="history" element={<History />} />
                     <Route path="configuration" element={<Configuration />} />
                 </Route>
+
+                <Route path="/login"
+                    element={
+                        <PublicRoute>
+                            <Login />
+                        </PublicRoute>
+                    }
+                />
 
                 <Route path="*" element={<Navigate to="/" />} />
 

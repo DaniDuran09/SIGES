@@ -10,12 +10,13 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login } = useAuth();
+    const [textButton, setTextButton] = useState("Iniciar Sesión");
+    const { accessToken, login, } = useAuth();
     const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
-
+        setTextButton("Cargando...");
         mutation.mutate({
             identifier: email.trim(),
             password: password.trim()
@@ -30,11 +31,12 @@ function Login() {
                 body: JSON.stringify(credentials),
             }),
         onSuccess: (data) => {
-            login(data.accessToken)
+            login(data);
             navigate("/", { replace: true });
         },
         onError: (error) => {
             console.log("Error", error.message);
+            alert(error.message);
         }
     });
 
@@ -101,8 +103,9 @@ function Login() {
                     </div>
                     */}
 
-                    <button type="submit" className={styles.loginButton}>
-                        Iniciar Sesión
+                    <button type="submit" className={styles.loginButton} //disabled={!mutation.isPending} 
+                    >
+                        {textButton}
                     </button>
                 </form>
             </div>
