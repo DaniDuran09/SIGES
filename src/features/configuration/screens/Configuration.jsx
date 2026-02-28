@@ -7,7 +7,6 @@ function Configuration() {
 
     const handleLogout = () => {
         logout();
-        navigate("/login");
     }
     return (
         <h1>

@@ -3,19 +3,26 @@ import { HiOutlineMail, HiOutlineLockClosed, HiOutlineEye, HiOutlineEyeOff } fro
 import styles from '../styles/Login.module.css';
 import { useMutation } from '@tanstack/react-query';
 import { apiFetch } from '../../../api/client';
+import { useAuth } from '../../../context/AuthContext';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [textButton, setTextButton] = useState("Iniciar Sesión");
+    const { accessToken, login, } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
-
+        setTextButton("Cargando...");
         mutation.mutate({
-            email,
-            password
+            identifier: email.trim(),
+            password: password.trim()
         });
+
     };
 
     const mutation = useMutation({
@@ -25,16 +32,21 @@ function Login() {
                 body: JSON.stringify(credentials),
             }),
         onSuccess: (data) => {
-            console.log("Login exitoso", data);
+            login(data);
+            navigate("/", { replace: true });
+            setTextButton("Iniciar Sesión");
         },
         onError: (error) => {
             console.log("Error", error.message);
+            setTextButton("Iniciar Sesión");
         }
     });
 
     return (
         <div className={styles.pageContainer}>
+
             <div className={styles.loginCard}>
+
                 <div className={styles.header}>
                     <div className={styles.logoBox}>
                         <span className={styles.logoText}>S</span>
@@ -47,7 +59,11 @@ function Login() {
                     className={styles.form}
                     onSubmit={handleLogin}
                 >
-
+                    {mutation.error && (
+                        <Alert severity="error">
+                            {mutation.error.message}
+                        </Alert>
+                    )}
                     <div className={styles.inputGroup}>
                         <label className={styles.label}>Correo Electrónico</label>
                         <div className={styles.inputWrapper}>
@@ -95,8 +111,9 @@ function Login() {
                     </div>
                     */}
 
-                    <button type="submit" className={styles.loginButton}>
-                        Iniciar Sesión
+                    <button type="submit" className={styles.loginButton} //disabled={!mutation.isPending} 
+                    >
+                        {textButton}
                     </button>
                 </form>
             </div>

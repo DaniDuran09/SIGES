@@ -1,38 +1,36 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { CiLight } from "react-icons/ci";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
-
-    useEffect(() => {
-        const storedToken = localStorage.getItem("token");
-        const storedUser = localStorage.getItem("user");
-
-        if (storedToken && storedUser) {
-            setToken(storedToken);
-            setUser(JSON.parse(storedUser));
-        }
-
-    }, []);
+    const [accessToken, setAccessToken] = useState(() => localStorage.getItem("accessToken"));
+    const [role, setRole] = useState(() => localStorage.getItem("role"));
 
     const login = (data) => {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        setToken(data.token);
-        setUser(data.user);
+        console.log(data);
+        if (data.accessToken) {
+            localStorage.setItem("accessToken", data.accessToken);
+            setAccessToken(data.accessToken);
+        }
+        if (data.role) {
+            localStorage.setItem("role", data.role);
+            setRole(data.role);
+        }
+        if (data.role !== "ADMIN") {
+            throw new Error("No tienes permisos para iniciar sesión");
+        }
     };
 
     const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setToken(null);
-        setUser(null);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("role");
+        setAccessToken(null);
+        setRole(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ role, accessToken, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
