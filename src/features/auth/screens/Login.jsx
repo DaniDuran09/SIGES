@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { apiFetch } from '../../../api/client';
 import { useAuth } from '../../../context/AuthContext';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -33,16 +34,19 @@ function Login() {
         onSuccess: (data) => {
             login(data);
             navigate("/", { replace: true });
+            setTextButton("Iniciar Sesión");
         },
         onError: (error) => {
             console.log("Error", error.message);
-            alert(error.message);
+            setTextButton("Iniciar Sesión");
         }
     });
 
     return (
         <div className={styles.pageContainer}>
+
             <div className={styles.loginCard}>
+
                 <div className={styles.header}>
                     <div className={styles.logoBox}>
                         <span className={styles.logoText}>S</span>
@@ -55,7 +59,11 @@ function Login() {
                     className={styles.form}
                     onSubmit={handleLogin}
                 >
-
+                    {mutation.error && (
+                        <Alert severity="error">
+                            {mutation.error.message}
+                        </Alert>
+                    )}
                     <div className={styles.inputGroup}>
                         <label className={styles.label}>Correo Electrónico</label>
                         <div className={styles.inputWrapper}>

@@ -17,6 +17,9 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem("role", data.role);
             setRole(data.role);
         }
+        if (data.role !== "ADMIN") {
+            throw new Error("No tienes permisos para iniciar sesión");
+        }
     };
 
     const logout = () => {
