@@ -1,0 +1,93 @@
+.wrapper {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e9e9ee;
+    padding: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background-color: #f6f7fb;
+}
+
+.table th {
+    text-align: left;
+    padding: 18px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.table td {
+    padding: 20px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #374151;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover {
+    background-color: #fafbff;
+}
+
+.usuario {
+    font-weight: 600;
+}
+
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+    text-transform: capitalize;
+}
+
+.pendiente {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+.aprobada {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.denegada {
+    background-color: #FEE2E2;
+    color: #991B1B;
+}
+
+.completada {
+    background-color: #E5E7EB;
+    color: #4B5563;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.approve {
+    background-color: #D1FAE5;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.reject {
+    background-color: #FECACA;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 12px;
+    cursor: pointer;
+}

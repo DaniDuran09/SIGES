@@ -60,6 +60,7 @@ function Home() {
             {/*TOP BAR*/}
 
             <div className={styles.topBar}>
+
                 <div className={styles.titleSection}>
                     <h1 className={styles.title}>Panel de control</h1>
                 </div>
