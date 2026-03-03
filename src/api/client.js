@@ -12,6 +12,10 @@ export const apiFetch = async (endpoint, options = {}) => {
         },
     });
 
+    if (response.status === 401 || response.status === 403) {
+        throw new Error("UNAUTHORIZED");
+    }
+
     if (!response.ok) {
         throw new Error("Error en la petición");
     }

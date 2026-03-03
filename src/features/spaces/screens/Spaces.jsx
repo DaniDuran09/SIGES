@@ -1,59 +1,31 @@
 import { FiPlus, FiSearch } from "react-icons/fi";
 import styles from "../styles/Spaces.module.css";
 import tableStyles from "../styles/SpacesData.module.css";
-
-const spacesData = [
-    {
-        name: 'Auditorio Principal',
-        type: 'Auditorio',
-        location: 'Edificio A, Piso 1',
-        capacity: 200,
-        students: 'Restringido',
-        status: 'disponible',
-        actions: 'Detalles'
-    },
-    {
-        name: 'Sala de Juntas A',
-        type: 'Sala',
-        location: 'Edificio B, Piso 2',
-        capacity: 15,
-        students: 'Abierto',
-        status: 'disponible',
-        actions: 'Detalles'
-    },
-    {
-        name: 'Sala de Juntas B',
-        type: 'Sala',
-        location: 'Edificio B, Piso 2',
-        capacity: 15,
-        students: 'Abierto',
-        status: 'enUso',
-        actions: 'Detalles'
-    },
-    {
-        name: 'Lab de Cómputo',
-        type: 'Laboratorio',
-        location: 'Edificio C, Piso 1',
-        capacity: 30,
-        students: 'Restringido',
-        status: 'disponible',
-        actions: 'Detalles'
-    },
-    {
-        name: 'Sala Biblioteca',
-        type: 'Sala',
-        location: 'Biblioteca',
-        capacity: 8,
-        students: 'Abierto',
-        status: 'mantenimiento',
-        actions: 'Detalles'
-    }
-];
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "../../../api/client";
+import { NewSpaceModal } from "../components/NewSpaceModal";
+import { useState } from "react";
 
 function Spaces() {
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const { data: spaces, isPending, error } = useQuery({
+        queryKey: ["spaces"],
+        queryFn: () => apiFetch("/spaces"),
+    });
+
+    if (isPending) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
     return (
         <div className={styles.container}>
-
+            {modalVisible && <NewSpaceModal onClose={() => setModalVisible(false)} />}
             <div className={styles.header}>
 
                 <h4>Gestión</h4>
@@ -61,7 +33,7 @@ function Spaces() {
                 <div className={styles.headerRow}>
                     <h1>Espacios</h1>
 
-                    <button className={styles.newRequestButton}>
+                    <button onClick={() => setModalVisible(true)} className={styles.newRequestButton}>
                         <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
                         <h3 className={styles.newRequestText}>
                             Nuevo espacio
@@ -106,47 +78,55 @@ function Spaces() {
                 <table className={tableStyles.table}>
 
                     <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Ubicación</th>
-                        <th>Capacidad</th>
-                        <th>Estudiantes</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Ubicación</th>
+                            <th>Capacidad</th>
+                            <th>Estudiantes</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
                     </thead>
 
                     <tbody>
-                    {spacesData.map((space, index) => (
-                        <tr key={index}>
-                            <td>{space.name}</td>
+                        {spaces?.content?.map((space) => (
+                            <tr key={space.id}>
+                                <td>{space.name}</td>
 
-                            <td>{space.type}</td>
+                                <td>{space.spaceType?.name}</td>
 
-                            <td>{space.location}</td>
+                                <td>{space.building?.name}</td>
 
-                            <td>{space.capacity}</td>
+                                <td>{space.capacity}</td>
 
-                            <td>
-                                    <span className={`${tableStyles.badge} ${tableStyles[space.students]}`}>
-                                        {space.students}
+                                <td>
+                                    <span
+                                        className={`${tableStyles.badge} ${tableStyles[
+                                            space.availableForStudents ? "Abierto" : "Restringido"
+                                        ]
+                                            }`}
+                                    >
+                                        {space.availableForStudents ? "Abierto" : "Restringido"}
                                     </span>
-                            </td>
+                                </td>
 
-                            <td>
-                                    <span className={`${tableStyles.badge} ${tableStyles[space.status]}`}>
+                                <td>
+                                    <span
+                                        className={`${tableStyles.badge} ${tableStyles[space.status]
+                                            }`}
+                                    >
                                         {space.status}
                                     </span>
-                            </td>
+                                </td>
 
-                            <td>
-                                <button className={tableStyles.detailsButton}>
-                                    {space.actions}
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
+                                <td>
+                                    <button className={tableStyles.detailsButton}>
+                                        Detalles
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
 
                 </table>

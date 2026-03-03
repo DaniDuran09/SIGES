@@ -87,11 +87,7 @@ h1 {
     flex-wrap: wrap;
 }
 
-.searchContainer {
-    position: relative;
-    width: 50%;
-    min-width: 200px;
-}
+.searchContainer {}
 
 .searchIcon {
     position: absolute;
