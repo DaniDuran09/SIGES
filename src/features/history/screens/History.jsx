@@ -108,7 +108,6 @@ function History() {
                         <tbody>
                         {historyData.map((item) => (
                             <tr key={item.id}>
-                                <td>#{item.id}</td>
                                 <td className={tableStyles.name}>{item.name}</td>
                                 <td>{item.resource}</td>
                                 <td>{item.requestDate}</td>

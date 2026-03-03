@@ -78,7 +78,6 @@ function Users() {
                     <button className={styles.active}>Todas</button>
                     <button>Personal</button>
                     <button>Estudiantes</button>
-
                 </div>
 
                 <div className={styles.searchBar}>
