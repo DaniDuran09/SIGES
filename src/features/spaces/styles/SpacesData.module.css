@@ -12,6 +12,15 @@
     border-collapse: collapse;
 }
 
+.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 24px;
+    color: #161616;
+}
+
 .table thead {
     background-color: #f6f7fb;
 }

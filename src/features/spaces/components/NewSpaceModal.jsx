@@ -1,10 +1,58 @@
+import { useState } from 'react';
 import styles from './NewSpaceModal.module.css';
 import { FiX } from 'react-icons/fi';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { apiFetch } from '../../../api/client';
+import { Alert } from '@mui/material';
 
 export const NewSpaceModal = ({ onClose }) => {
+    const [showAddType, setShowAddType] = useState(false);
+    const [showAddBuilding, setShowAddBuilding] = useState(false);
+    const [newBuildingName, setNewBuildingName] = useState("");
+
+    const queryClient = useQueryClient();
+
+    const { data: b_types, isLoading: b_typesLoading, error: b_typesError } = useQuery({
+        queryKey: ["getSpaceTypes"],
+        queryFn: () => apiFetch("/spacetypes", {
+            method: "GET",
+        })
+    })
+
+
+
+    const { data: b_buildings, isLoading: b_buildingsLoading, error: b_buildingsError } = useQuery({
+        queryKey: ["getBuildings"],
+        queryFn: () => apiFetch("/buildings", {
+            method: "GET",
+        })
+    })
+
+    const mutationBuilding = useMutation({
+        mutationFn: (data) => apiFetch("/buildings", {
+            method: "POST",
+            body: JSON.stringify(data),
+        }),
+        onSuccess: () => {
+            setShowAddBuilding(false)
+            queryClient.invalidateQueries({ queryKey: ["getBuildings"] });
+        },
+        onError: (error) => {
+            console.log("Error", error.message);
+        }
+    })
+
+    const handleAddBuilding = () => {
+        mutationBuilding.mutate({
+            name: newBuildingName,
+        })
+    }
+
+
 
     return (
         <div className={styles.overlay}>
+
             <div className={styles.modal}>
 
                 <div className={styles.header}>
@@ -26,9 +74,12 @@ export const NewSpaceModal = ({ onClose }) => {
                         <div className={styles.selectWrapper}>
                             <select defaultValue="">
                                 <option value="" disabled>Seleccione...</option>
-                                <option value="1">Auditorio</option>
-                                <option value="2">Sala</option>
-                                <option value="3">Laboratorio</option>
+                                {b_types?.map((type) => (
+                                    <option key={type.id} value={type.id}>
+                                        {type.name}
+                                    </option>
+                                ))}
+                                <option value="">Agregar tipo</option>
                             </select>
                         </div>
                     </div>
@@ -36,7 +87,25 @@ export const NewSpaceModal = ({ onClose }) => {
                     <div className={styles.formRow}>
                         <div className={styles.formGroup}>
                             <label>Ubicación</label>
-                            <input type="text" placeholder="Ej. Edificio A" />
+                            <select>
+                                <option onClick={() => { setShowAddBuilding(false) }} value="">Seleccione...</option>
+                                {b_buildings?.map((building) => (
+                                    <option onClick={() => { setShowAddBuilding(false) }} key={building.id} value={building.id}>
+                                        {building.name}
+                                    </option>
+                                ))}
+                                <option onClick={() => { setShowAddBuilding(true) }} value="">Agregar ubicación</option>
+                            </select>
+                            {showAddBuilding && (
+                                <div style={{ marginTop: "10px", backgroundColor: "#D8D3E4", padding: "10px", borderRadius: "5px" }} className={styles.formGroup}>
+                                    <label  >Nueva ubicación</label>
+                                    <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                                        <input style={{ backgroundColor: "#fff", color: "#000" }} type="text" placeholder="Ej. Edificio A" value={newBuildingName} onChange={(e) => setNewBuildingName(e.target.value)} />
+                                        <button style={{ backgroundColor: "#D4F1E8", color: "#1aa76fff", padding: "5px 10px", borderRadius: "5px" }} onClick={handleAddBuilding}>Agregar</button>
+                                        <button style={{ backgroundColor: "#fff", color: "#000000ff", padding: "5px 25px", borderRadius: "5px" }} onClick={() => { setShowAddBuilding(false) }} >X</button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className={styles.formGroup}>
                             <label>Capacidad</label>

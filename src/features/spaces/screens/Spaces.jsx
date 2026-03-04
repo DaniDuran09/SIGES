@@ -11,16 +11,18 @@ function Spaces() {
     const [modalVisible, setModalVisible] = useState(false);
 
     const { data: spaces, isPending, error } = useQuery({
-        queryKey: ["spaces"],
-        queryFn: () => apiFetch("/spaces"),
+        queryKey: ["GetSpaces"],
+        queryFn: () => apiFetch("/spaces", {
+            method: "GET",
+        }),
     });
 
     if (isPending) {
-        return <div>Loading...</div>;
+        return <div className={styles.container}>Loading...</div>;
     }
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div className={styles.container}>Error: {error.message}</div>;
     }
 
     return (
@@ -75,61 +77,67 @@ function Spaces() {
             </div>
 
             <div className={tableStyles.wrapper}>
-                <table className={tableStyles.table}>
+                {spaces?.content?.length === 0 ? (
+                    <div className={tableStyles.empty}>
+                        <p>No hay espacios registrados</p>
+                    </div>
+                ) : (
+                    <table className={tableStyles.table}>
 
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Ubicación</th>
-                            <th>Capacidad</th>
-                            <th>Estudiantes</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {spaces?.content?.map((space) => (
-                            <tr key={space.id}>
-                                <td>{space.name}</td>
-
-                                <td>{space.spaceType?.name}</td>
-
-                                <td>{space.building?.name}</td>
-
-                                <td>{space.capacity}</td>
-
-                                <td>
-                                    <span
-                                        className={`${tableStyles.badge} ${tableStyles[
-                                            space.availableForStudents ? "Abierto" : "Restringido"
-                                        ]
-                                            }`}
-                                    >
-                                        {space.availableForStudents ? "Abierto" : "Restringido"}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <span
-                                        className={`${tableStyles.badge} ${tableStyles[space.status]
-                                            }`}
-                                    >
-                                        {space.status}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button className={tableStyles.detailsButton}>
-                                        Detalles
-                                    </button>
-                                </td>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Ubicación</th>
+                                <th>Capacidad</th>
+                                <th>Estudiantes</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
-                        ))}
-                    </tbody>
+                        </thead>
 
-                </table>
+                        <tbody>
+                            {spaces?.content?.map((space) => (
+                                <tr key={space.id}>
+                                    <td>{space.name}</td>
+
+                                    <td>{space.spaceType?.name}</td>
+
+                                    <td>{space.building?.name}</td>
+
+                                    <td>{space.capacity}</td>
+
+                                    <td>
+                                        <span
+                                            className={`${tableStyles.badge} ${tableStyles[
+                                                space.availableForStudents ? "Abierto" : "Restringido"
+                                            ]
+                                                }`}
+                                        >
+                                            {space.availableForStudents ? "Abierto" : "Restringido"}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span
+                                            className={`${tableStyles.badge} ${tableStyles[space.status]
+                                                }`}
+                                        >
+                                            {space.status}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <button className={tableStyles.detailsButton}>
+                                            Detalles
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+
+                    </table>
+                )}
             </div>
 
         </div>

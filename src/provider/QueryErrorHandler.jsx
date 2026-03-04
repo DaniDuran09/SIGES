@@ -8,7 +8,7 @@ export function QueryErrorHandler() {
 
     useEffect(() => {
         const unsubscribe = queryClient.getQueryCache().subscribe(event => {
-            if (event?.query?.state?.error?.message === "UNAUTHORIZED") {
+            if (event?.query?.state?.error?.message === "ERROR") {
                 logout();
             }
         });
