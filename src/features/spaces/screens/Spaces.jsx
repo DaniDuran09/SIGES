@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import { NewSpaceModal } from "../components/NewSpaceModal";
 import { useState } from "react";
+import LoaderCircle from "../../../assets/components/LoaderCircle";
 
 function Spaces() {
 
@@ -18,7 +19,9 @@ function Spaces() {
     });
 
     if (isPending) {
-        return <div className={styles.container}>Loading...</div>;
+        return (
+            <LoaderCircle />
+        );
     }
 
     if (error) {

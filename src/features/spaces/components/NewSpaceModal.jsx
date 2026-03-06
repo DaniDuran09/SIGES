@@ -84,20 +84,11 @@ export const NewSpaceModal = ({ onClose }) => {
             body: JSON.stringify(data),
         }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["getSpaces"] });
+            queryClient.invalidateQueries({ queryKey: ["GetSpaces"] });
             onClose();
-            return (
-                <Alert severity="success">
-                    Espacio registrado exitosamente
-                </Alert>
-            )
         },
         onError: (error) => {
-            return (
-                <Alert severity="error">
-                    Error al registrar el espacio
-                </Alert>
-            )
+            console.log("Error", error.message);
         }
     });
 
