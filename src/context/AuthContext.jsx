@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import { CiLight } from "react-icons/ci";
 
 const AuthContext = createContext();
 

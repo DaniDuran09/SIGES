@@ -56,39 +56,49 @@ function Requests() {
             <div className={tableStyles.wrapper}>
                 <table className={tableStyles.table}>
                     <thead>
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Recurso</th>
-                        <th>Fecha</th>
-                        <th>Horario</th>
-                        <th>Tipo</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Recurso</th>
+                            <th>Fecha</th>
+                            <th>Horario</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {requestsData.map((item, index) => (
-                        <tr key={index}>
-                            <td className={tableStyles.usuario}>{item.usuario}</td>
-                            <td>{item.recurso}</td>
-                            <td>{item.fecha}</td>
-                            <td>{item.horario}</td>
-                            <td>{item.tipo}</td>
-                            <td>
+                        {requestsData.map((item, index) => (
+                            <tr key={index}>
+                                <td className={tableStyles.usuario}>{item.usuario}</td>
+                                <td>{item.recurso}</td>
+                                <td>{item.fecha}</td>
+                                <td>{item.horario}</td>
+                                <td>{item.tipo}</td>
+                                <td>
                                     <span className={`${tableStyles.badge} ${tableStyles[item.estado.toLowerCase()]}`}>
                                         {item.estado}
                                     </span>
-                            </td>
-                            <td className={tableStyles.actions}>
-                                {item.acciones.aprobar && (
-                                    <button className={tableStyles.approve}>✓</button>
-                                )}
-                                {item.acciones.rechazar && (
-                                    <button className={tableStyles.reject}>✕</button>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
+                                </td>
+                                <td className={tableStyles.actions}>
+                                    <span>pendiente</span>
+                                    {/*item.acciones ?
+                                        <>
+                                            {item.acciones.aprobar && (
+                                                <button className={tableStyles.approve}>✓</button>
+                                            )}
+                                            {item.acciones.rechazar && (
+                                                <button className={tableStyles.reject}>✕</button>
+                                            )}
+                                        </>
+                                        :
+                                        <>
+                                            <text> - </text>
+                                        </>
+                                    */
+                                    }
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

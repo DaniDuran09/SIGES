@@ -1,51 +1,20 @@
 import styles from "../styles/Users.module.css"
 import tableStyles from "../styles/UsersData.module.css"
 import { FiPlus, FiSearch } from "react-icons/fi";
-
-const userData = [
-    {
-        name: 'Carlos Salgado Trujillo',
-        type: 'personal',
-        tuition: '20243DS008',
-        mail: '20243ds008@utez.edu.mx',
-        phone: 7773452574,
-        status: 'activo'
-    },
-    {
-        name: 'Kevin Arturo Porcayo Cervantes',
-        type: 'estudiante',
-        tuition: '20243DS154',
-        mail: '20243ds154@utez.edu.mx',
-        phone: 7773459386,
-        status: 'activo'
-    },
-    {
-        name: 'Yahir Fuentes Martinez',
-        type: 'personal',
-        tuition: '20243DS946',
-        mail: '20243ds946@utez.edu.mx',
-        phone: 7773574894,
-        status: 'activo'
-    },
-    {
-        name: 'Daniel Duran Torres',
-        type: 'personal',
-        tuition: '20243DS486',
-        mail: '20243ds486@utez.edu.mx',
-        phone: 7773653548,
-        status: 'inactivo'
-    },
-    {
-        name: 'Carlos Salgado Trujillo',
-        type: 'personal',
-        tuition: '20243DS009',
-        mail: '20243ds009@utez.edu.mx',
-        phone: 7774553621,
-        status: 'inactivo'
-    },
-]
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "../../../api/client";
+import LoaderCircle from "../../../assets/components/LoaderCircle";
 
 function Users() {
+    const { data: b_users, isLoading: b_usersIsLoading, isError: b_usersIsError } = useQuery({
+        queryKey: ["GetUsers"],
+        queryFn: () => apiFetch("/users", {
+            method: "GET",
+        }),
+    });
+    if (b_usersIsLoading) {
+        return <LoaderCircle />;
+    }
 
     return (
 
@@ -122,38 +91,42 @@ function Users() {
                 <table className={tableStyles.table}>
 
                     <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Matricula</th>
-                        <th>correo</th>
-                        <th>Telefono</th>
-                        <th>Estatus</th>
-                    </tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Matricula</th>
+                            <th>correo</th>
+                            <th>Telefono</th>
+                            <th>Estatus</th>
+                        </tr>
                     </thead>
 
                     <tbody>
-                    {userData.map((user, index) => (
-                        <tr key={index}>
-                            <td>{user.name}</td>
+                        {b_users?.content.map((user) => (
+                            <tr key={user.id}>
+                                <td>{user.firstName + " " + user.lastName}</td>
 
-                            <td>
-                                    <span className={`${tableStyles.badge} ${tableStyles[user.type]}`}>
-                                        {user.type}
+                                <td>
+                                    <span className={`${tableStyles.badge} ${tableStyles[user.role]}`}>
+                                        {user.role}
                                     </span>
-                            </td>
+                                </td>
 
-                            <td>{user.tuition}</td>
-                            <td>{user.mail}</td>
-                            <td>{user.phone}</td>
+                                <td>{user.registrationNumber}</td>
+                                <td>{user.email}</td>
+                                <td>{user.phoneNumber}</td>
 
-                            <td>
-                                    <span className={`${tableStyles.badge} ${tableStyles[user.status]}`}>
+                                <td>
+                                    {/*
+                                    <span className={`${tableStyles.badge} ${tableStyles[user.status]}`}
+                                    >
                                         {user.status}
                                     </span>
-                            </td>
-                        </tr>
-                    ))}
+                                */}
+
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
 
                 </table>

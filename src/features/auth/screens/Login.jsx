@@ -65,13 +65,13 @@ function Login() {
                         </Alert>
                     )}
                     <div className={styles.inputGroup}>
-                        <label className={styles.label}>Correo Electrónico</label>
+                        <label className={styles.label}>Identificador</label>
                         <div className={styles.inputWrapper}>
                             <HiOutlineMail className={styles.icon} />
                             <input
-                                type="email"
+                                type="text"
                                 className={styles.input}
-                                placeholder="nombre@ejemplo.com"
+                                placeholder="Ejemplo: correo electronico o usuario"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
