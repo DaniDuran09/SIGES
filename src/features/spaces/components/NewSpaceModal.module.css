@@ -249,4 +249,74 @@
     .formRow {
         flex-direction: column;
     }
+
+    .addSubFormActions {
+        width: 100%;
+    }
+
+    .btnDismiss {
+        flex: 1;
+    }
+}
+
+.addSubForm {
+    margin-top: 10px;
+    background-color: #D8D3E4;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.addSubFormTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #64748B;
+}
+
+.addSubFormCol {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.addSubFormActions {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.btnAdd {
+    background-color: #D4F1E8;
+    color: #1aa76f;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-weight: 400;
+    cursor: pointer;
+    flex: 1;
+    transition: background 0.2s;
+    font-size: 14px;
+    min-width: 90px;
+}
+
+.btnAdd:hover {
+    background-color: #B2E5D3;
+}
+
+.btnDismiss {
+    background-color: #FFFFFF;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 25px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+
+.btnDismiss:hover {
+    background-color: #F1F5F9;
 }
