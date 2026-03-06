@@ -6,7 +6,6 @@ import {apiFetch} from "../../../api/client.js";
 import LoaderCircle from "../../../assets/components/LoaderCircle.jsx";
 import {Alert} from "@mui/material";
 
-
 function Equipments() {
     const { data: b_equipments, isLoading: b_equipmentsIsLoading, isError: b_equipmentsIsError } = useQuery({
         queryKey: ["GetEquipments"],
