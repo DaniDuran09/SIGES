@@ -86,7 +86,7 @@ h1 {
 
 .searchContainer {
     position: relative;
-    width: 750px;
+    width: 50%;
     min-width: 200px;
 }
 
@@ -137,6 +137,12 @@ h1 {
     .searchBar {
         flex-direction: column;
     }
+    .searchContainer {
+        position: relative;
+        width: 100%;
+        min-width: 200px;
+    }
+
 }
 
 @media (max-width: 768px) {
