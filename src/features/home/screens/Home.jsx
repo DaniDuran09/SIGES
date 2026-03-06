@@ -8,6 +8,7 @@ import StatsComponent from "../components/StatsComponent.jsx";
 import PendingRequestComponent from "../components/PendingRequestComponent.jsx";
 import { NewSpaceModal } from "../../spaces/components/NewSpaceModal";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const options = [
     {
@@ -56,6 +57,7 @@ const pendingRequests = [
 
 function Home() {
     const [modalVisible, setModalVisible] = useState(false);
+    const navigate = useNavigate();
     return (
         <div className={styles.container}>
 
@@ -98,7 +100,12 @@ function Home() {
                 {/*SOLICITUDES PENDIENTES */}
                 <div style={{ flex: 2, overflow: 'auto', display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: 'white', borderRadius: '10px', border: '1px solid #ddd', padding: '10px' }}>
                     <div className={styles.ResponsiveTitleContainer}>
-                        <h3 style={{}}>Solicitudes pendientes {'>'}</h3>
+                        <h3 style={{}}>Solicitudes pendientes</h3>
+                        <button onClick={() => { navigate('/requests') }} style={{
+                            backgroundColor: 'transparent', border: '0px', cursor: 'pointer'
+                        }}>
+                            <h3 style={{ color: '#6B5B95' }}>Ver todas {'>'}</h3>
+                        </button>
                     </div>
                     {pendingRequests.map((request, index) => (
                         <PendingRequestComponent key={index} props={request} />
@@ -108,7 +115,7 @@ function Home() {
                 </div>
                 <div className={styles.quickActionsContainer} >
                     <h3>Acciones rapidas</h3>
-                    {/*SOLICITUDES PENDIENTES*/}
+                    {/*ACCIONES RAPIDAS*/}
                     <div className={styles.quickActionsGrid} >
                         <button onClick={() => { setModalVisible(true) }} className={styles.quickActionButton} style={{ backgroundColor: Colors.primaryColor }} >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >

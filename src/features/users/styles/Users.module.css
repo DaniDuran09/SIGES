@@ -170,6 +170,10 @@ h1 {
         flex-direction: column;
     }
 
+    .searchContainer {
+        width: 100%;
+    }
+
     .bottomSection {
         display: flex;
         flex-direction: column;
@@ -187,7 +191,7 @@ h1 {
         width: 48%;
     }
 
-    .date {
+    .searchContainer {
         width: 100%;
     }
 

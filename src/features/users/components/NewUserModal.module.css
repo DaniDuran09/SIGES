@@ -1,0 +1,252 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal {
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 28px 16px 28px;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 26px;
+    color: #2D3748;
+    font-weight: 700;
+}
+
+.closeButton {
+    background: #F1F5F9;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #475569;
+    transition: background 0.2s;
+}
+
+.closeButton:hover {
+    background: #E2E8F0;
+}
+
+.content {
+    padding: 0 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.formGroup label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #64748B;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    font-size: 15px;
+    color: #1E293B;
+    background-color: #FFFFFF;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+    color: #94A3B8;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+    border-color: #6B5B95;
+    box-shadow: 0 0 0 1px #6B5B95;
+}
+
+.formGroup textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.selectWrapper {
+    position: relative;
+}
+
+.formGroup select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 36px;
+}
+
+.selectWrapper::after {
+    content: "";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 6px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    pointer-events: none;
+}
+
+.formRow {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.toggleContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background-color: #F8FAFC;
+    border-radius: 6px;
+}
+
+.toggleContainer span {
+    font-size: 15px;
+    color: #0F172A;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #CBD5E1;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.switch input:checked+.slider {
+    background-color: #6B5B95;
+}
+
+.switch input:focus+.slider {
+    box-shadow: 0 0 1px #6B5B95;
+}
+
+.switch input:checked+.slider:before {
+    transform: translateX(20px);
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+    margin-top: 8px;
+}
+
+.cancelButton,
+.submitButton {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.cancelButton {
+    background-color: white;
+    color: #0F172A;
+    border: 1px solid #E2E8F0;
+}
+
+.cancelButton:hover {
+    background-color: #F8FAFC;
+}
+
+.submitButton {
+    background-color: #6B5B95;
+    color: white;
+}
+
+.submitButton:hover {
+    background-color: #5A4A81;
+}
+
+@media (max-width: 600px) {
+    .modal {
+        width: 90%;
+        max-width: none;
+    }
+
+    .formRow {
+        flex-direction: column;
+    }
+}
