@@ -4,6 +4,7 @@
     border-radius: 20px;
     border: 1px solid #e9e9ee;
     padding: 20px;
+    overflow-y: auto;
 }
 
 .table {

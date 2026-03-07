@@ -1,56 +1,27 @@
 import { FiPlus, FiSearch } from "react-icons/fi";
 import styles from "../styles/Equipment.module.css";
 import tableStyles from "../styles/EquipmentData.module.css";
-
-const equipmentsData = [
-    {
-        name: 'Proyector HDMI',
-        type: 'Proyector',
-        inventory: 'INV-2026-001',
-        space: 'Auditorio Principal',
-        students: 'Abierto',
-        status: 'disponible',
-        actions: 'Detalles'
-    },
-    {
-        name: 'Cable HDMI x2',
-        type: 'Cable',
-        inventory: 'INV-2026-010',
-        space: '—',
-        students: 'Abierto',
-        status: 'disponible',
-        actions: 'Detalles'
-    },
-    {
-        name: 'Router Wifi Industrial',
-        type: 'Router',
-        inventory: 'INV-2026-025',
-        space: 'Lab de Cómputo 1',
-        students: 'Restringido',
-        status: 'enUso',
-        actions: 'Detalles'
-    },
-    {
-        name: 'Pantalla Interactiva',
-        type: 'Pantalla',
-        inventory: 'INV-2026-040',
-        space: 'Sala de Juntas A',
-        students: 'Abierto',
-        status: 'disponible',
-        actions: 'Detalles'
-    },
-    {
-        name: 'Extensión 3 m',
-        type: 'Extensión',
-        inventory: 'INV-2026-055',
-        space: '—',
-        students: 'Abierto',
-        status: 'mantenimiento',
-        actions: 'Detalles'
-    }
-];
+import {useQuery} from "@tanstack/react-query";
+import {apiFetch} from "../../../api/client.js";
+import LoaderCircle from "../../../assets/components/LoaderCircle.jsx";
+import {Alert} from "@mui/material";
 
 function Equipments() {
+    const { data: b_equipments, isLoading: b_equipmentsIsLoading, isError: b_equipmentsIsError } = useQuery({
+        queryKey: ["GetEquipments"],
+        queryFn: () => apiFetch("/equipments", {
+            method: "GET",
+        }),
+    });
+
+    if (b_equipmentsIsLoading) {
+        return <LoaderCircle />;
+    }
+
+    if (b_equipmentsIsError){
+        return <Alert severity="error"> Hubo un error al cargar los equipos </Alert>;
+    }
+
     return (
         <div className={styles.container}>
 
@@ -103,39 +74,39 @@ function Equipments() {
 
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Inventory No.</th>
-                        <th>Associated Space</th>
-                        <th>Students</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>No°Inventario</th>
+                        <th>Espacio Asociado</th>
+                        <th>Estdiantes</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    {equipmentsData.map((equipment, index) => (
+                    {b_equipments.content.map((equipment, index) => (
                         <tr key={index}>
                             <td>{equipment.name}</td>
-                            <td>{equipment.type}</td>
-                            <td>{equipment.inventory}</td>
-                            <td>{equipment.space}</td>
+                            <td>{equipment.spaceAttached?.spaceType?.name}</td>
+                            <td>{equipment.inventoryIdNum}</td>
+                            <td>{equipment.spaceAttached?.name}</td>
 
                             <td>
-                                    <span className={`${tableStyles.badge} ${tableStyles[equipment.students]}`}>
-                                        {equipment.students}
-                                    </span>
+                                <span className={`${tableStyles.badge} ${tableStyles[equipment.availableForStudents]}`}>
+                                    {equipment.availableForStudents ? "Yes" : "No"}
+                                </span>
                             </td>
 
                             <td>
-                                    <span className={`${tableStyles.badge} ${tableStyles[equipment.status]}`}>
-                                        {equipment.status}
-                                    </span>
+                                <span className={`${tableStyles.badge} ${tableStyles[equipment.status]}`}>
+                                    {equipment.status}
+                                </span>
                             </td>
 
                             <td>
                                 <button className={tableStyles.detailsButton}>
-                                    {equipment.actions}
+                                    {equipment.id}
                                 </button>
                             </td>
                         </tr>
