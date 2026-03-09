@@ -12,7 +12,7 @@ function Users() {
 
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
-    const [state, setState] = useState("");
+    const [state, setState] = useState("ALL");
     const [type, setType] = useState("");
 
     const queryClient = useQueryClient();
@@ -26,14 +26,13 @@ function Users() {
         queryFn: () => apiFetch("/users", {
             method: "GET",
             params: {
-                showMode: "ALL",
+                showMode: state,
                 sort: [
                     'firstName,asc',
                     'lastName,asc'
                 ],
                 userTypes: type,
-                search: search,
-                enabled: state,
+                search: search
             }
         }),
     });
@@ -69,9 +68,9 @@ function Users() {
                 </div>
 
                 <div className={styles.tabs}>
-
                     <button className={type === "" ? styles.active : ""} onClick={() => handleSetType("")}>Todas</button>
-                    <button className={type === "ADMIN" ? styles.active : ""} onClick={() => handleSetType("ADMIN")}>Personal</button>
+                    <button className={type === "ADMIN" ? styles.active : ""} onClick={() => handleSetType("ADMIN")}>Administrador</button>
+                    <button className={type === "PERSONAL_STAFF" ? styles.active : ""} onClick={() => handleSetType("PERSONAL_STAFF")}>Personal / Staff</button>
                     <button className={type === "STUDENT" ? styles.active : ""} onClick={() => handleSetType("STUDENT")}>Estudiantes</button>
                 </div>
 
@@ -84,6 +83,8 @@ function Users() {
                             className={styles.search}
                             type="search"
                             placeholder="Buscar Usuario..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
                         />
 
                     </div>
@@ -91,16 +92,14 @@ function Users() {
                     <div className={styles.componentSearch}>
 
                         <div className={styles.optionAndState}>
-                            <select className={styles.state} id="opciones" name="estado" >
-                                <option value="">Estado: Tipo</option>
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
-
-                            <select className={styles.sort} id="opciones" name="tipo">
-                                <option value="">Tipo: Todos</option>
-                                <option value="personal">Personal</option>
-                                <option value="estudiante">Estudiante</option>
+                            <select
+                                className={styles.state}
+                                value={state}
+                                onChange={(e) => setState(e.target.value)}
+                            >
+                                <option value="ALL">Estado: Todos</option>
+                                <option value="ACTIVE">Activo</option>
+                                <option value="INACTIVE">Inactivo</option>
                             </select>
                         </div>
 

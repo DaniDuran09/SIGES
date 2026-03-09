@@ -1,25 +1,31 @@
 import { FiPlus, FiSearch } from "react-icons/fi";
 import styles from "../styles/Equipment.module.css";
 import tableStyles from "../styles/EquipmentData.module.css";
-import {useQuery} from "@tanstack/react-query";
-import {apiFetch} from "../../../api/client.js";
-import LoaderCircle from "../../../assets/components/LoaderCircle.jsx";
-import {Alert} from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "../../../api/client";
+import { useState } from "react";
+import LoaderCircle from "../../../assets/components/LoaderCircle";
 
 function Equipments() {
-    const { data: b_equipments, isLoading: b_equipmentsIsLoading, isError: b_equipmentsIsError } = useQuery({
-        queryKey: ["GetEquipments"],
+
+    const [searchEquipment, setSearchEquipment] = useState('');
+    const [state, setState] = useState('');
+    // const [type, setType] = useState('');
+
+    const { data: b_equipments, isPending: b_equipmentsIsPending, error: b_equipmentsIsError } = useQuery({
+        queryKey: ["GetEquipments", searchEquipment, state],
         queryFn: () => apiFetch("/equipments", {
             method: "GET",
+            params: {
+                searchQuery: searchEquipment,
+                status: state,
+                // type: type 
+            }
         }),
     });
 
-    if (b_equipmentsIsLoading) {
-        return <LoaderCircle />;
-    }
-
-    if (b_equipmentsIsError){
-        return <Alert severity="error"> Hubo un error al cargar los equipos </Alert>;
+    if (b_equipmentsIsError) {
+        return <div className={styles.container}>Error: {b_equipmentsIsError.message}</div>;
     }
 
     return (
@@ -48,19 +54,32 @@ function Equipments() {
                             className={styles.search}
                             type="search"
                             placeholder="Buscar equipo..."
+                            value={searchEquipment}
+                            onChange={(e) => setSearchEquipment(e.target.value)}
                         />
                     </div>
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
-                            <select className={styles.state}>
+                            {/* 
+                            <select 
+                                className={styles.state}
+                                value={type}
+                                onChange={(e) => setType(e.target.value)}
+                            >
                                 <option value="">Tipo: Todos</option>
                                 <option value="Proyector">Proyector</option>
                             </select>
+                            */}
 
-                            <select className={styles.sort}>
+                            <select
+                                className={styles.sort}
+                                value={state}
+                                onChange={(e) => setState(e.target.value)}
+                            >
                                 <option value="">Estado: Todos</option>
-                                <option value="disponible">Disponible</option>
+                                <option value="ACTIVE">Activo</option>
+                                <option value="MAINTENANCE">Mantenimiento</option>
                             </select>
                         </div>
                     </div>
@@ -69,52 +88,62 @@ function Equipments() {
 
             </div>
 
-            <div className={tableStyles.wrapper}>
-                <table className={tableStyles.table}>
+            {b_equipmentsIsPending ? (
+                <LoaderCircle />
+            ) : (
+                <div className={tableStyles.wrapper}>
+                    {!b_equipments?.content || b_equipments.content.length === 0 ? (
+                        <div className={tableStyles.empty}>
+                            <p>No hay equipos registrados</p>
+                        </div>
+                    ) : (
+                        <table className={tableStyles.table}>
 
-                    <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>No°Inventario</th>
-                        <th>Espacio Asociado</th>
-                        <th>Estdiantes</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    {/* <th>Tipo</th> */}
+                                    <th>No. Inventario</th>
+                                    <th>Espacio Asociado</th>
+                                    <th>Estudiantes</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
 
-                    <tbody>
-                    {b_equipments.content.map((equipment, index) => (
-                        <tr key={index}>
-                            <td>{equipment.name}</td>
-                            <td>{equipment.spaceAttached?.spaceType?.name}</td>
-                            <td>{equipment.inventoryIdNum}</td>
-                            <td>{equipment.spaceAttached?.name}</td>
+                            <tbody>
+                                {b_equipments.content.map((equipment) => (
+                                    <tr key={equipment.id}>
+                                        <td>{equipment.name}</td>
+                                        {/* <td>{equipment.type}</td> */}
+                                        <td>{equipment.inventoryIdNum || '—'}</td>
+                                        <td>{equipment.spaceAttached?.name || equipment.building?.name || '—'}</td>
 
-                            <td>
-                                <span className={`${tableStyles.badge} ${tableStyles[equipment.availableForStudents]}`}>
-                                    {equipment.availableForStudents ? "Yes" : "No"}
-                                </span>
-                            </td>
+                                        <td>
+                                            <span className={`${tableStyles.badge} ${tableStyles[equipment.availableForStudents ? "Abierto" : "Restringido"]}`}>
+                                                {equipment.availableForStudents ? "Abierto" : "Restringido"}
+                                            </span>
+                                        </td>
 
-                            <td>
-                                <span className={`${tableStyles.badge} ${tableStyles[equipment.status]}`}>
-                                    {equipment.status}
-                                </span>
-                            </td>
+                                        <td>
+                                            <span className={`${tableStyles.badge} ${tableStyles[equipment.status]}`}>
+                                                {equipment.status}
+                                            </span>
+                                        </td>
 
-                            <td>
-                                <button className={tableStyles.detailsButton}>
-                                    {equipment.id}
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
+                                        <td>
+                                            <button className={tableStyles.detailsButton}>
+                                                Detalles
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
 
-                </table>
-            </div>
+                        </table>
+                    )}
+                </div>
+            )}
 
         </div>
     );
