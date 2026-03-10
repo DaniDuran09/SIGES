@@ -70,7 +70,7 @@ function Users() {
                 <div className={styles.tabs}>
                     <button className={type === "" ? styles.active : ""} onClick={() => handleSetType("")}>Todas</button>
                     <button className={type === "ADMIN" ? styles.active : ""} onClick={() => handleSetType("ADMIN")}>Administrador</button>
-                    <button className={type === "PERSONAL_STAFF" ? styles.active : ""} onClick={() => handleSetType("PERSONAL_STAFF")}>Personal / Staff</button>
+                    <button className={type === "INSTITUTIONAL_STAFF" ? styles.active : ""} onClick={() => handleSetType("INSTITUTIONAL_STAFF")}>Personal / Staff</button>
                     <button className={type === "STUDENT" ? styles.active : ""} onClick={() => handleSetType("STUDENT")}>Estudiantes</button>
                 </div>
 
