@@ -13,7 +13,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Building_04 from "../../assets/icons/Building_04.svg"
 import { FiHome } from "react-icons/fi";
 import styles from "./SideBar.module.css"
-import {useAuth} from "../../context/AuthContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import { FiLogOut } from "react-icons/fi";
 
 function SideBar() {
@@ -42,6 +42,8 @@ function SideBar() {
     return (
         <Sidebar
             collapsed={collapsed}
+            width="190px"
+            collapsedWidth="65px"
             rootStyles={{
                 backgroundColor: Colors.primaryColor,
                 height: "100vh",
@@ -58,7 +60,7 @@ function SideBar() {
             {/* Logo */}
             <div
                 style={{
-                    padding: "20px",
+                    padding: "10px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: collapsed ? "center" : "flex-start",
@@ -81,7 +83,7 @@ function SideBar() {
                 <Menu
                     menuItemStyles={{
                         button: ({ active }) => ({
-                            backgroundColor: active ? "#B19CD9" : undefined,
+                            backgroundColor: active && "#B19CD9",
                         }),
                     }}
                 >
@@ -185,7 +187,7 @@ function SideBar() {
 
                 {!collapsed && (
                     <div>
-                        <p style={{ margin: 0, fontWeight: "bold", fontSize:"10px"}}>
+                        <p style={{ margin: 0, fontWeight: "bold", fontSize: "10px" }}>
                             José Domínguez
                         </p>
                         <p style={{ margin: 0, fontSize: "12px" }}>
@@ -198,15 +200,15 @@ function SideBar() {
                     onClick={handleLogout}
                     style={{
                         borderWidth: "0px",
-                        backgroundColor:"transparent",
+                        backgroundColor: "transparent",
                         width: collapsed ? "auto" : "100%",
-                        display:"flex",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        cursor:"pointer"
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        cursor: "pointer"
                     }}
                 >
-                    <FiLogOut style={{ width: "20px", height: "20px" }}/>
+                    <FiLogOut style={{ width: "20px", height: "20px" }} />
                 </button>
             </div>
 
