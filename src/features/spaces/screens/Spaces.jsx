@@ -1,4 +1,4 @@
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiEye, FiEdit2 } from "react-icons/fi";
 import styles from "../styles/Spaces.module.css";
 import tableStyles from "../styles/SpacesData.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -19,9 +19,7 @@ function Spaces() {
     });
 
     if (isPending) {
-        return (
-            <LoaderCircle />
-        );
+        return <LoaderCircle />;
     }
 
     if (error) {
@@ -31,6 +29,7 @@ function Spaces() {
     return (
         <div className={styles.container}>
             {modalVisible && <NewSpaceModal onClose={() => setModalVisible(false)} />}
+
             <div className={styles.header}>
 
                 <h4>Gestión</h4>
@@ -88,55 +87,82 @@ function Spaces() {
                     <table className={tableStyles.table}>
 
                         <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Ubicación</th>
-                                <th>Capacidad</th>
-                                <th>Estudiantes</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Ubicación</th>
+                            <th>Capacidad</th>
+                            <th>Estudiantes</th>
+                            <th>Disponibilidad</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            {spaces?.content?.map((space) => (
-                                <tr key={space.id}>
-                                    <td>{space.name}</td>
+                        {spaces?.content?.map((space) => (
+                            <tr key={space.id}>
 
-                                    <td>{space.spaceType?.name}</td>
+                                <td>{space.name}</td>
 
-                                    <td>{space.building?.name}</td>
+                                <td>{space.spaceType?.name}</td>
 
-                                    <td>{space.capacity}</td>
+                                <td>{space.building?.name}</td>
 
-                                    <td>
-                                        <span
-                                            className={`${tableStyles.badge} ${tableStyles[
-                                                space.availableForStudents ? "Abierto" : "Restringido"
-                                            ]
-                                                }`}
-                                        >
-                                            {space.availableForStudents ? "Abierto" : "Restringido"}
-                                        </span>
-                                    </td>
+                                <td>{space.capacity}</td>
 
-                                    <td>
-                                        <span
-                                            className={`${tableStyles.badge} ${tableStyles[space.status]
-                                                }`}
-                                        >
-                                            {space.status}
-                                        </span>
-                                    </td>
+                                <td>
+                                    <span
+                                        className={
+                                            space.availableForStudents
+                                                ? tableStyles.abierto
+                                                : tableStyles.restringido
+                                        }
+                                    >
+                                        {space.availableForStudents ? "Abierto" : "Restringido"}
+                                    </span>
+                                </td>
 
-                                    <td>
-                                        <button className={tableStyles.detailsButton}>
-                                            Detalles
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                                <td>
+                                    <span
+                                        className={`${tableStyles.badge} ${
+                                            space.status === "AVAILABLE"
+                                                ? tableStyles.disponible
+                                                : space.status === "IN_USE"
+                                                    ? tableStyles.enUso
+                                                    : tableStyles.mantenimiento
+                                        }`}
+                                    >
+                                        {space.status === "AVAILABLE"
+                                            ? "Disponible"
+                                            : space.status === "IN_USE"
+                                                ? "En uso"
+                                                : "Mantenimiento"}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <label className={tableStyles.switch}>
+                                        <input
+                                            type="checkbox"
+                                            defaultChecked={space.status === "disponible"}
+                                        />
+                                        <span className={tableStyles.slider}></span>
+                                    </label>
+                                </td>
+
+                                <td className={tableStyles.actions}>
+                                    <button className={tableStyles.iconButton}>
+                                        <FiEye />
+                                    </button>
+
+                                    <button className={tableStyles.iconButton}>
+                                        <FiEdit2 />
+                                    </button>
+                                </td>
+
+                            </tr>
+                        ))}
                         </tbody>
 
                     </table>

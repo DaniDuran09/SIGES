@@ -62,11 +62,11 @@
 }
 
 .cancelada {
-    background-color: #f8d7da;
-    color: #6b7280;
+    background-color: #F3F4F6;
+    color: #000000;
 }
 
 .denegada {
-    background-color: #F3F4F6;
-    color: #000000;
+    background-color: #f8d7da;
+    color: #6b7280;
 }

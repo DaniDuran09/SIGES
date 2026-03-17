@@ -58,16 +58,48 @@
 }
 
 .INSTITUTIONAL_STAFF {
-    background-color: #fde7c7;
-    color: #b45309;
-}
-
-.active {
     background-color: #d1f0e8;
     color: #0f766e;
 }
 
-.inactive {
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
     background-color: #e5e7eb;
-    color: #6b7280;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+input:checked + .slider {
+    background-color: #10b981;
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
 }

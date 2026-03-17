@@ -56,11 +56,11 @@
     display: inline-block;
 }
 
-.Abierto {
+.abierto {
     color: #0f766e;
 }
 
-.Restringido {
+.restringido {
     color: #dc2626;
 }
 
@@ -79,16 +79,70 @@
     color: #6b7280;
 }
 
-.detailsButton {
-    padding: 6px 14px;
-    border-radius: 16px;
-    border: 1px solid #e5e7eb;
-    background-color: #ffffff;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+.actions {
+    display: flex;
+    gap: 10px;
 }
 
-.detailsButton:hover {
+.iconButton {
     background-color: #f3f4f6;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconButton svg {
+    width: 16px;
+    height: 16px;
+    color: #374151;
+}
+
+.iconButton:hover {
+    background-color: #e5e7eb;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #d1d5db;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+input:checked + .slider {
+    background-color: #6d5cae;
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
 }

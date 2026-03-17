@@ -2,6 +2,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { FiSearch } from "react-icons/fi";
 import styles from "../styles/Requests.module.css";
 import tableStyles from "../styles/RequestsData.module.css";
+import { FiEye } from "react-icons/fi";
 
 const requestsData = [
     { usuario: 'Carlos Salgado Trujillo', recurso: 'Auditorio principal', fecha: '28 ene 2026', horario: '14:00 - 16:00', tipo: 'Espacio', estado: 'Pendiente', acciones: { aprobar: true, rechazar: true } },
@@ -80,22 +81,9 @@ function Requests() {
                                     </span>
                                 </td>
                                 <td className={tableStyles.actions}>
-                                    <span>pendiente</span>
-                                    {/*item.acciones ?
-                                        <>
-                                            {item.acciones.aprobar && (
-                                                <button className={tableStyles.approve}>✓</button>
-                                            )}
-                                            {item.acciones.rechazar && (
-                                                <button className={tableStyles.reject}>✕</button>
-                                            )}
-                                        </>
-                                        :
-                                        <>
-                                            <text> - </text>
-                                        </>
-                                    */
-                                    }
+                                    <button className={tableStyles.viewButton}>
+                                        <FiEye />
+                                    </button>
                                 </td>
                             </tr>
                         ))}

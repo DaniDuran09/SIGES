@@ -6,12 +6,14 @@ import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 
 function Users() {
-    const { data: b_users, isLoading: b_usersIsLoading, isError: b_usersIsError } = useQuery({
+
+    const { data: b_users, isLoading: b_usersIsLoading } = useQuery({
         queryKey: ["GetUsers"],
         queryFn: () => apiFetch("/users", {
             method: "GET",
         }),
     });
+
     if (b_usersIsLoading) {
         return <LoaderCircle />;
     }
@@ -67,13 +69,13 @@ function Users() {
                         <input className={styles.date} type="datetime-local" />
 
                         <div className={styles.optionAndState}>
-                            <select className={styles.state} id="opciones" name="estado" >
+                            <select className={styles.state}>
                                 <option value="">Estado: Tipo</option>
                                 <option value="activo">Activo</option>
                                 <option value="inactivo">Inactivo</option>
                             </select>
 
-                            <select className={styles.sort} id="opciones" name="tipo">
+                            <select className={styles.sort}>
                                 <option value="">Tipo: Todos</option>
                                 <option value="personal">Personal</option>
                                 <option value="estudiante">Estudiante</option>
@@ -91,42 +93,52 @@ function Users() {
                 <table className={tableStyles.table}>
 
                     <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Matricula</th>
-                            <th>correo</th>
-                            <th>Telefono</th>
-                            <th>Estatus</th>
-                        </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Matrícula</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
+                    </tr>
                     </thead>
 
                     <tbody>
-                        {b_users?.content.map((user) => (
-                            <tr key={user.id}>
-                                <td>{user.firstName + " " + user.lastName}</td>
+                    {b_users?.content.map((user) => (
+                        <tr key={user.id}>
 
-                                <td>
-                                    <span className={`${tableStyles.badge} ${tableStyles[user.role]}`}>
-                                        {user.role}
-                                    </span>
-                                </td>
+                            <td>{user.firstName + " " + user.lastName}</td>
 
-                                <td>{user.registrationNumber}</td>
-                                <td>{user.email}</td>
-                                <td>{user.phoneNumber}</td>
-
-                                <td>
-                                    {/*
-                                    <span className={`${tableStyles.badge} ${tableStyles[user.status]}`}
+                            <td>
+                                    <span
+                                        className={`${tableStyles.badge} ${
+                                            user.role === "ADMIN"
+                                                ? tableStyles.ADMIN
+                                                : user.role === "STUDENT"
+                                                    ? tableStyles.STUDENT
+                                                    : tableStyles.INSTITUTIONAL_STAFF
+                                        }`}
                                     >
-                                        {user.status}
+                                        {user.role === "STUDENT" ? "Estudiante" : "Personal"}
                                     </span>
-                                */}
+                            </td>
 
-                                </td>
-                            </tr>
-                        ))}
+                            <td>{user.registrationNumber}</td>
+                            <td>{user.email}</td>
+                            <td>{user.phoneNumber}</td>
+
+                            <td>
+                                <label className={tableStyles.switch}>
+                                    <input
+                                        type="checkbox"
+                                        defaultChecked={user.active}
+                                    />
+                                    <span className={tableStyles.slider}></span>
+                                </label>
+                            </td>
+
+                        </tr>
+                    ))}
                     </tbody>
 
                 </table>

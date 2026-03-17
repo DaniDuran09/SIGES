@@ -85,32 +85,40 @@ function Equipments() {
                     </thead>
 
                     <tbody>
-                    {b_equipments.content.map((equipment, index) => (
-                        <tr key={index}>
-                            <td>{equipment.name}</td>
-                            <td>{equipment.spaceAttached?.spaceType?.name}</td>
-                            <td>{equipment.inventoryIdNum}</td>
-                            <td>{equipment.spaceAttached?.name}</td>
+                    {b_equipments?.content?.length !== 0 ? (
+                        b_equipments.content.map((equipment, index) => (
+                            <tr key={index}>
+                                <td>{equipment.name}</td>
+                                <td>{equipment.spaceAttached?.spaceType?.name}</td>
+                                <td>{equipment.inventoryIdNum}</td>
+                                <td>{equipment.spaceAttached?.name}</td>
 
-                            <td>
-                                <span className={`${tableStyles.badge} ${tableStyles[equipment.availableForStudents]}`}>
-                                    {equipment.availableForStudents ? "Yes" : "No"}
-                                </span>
-                            </td>
+                                <td>
+                                        <span className={`${tableStyles.badge} ${tableStyles[equipment.availableForStudents]}`}>
+                                            {equipment.availableForStudents ? "Yes" : "No"}
+                                        </span>
+                                </td>
 
-                            <td>
-                                <span className={`${tableStyles.badge} ${tableStyles[equipment.status]}`}>
-                                    {equipment.status}
-                                </span>
-                            </td>
+                                <td>
+                                        <span className={`${tableStyles.badge} ${tableStyles[equipment.status]}`}>
+                                            {equipment.status}
+                                        </span>
+                                </td>
 
-                            <td>
-                                <button className={tableStyles.detailsButton}>
-                                    {equipment.id}
-                                </button>
+                                <td>
+                                    <button className={tableStyles.detailsButton}>
+                                        {equipment.id}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
+                                No hay equipos registrados
                             </td>
                         </tr>
-                    ))}
+                    )}
                     </tbody>
 
                 </table>
