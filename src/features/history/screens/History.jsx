@@ -92,38 +92,44 @@ function History() {
                 </div>
 
                 <div className={tableStyles.wrapper}>
-                    <table className={tableStyles.table}>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Recurso</th>
-                                <th>Fecha de solicitud</th>
-                                <th>Fecha de uso</th>
-                                <th>Estatus</th>
-                                <th>Resuelto por</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {historyData.map((item) => (
-                                <tr key={item.id}>
-                                    <td>{item.id}</td>
-                                    <td className={tableStyles.name}>{item.name}</td>
-                                    <td>{item.resource}</td>
-                                    <td>{item.requestDate}</td>
-                                    <td>{item.useDate}</td>
-                                    <td>
-                                        <span className={`${tableStyles.badge} ${tableStyles[item.status]}`}>
-                                            {item.status}
-                                        </span>
-                                    </td>
-                                    <td className={tableStyles.resolved}>{item.resolvedBy}</td>
+                    {historyData.length === 0 ? (
+                        <div className={tableStyles.empty}>
+                            <p>No hay historial</p>
+                        </div>
+                    ) : (
+                        <table className={tableStyles.table}>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Recurso</th>
+                                    <th>Fecha de solicitud</th>
+                                    <th>Fecha de uso</th>
+                                    <th>Estatus</th>
+                                    <th>Resuelto por</th>
                                 </tr>
-                            ))}
-                        </tbody>
+                            </thead>
 
-                    </table>
+                            <tbody>
+                                {historyData.map((item) => (
+                                    <tr key={item.id}>
+                                        <td>{item.id}</td>
+                                        <td className={tableStyles.name}>{item.name}</td>
+                                        <td>{item.resource}</td>
+                                        <td>{item.requestDate}</td>
+                                        <td>{item.useDate}</td>
+                                        <td>
+                                            <span className={`${tableStyles.badge} ${tableStyles[item.status]}`}>
+                                                {item.status}
+                                            </span>
+                                        </td>
+                                        <td className={tableStyles.resolved}>{item.resolvedBy}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+
+                        </table>
+                    )}
                 </div>
 
             </div>

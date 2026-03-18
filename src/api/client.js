@@ -29,11 +29,11 @@ export const apiFetch = async (endpoint, options = {}) => {
     });
 
     if (response.status === 401 || response.status === 403) {
-        throw new Error("ERROR");
+        throw new Error("Usuario o contraseña incorrectos");
     }
 
     if (!response.ok) {
-        throw new Error("Error en la petición");
+        throw new Error(response.message || "Error en la petición");
     }
 
     return response.json();
