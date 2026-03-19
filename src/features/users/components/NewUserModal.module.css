@@ -250,3 +250,30 @@
         flex-direction: column;
     }
 }
+
+.requiredStar {
+    color: #F87171;
+    margin-left: 2px;
+}
+
+.errorText {
+    color: #DC2626;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.generateButton {
+    background: none;
+    border: none;
+    color: #6B5B95;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    text-decoration: underline;
+}
+
+.generateButton:hover {
+    color: #5A4A81;
+}

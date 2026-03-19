@@ -16,7 +16,7 @@ function Spaces() {
 
     const { data: b_types, isPending: b_typesIsPending, error: b_typesIsError } = useQuery({
         queryKey: ["GetTypeSpaces"],
-        queryFn: () => apiFetch("/spacetypes", {
+        queryFn: () => apiFetch("/space-types", {
             method: 'GET',
         })
     })
