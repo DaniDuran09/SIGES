@@ -8,22 +8,42 @@ import { useState } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 
 function Spaces() {
-
     const [modalVisible, setModalVisible] = useState(false);
+    const [searchSpace, setSearchSpace] = useState('');
+    const [state, setState] = useState('ALL');
+    const [type, setType] = useState('');
 
-    const { data: spaces, isPending, error } = useQuery({
-        queryKey: ["GetSpaces"],
-        queryFn: () => apiFetch("/spaces", {
-            method: "GET",
-        }),
+    const { data: b_types } = useQuery({
+        queryKey: ["GetTypeSpaces"],
+        queryFn: () =>
+            apiFetch("/spacetypes", {
+                method: "GET",
+            }),
     });
 
-    if (isPending) {
-        return <LoaderCircle />;
-    }
+    const {
+        data: b_spaces,
+        isPending: b_spacesIsPending,
+        error: b_spacesIsError,
+    } = useQuery({
+        queryKey: ["GetSpaces", searchSpace, state, type],
+        queryFn: () =>
+            apiFetch("/spaces", {
+                method: "GET",
+                params: {
+                    searchQuery: searchSpace,
+                    showMode: state,
+                    buildingId: type,
+                },
+            }),
+    });
 
-    if (error) {
-        return <div className={styles.container}>Error: {error.message}</div>;
+    if (b_spacesIsError) {
+        return (
+            <div className={styles.container}>
+                Error: {b_spacesIsError.message}
+            </div>
+        );
     }
 
     return (
@@ -31,7 +51,6 @@ function Spaces() {
             {modalVisible && <NewSpaceModal onClose={() => setModalVisible(false)} />}
 
             <div className={styles.header}>
-
                 <h4>Gestión</h4>
 
                 <div className={styles.headerRow}>
@@ -46,131 +65,126 @@ function Spaces() {
                 </div>
 
                 <div className={styles.searchBar}>
-
                     <div className={styles.searchContainer}>
                         <FiSearch className={styles.searchIcon} />
                         <input
                             className={styles.search}
                             type="search"
                             placeholder="Buscar espacio..."
+                            value={searchSpace}
+                            onChange={(e) => setSearchSpace(e.target.value)}
                         />
                     </div>
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
-                            <select className={styles.state}>
+                            <select
+                                className={styles.state}
+                                value={type}
+                                onChange={(e) => setType(e.target.value)}
+                            >
                                 <option value="">Tipo: Todos</option>
-                                <option value="Auditorio">Auditorio</option>
-                                <option value="Sala">Sala</option>
-                                <option value="Laboratorio">Laboratorio</option>
+                                {b_types?.map((t) => (
+                                    <option key={t.id} value={t.id}>
+                                        {t.name}
+                                    </option>
+                                ))}
                             </select>
 
-                            <select className={styles.sort}>
-                                <option value="">Estado: Todos</option>
-                                <option value="disponible">Disponible</option>
-                                <option value="enUso">En uso</option>
-                                <option value="mantenimiento">Mantenimiento</option>
+                            <select
+                                className={styles.sort}
+                                value={state}
+                                onChange={(e) => setState(e.target.value)}
+                            >
+                                <option value="ALL">Estado: Todos</option>
+                                <option value="ACTIVE">Activo</option>
+                                <option value="INACTIVE">Inactivo</option>
                             </select>
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
-            <div className={tableStyles.wrapper}>
-                <table className={tableStyles.table}>
-
-                    <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Ubicación</th>
-                        <th>Capacidad</th>
-                        <th>Estudiantes</th>
-                        <th>Disponibilidad</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {spaces?.content?.length > 0 ? (
-                        spaces.content.map((space) => (
-                            <tr key={space.id}>
-
-                                <td>{space.name}</td>
-
-                                <td>{space.spaceType?.name}</td>
-
-                                <td>{space.building?.name}</td>
-
-                                <td>{space.capacity}</td>
-
-                                <td>
-                                    <span
-                                        className={
-                                            space.availableForStudents
-                                                ? tableStyles.abierto
-                                                : tableStyles.restringido
-                                        }
-                                    >
-                                        {space.availableForStudents ? "Abierto" : "Restringido"}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <span
-                                        className={`${tableStyles.badge} ${
-                                            space.status === "AVAILABLE"
-                                                ? tableStyles.disponible
-                                                : space.status === "IN_USE"
-                                                    ? tableStyles.enUso
-                                                    : tableStyles.mantenimiento
-                                        }`}
-                                    >
-                                        {space.status === "AVAILABLE"
-                                            ? "Disponible"
-                                            : space.status === "IN_USE"
-                                                ? "En uso"
-                                                : "Mantenimiento"}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <label className={tableStyles.switch}>
-                                        <input
-                                            type="checkbox"
-                                            defaultChecked={space.status === "disponible"}
-                                        />
-                                        <span className={tableStyles.slider}></span>
-                                    </label>
-                                </td>
-
-                                <td className={tableStyles.actions}>
-                                    <button className={tableStyles.iconButton}>
-                                        <FiEye />
-                                    </button>
-
-                                    <button className={tableStyles.iconButton}>
-                                        <FiEdit2 />
-                                    </button>
-                                </td>
-
-                            </tr>
-                        ))
+            {b_spacesIsPending ? (
+                <LoaderCircle />
+            ) : (
+                <div className={tableStyles.wrapper}>
+                    {!b_spaces?.content || b_spaces.content.length === 0 ? (
+                        <div className={tableStyles.empty}>
+                            <p>No hay espacios registrados</p>
+                        </div>
                     ) : (
-                        <tr>
-                            <td colSpan="8" style={{ textAlign: "center", padding: "20px" }}>
-                                No hay espacios registrados
-                            </td>
-                        </tr>
+                        <table className={tableStyles.table}>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Ubicación</th>
+                                    <th>Capacidad</th>
+                                    <th>Estudiantes</th>
+                                    <th>Disponibilidad</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {b_spaces.content.map((space) => (
+                                    <tr key={space.id}>
+                                        <td>{space.name}</td>
+                                        <td>{space.spaceType?.name || '—'}</td>
+                                        <td>{space.building?.name || '—'}</td>
+                                        <td>{space.capacity ?? '—'}</td>
+
+                                        <td>
+                                            <span
+                                                className={`${tableStyles.badge} ${
+                                                    space.availableForStudents
+                                                        ? tableStyles.abierto
+                                                        : tableStyles.restringido
+                                                }`}
+                                            >
+                                                {space.availableForStudents ? "Abierto" : "Restringido"}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <label className={tableStyles.switch}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={space.status === "AVAILABLE"}
+                                                    readOnly
+                                                />
+                                                <span className={tableStyles.slider}></span>
+                                            </label>
+                                        </td>
+
+                                        <td>
+                                            <span
+                                                className={`${tableStyles.badge} ${
+                                                    tableStyles[space.status] || ''
+                                                }`}
+                                            >
+                                                {space.status}
+                                            </span>
+                                        </td>
+
+                                        <td className={tableStyles.actions}>
+                                            <button className={tableStyles.iconButton}>
+                                                <FiEye />
+                                            </button>
+
+                                            <button className={tableStyles.iconButton}>
+                                                <FiEdit2 />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     )}
-                    </tbody>
-
-                </table>
-            </div>
-
+                </div>
+            )}
         </div>
     );
 }

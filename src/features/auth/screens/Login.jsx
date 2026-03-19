@@ -4,7 +4,7 @@ import styles from '../styles/Login.module.css';
 import { useMutation } from '@tanstack/react-query';
 import { apiFetch } from '../../../api/client';
 import { useAuth } from '../../../context/AuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 
 function Login() {
@@ -12,18 +12,9 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [textButton, setTextButton] = useState("Iniciar Sesión");
-    const { accessToken, login, } = useAuth();
+    const [localError, setLocalError] = useState('');
+    const { login } = useAuth();
     const navigate = useNavigate();
-
-    const handleLogin = (e) => {
-        e.preventDefault();
-        setTextButton("Cargando...");
-        mutation.mutate({
-            identifier: email.trim(),
-            password: password.trim()
-        });
-
-    };
 
     const mutation = useMutation({
         mutationFn: (credentials) =>
@@ -37,16 +28,30 @@ function Login() {
             setTextButton("Iniciar Sesión");
         },
         onError: (error) => {
-            console.log("Error", error.message);
             setTextButton("Iniciar Sesión");
         }
     });
 
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        if (!email.trim() || !password.trim()) {
+            setLocalError("Ingrese su usuario y contraseña");
+            return;
+        }
+
+        setLocalError('');
+        setTextButton("Cargando...");
+
+        mutation.mutate({
+            identifier: email.trim(),
+            password: password.trim()
+        });
+    };
+
     return (
         <div className={styles.pageContainer}>
-
             <div className={styles.loginCard}>
-
                 <div className={styles.header}>
                     <div className={styles.logoBox}>
                         <span className={styles.logoText}>S</span>
@@ -55,23 +60,27 @@ function Login() {
                     <p className={styles.subtitle}>Sistema de Gestión de Equipos y Espacios</p>
                 </div>
 
-                <form
-                    className={styles.form}
-                    onSubmit={handleLogin}
-                >
+                <form className={styles.form} onSubmit={handleLogin}>
+                    {localError && (
+                        <Alert severity="error">
+                            {localError}
+                        </Alert>
+                    )}
+
                     {mutation.error && (
                         <Alert severity="error">
                             {mutation.error.message}
                         </Alert>
                     )}
+
                     <div className={styles.inputGroup}>
-                        <label className={styles.label}>Identificador</label>
+                        <label className={styles.label}>Usuario / Correo electronico</label>
                         <div className={styles.inputWrapper}>
                             <HiOutlineMail className={styles.icon} />
                             <input
                                 type="text"
                                 className={styles.input}
-                                placeholder="Ejemplo: correo electronico o usuario"
+                                placeholder="Usuario / Correo electronico"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -99,21 +108,18 @@ function Login() {
                         </div>
                     </div>
 
-                    {/* 
-                    <div className={styles.formFooter}>
-                        <label className={styles.rememberMe}>
-                            <input type="checkbox" className={styles.checkbox} />
-                            <span>Recordarme</span>
-                        </label>
+                    <div className={styles.inputGroup}>
                         <a className={styles.forgotPassword}>
                             ¿Olvidaste tu contraseña?
                         </a>
                     </div>
-                    */}
 
-                    <button type="submit" className={styles.loginButton} //disabled={!mutation.isPending} 
+                    <button
+                        type="submit"
+                        className={styles.loginButton}
+                        disabled={mutation.isPending}
                     >
-                        {textButton}
+                        {mutation.isPending ? "Cargando..." : textButton}
                     </button>
                 </form>
             </div>
