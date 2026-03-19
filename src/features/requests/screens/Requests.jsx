@@ -57,18 +57,19 @@ function Requests() {
             <div className={tableStyles.wrapper}>
                 <table className={tableStyles.table}>
                     <thead>
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Recurso</th>
-                            <th>Fecha</th>
-                            <th>Horario</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Recurso</th>
+                        <th>Fecha</th>
+                        <th>Horario</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {requestsData.map((item, index) => (
+                    {requestsData.length > 0 ? (
+                        requestsData.map((item, index) => (
                             <tr key={index}>
                                 <td className={tableStyles.usuario}>{item.usuario}</td>
                                 <td>{item.recurso}</td>
@@ -76,9 +77,9 @@ function Requests() {
                                 <td>{item.horario}</td>
                                 <td>{item.tipo}</td>
                                 <td>
-                                    <span className={`${tableStyles.badge} ${tableStyles[item.estado.toLowerCase()]}`}>
-                                        {item.estado}
-                                    </span>
+                                        <span className={`${tableStyles.badge} ${tableStyles[item.estado.toLowerCase()]}`}>
+                                            {item.estado}
+                                        </span>
                                 </td>
                                 <td className={tableStyles.actions}>
                                     <button className={tableStyles.viewButton}>
@@ -86,7 +87,14 @@ function Requests() {
                                     </button>
                                 </td>
                             </tr>
-                        ))}
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
+                                No hay solicitudes registradas
+                            </td>
+                        </tr>
+                    )}
                     </tbody>
                 </table>
             </div>

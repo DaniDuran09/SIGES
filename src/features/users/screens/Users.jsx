@@ -104,12 +104,13 @@ function Users() {
                     </thead>
 
                     <tbody>
-                    {b_users?.content.map((user) => (
-                        <tr key={user.id}>
+                    {b_users?.content?.length > 0 ? (
+                        b_users.content.map((user) => (
+                            <tr key={user.id}>
 
-                            <td>{user.firstName + " " + user.lastName}</td>
+                                <td>{user.firstName + " " + user.lastName}</td>
 
-                            <td>
+                                <td>
                                     <span
                                         className={`${tableStyles.badge} ${
                                             user.role === "ADMIN"
@@ -121,24 +122,31 @@ function Users() {
                                     >
                                         {user.role === "STUDENT" ? "Estudiante" : "Personal"}
                                     </span>
+                                </td>
+
+                                <td>{user.registrationNumber}</td>
+                                <td>{user.email}</td>
+                                <td>{user.phoneNumber}</td>
+
+                                <td>
+                                    <label className={tableStyles.switch}>
+                                        <input
+                                            type="checkbox"
+                                            defaultChecked={user.active}
+                                        />
+                                        <span className={tableStyles.slider}></span>
+                                    </label>
+                                </td>
+
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                                No hay usuarios registrados
                             </td>
-
-                            <td>{user.registrationNumber}</td>
-                            <td>{user.email}</td>
-                            <td>{user.phoneNumber}</td>
-
-                            <td>
-                                <label className={tableStyles.switch}>
-                                    <input
-                                        type="checkbox"
-                                        defaultChecked={user.active}
-                                    />
-                                    <span className={tableStyles.slider}></span>
-                                </label>
-                            </td>
-
                         </tr>
-                    ))}
+                    )}
                     </tbody>
 
                 </table>

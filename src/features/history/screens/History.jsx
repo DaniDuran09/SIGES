@@ -94,19 +94,20 @@ function History() {
                 <div className={tableStyles.wrapper}>
                     <table className={tableStyles.table}>
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Recurso</th>
-                                <th>Fecha de solicitud</th>
-                                <th>Fecha de uso</th>
-                                <th>Estatus</th>
-                                <th>Resuelto por</th>
-                            </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Recurso</th>
+                            <th>Fecha de solicitud</th>
+                            <th>Fecha de uso</th>
+                            <th>Estatus</th>
+                            <th>Resuelto por</th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            {historyData.map((item) => (
+                        {historyData.length > 0 ? (
+                            historyData.map((item) => (
                                 <tr key={item.id}>
                                     <td>{item.id}</td>
                                     <td className={tableStyles.name}>{item.name}</td>
@@ -114,13 +115,20 @@ function History() {
                                     <td>{item.requestDate}</td>
                                     <td>{item.useDate}</td>
                                     <td>
-                                        <span className={`${tableStyles.badge} ${tableStyles[item.status]}`}>
-                                            {item.status}
-                                        </span>
+                                            <span className={`${tableStyles.badge} ${tableStyles[item.status]}`}>
+                                                {item.status}
+                                            </span>
                                     </td>
                                     <td className={tableStyles.resolved}>{item.resolvedBy}</td>
                                 </tr>
-                            ))}
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
+                                    No hay historial disponible
+                                </td>
+                            </tr>
+                        )}
                         </tbody>
 
                     </table>

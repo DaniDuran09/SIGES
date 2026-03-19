@@ -79,28 +79,24 @@ function Spaces() {
             </div>
 
             <div className={tableStyles.wrapper}>
-                {spaces?.content?.length === 0 ? (
-                    <div className={tableStyles.empty}>
-                        <p>No hay espacios registrados</p>
-                    </div>
-                ) : (
-                    <table className={tableStyles.table}>
+                <table className={tableStyles.table}>
 
-                        <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Ubicación</th>
-                            <th>Capacidad</th>
-                            <th>Estudiantes</th>
-                            <th>Disponibilidad</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Ubicación</th>
+                        <th>Capacidad</th>
+                        <th>Estudiantes</th>
+                        <th>Disponibilidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
 
-                        <tbody>
-                        {spaces?.content?.map((space) => (
+                    <tbody>
+                    {spaces?.content?.length > 0 ? (
+                        spaces.content.map((space) => (
                             <tr key={space.id}>
 
                                 <td>{space.name}</td>
@@ -162,11 +158,17 @@ function Spaces() {
                                 </td>
 
                             </tr>
-                        ))}
-                        </tbody>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="8" style={{ textAlign: "center", padding: "20px" }}>
+                                No hay espacios registrados
+                            </td>
+                        </tr>
+                    )}
+                    </tbody>
 
-                    </table>
-                )}
+                </table>
             </div>
 
         </div>
