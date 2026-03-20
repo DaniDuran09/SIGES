@@ -1,0 +1,33 @@
+.pendingRequestCard {
+    flex-direction: row;
+    min-height: 0;
+    overflow-y: auto;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding-inline: 10px;
+    margin-bottom: 15px;
+}
+
+.applierName {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.infoContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.objectName {
+    font-size: 14px;
+    font-weight: bold;
+    color: #6B5B95;
+}
+
+.date {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+}

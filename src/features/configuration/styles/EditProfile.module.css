@@ -1,0 +1,136 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+h4 {
+    padding-left: 10px;
+    margin: 10px 0;
+}
+
+h1 {
+    font-size: 40px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.returnButton {
+    margin-left: 10px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* CARD */
+.card {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.cardHeader {
+    background: #c7bedb;
+    padding: 15px 20px;
+    border-radius: 10px;
+}
+
+.cardHeader h2 {
+    margin: 0;
+}
+
+
+.cardBody {
+    display: flex;
+    gap: 30px;
+    padding: 30px;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+}
+
+.avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #6B5B95;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    font-weight: bold;
+}
+
+.form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputGroup label {
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #6b7280;
+}
+
+.inputGroup input {
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    padding: 0 10px;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+}
+
+.cancelButton {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    cursor: pointer;
+}
+
+.saveButton {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background: #6B5B95;
+    color: white;
+    cursor: pointer;
+}

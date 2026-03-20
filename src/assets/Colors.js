@@ -1,2 +1,2 @@
-export const Colors = {primaryColor:"#C8A2C8", secondaryColor: "#FFFFFF"}
+export const Colors = { primaryColor: "#E8DFF5", secondaryColor: "#FFFFFF" }
 

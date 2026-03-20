@@ -1,0 +1,64 @@
+.statCard {
+    width: 20%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.statCardTitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
+.statCardNumber {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.statCard p {
+    margin: 5px 0;
+}
+
+.statCardStats {
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+}
+
+
+@media (max-width:1024px) {
+    .statCard {
+        width: 40%;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .statCard {
+        width: 100%;
+    }
+
+    .statCard h1 {
+        font-size: 20px !important;
+        margin: 0;
+    }
+
+    .statCardNumber {
+        font-size: 25px;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .statCardStats {
+        font-size: 8px;
+
+    }
+
+}

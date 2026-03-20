@@ -1,0 +1,124 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+    flex-shrink: 0;
+}
+
+h4 {
+    padding-left: 10px;
+    margin: 10px 0;
+}
+
+h1 {
+    font-size: 40px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.icon {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    min-height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon svg {
+    font-size: 18px;
+}
+
+.purple {
+    background-color: #ede9fe;
+    color: #6d28d9;
+}
+
+.purpleLight {
+    background-color: #ede9fe;
+    color: #7c3aed;
+}
+
+.green {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.red {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #111827;
+}
+
+.card p {
+    font-size: 13px;
+    margin: 2px 0 0 0;
+    color: #6b7280;
+}
+
+@media (max-width: 768px) {
+    .headerRow {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .icon {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        min-height: 45px;
+        aspect-ratio: 1 / 1;
+        flex-shrink: 0;
+    }
+}

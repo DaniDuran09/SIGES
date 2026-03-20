@@ -4,8 +4,12 @@ type loginRequest = {
 }
 
 type loginResponse = {
-    token: string
+    accessToken: string
     refreshToken: string
+    role: string
+    claims: {
+        authority: string
+    }
 }
 
-export { loginRequest, loginResponse }
+export type { loginRequest, loginResponse }
