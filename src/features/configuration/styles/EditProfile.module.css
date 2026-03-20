@@ -55,6 +55,7 @@ h1 {
 .cardHeader {
     background: #c7bedb;
     padding: 15px 20px;
+    border-radius: 10px;
 }
 
 .cardHeader h2 {
