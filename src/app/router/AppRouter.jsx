@@ -20,6 +20,9 @@ import PublicRoute from "../../routes/PublicRoute";
 import EditProfile from "../../features/configuration/screens/EditProfile.jsx";
 import Notifications from "../../features/configuration/screens/Notifications.jsx";
 import AccountRecovery from "../../features/auth/screens/AccountRecovery.jsx";
+import NewPassword from "../../features/auth/screens/NewPassword";
+import UsedLinkError from "../../features/auth/screens/UsedLinkError";
+import ExpiredLinkError from "../../features/auth/screens/ExpiredLinkError";
 
 function AppRouter() {
     return (
@@ -44,11 +47,8 @@ function AppRouter() {
                     <Route path="users" element={<Users />} />
                     <Route path="history" element={<History />} />
                     <Route path="configuration" element={<Configuration />} />
-                    <Route path="EditProfile" element={<EditProfile />}/>
-                    <Route path="Notificactions" element={<Notifications />}/>
-
-
-
+                    <Route path="EditProfile" element={<EditProfile />} />
+                    <Route path="Notificactions" element={<Notifications />} />
                 </Route>
 
                 <Route path="/login"
@@ -59,7 +59,10 @@ function AppRouter() {
                     }
                 />
 
-                <Route path="AccountRecovery" element={<AccountRecovery />}/>
+                <Route path="AccountRecovery" element={<AccountRecovery />} />
+                <Route path="NewPassword" element={<NewPassword />} />
+                <Route path="UsedLinkError" element={<UsedLinkError />} />
+                <Route path="ExpiredLinkError" element={<ExpiredLinkError />} />
                 <Route path="*" element={<Navigate to="/" />} />
 
             </Routes>
