@@ -2,20 +2,65 @@ import styles from '../styles/AccountRecovery.module.css';
 import { useNavigate } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import {useState} from "react";
+import { useMutation } from '@tanstack/react-query';
+import {apiFetch} from "../../../api/client.js";
 
 function AccountRecovery() {
     const navigate = useNavigate();
+
     const [sended, setSend] = useState(false);
     const [alert, setAlert] = useState({});
     const [mail, setMail] = useState('');
 
-    const handleSendMail = (() => {
-        setSend(true);
-        if(mail === ''){setAlert({severity: 'error', text: 'Ingresa un correo valido'});}
-        else{
-            setAlert({severity: 'info', text: 'Correo enviado exitosamente'});
+    const mutation = useMutation({
+        mutationFn: (credentials) =>
+            apiFetch('/password-recovery/request', {
+                method: 'POST',
+                body: JSON.stringify(credentials),
+            }),
+        onSuccess: (data) => {
+           console.log(data)
+        },
+        onError: (error) => {
+            console.log(error);
+
         }
-    })
+    });
+
+    const validateEmail = (email) => {
+        const domain = 'utez.edu.mx';
+        const atSymbolIndex = email.indexOf('@');
+
+        if (atSymbolIndex <= 0 || atSymbolIndex === email.length - 1) {
+            return false;
+        }
+
+        const emailDomain = email.substring(atSymbolIndex + 1);
+
+        const isFromUtez = (emailDomain === domain);
+        return isFromUtez;
+    };
+
+
+    const handleSendMail = () => {
+        try {
+            if (mail === '' || !validateEmail(mail)) {
+                setAlert({ severity: 'error', text: 'Ingresa un correo válido' });
+                return;
+            }
+            mutation.mutate({
+                email: mail.trim(),
+                platform: "WEB"
+            })
+            setSend(true);
+            setAlert({ severity: 'success', text: 'Correo enviado' });
+
+        } catch (e) {
+            console.error(e);
+            setAlert({ severity: 'error', text: 'Ocurrió un error inesperado' });
+        }
+    };
+
 
     return (
         <div className={styles.container}>
