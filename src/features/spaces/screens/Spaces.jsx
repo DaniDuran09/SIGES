@@ -1,4 +1,5 @@
-import { FiPlus, FiSearch, FiEye, FiEdit2 } from "react-icons/fi";
+import { FiPlus, FiSearch, FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/Spaces.module.css";
 import tableStyles from "../styles/SpacesData.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +11,7 @@ import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 
 function Spaces() {
+    const navigate = useNavigate();
     const [modalVisible, setModalVisible] = useState(false);
     const [searchSpace, setSearchSpace] = useState('');
     const [state, setState] = useState('ALL');
@@ -82,6 +84,10 @@ function Spaces() {
                         />
                     </div>
 
+                    <button className={styles.refreshIcon} title="Refrescar">
+                        <FiRefreshCw />
+                    </button>
+
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
                             <select
@@ -137,7 +143,7 @@ function Spaces() {
                             <tbody>
                             {b_spaces.content.map((space) => (
                                 <tr key={space.id}>
-                                    <td>{space.name}</td>
+                                    <td className={tableStyles.projectName}>{space.name}</td>
 
                                     <td>{space.spaceType?.name || '—'}</td>
 
@@ -146,44 +152,42 @@ function Spaces() {
                                     <td>{space.capacity ?? '—'}</td>
 
                                     <td>
-                                            <span
-                                                className={`${tableStyles.badge} ${
-                                                    space.availableForStudents
-                                                        ? tableStyles.Abierto
-                                                        : tableStyles.Restringido
-                                                }`}
-                                            >
-                                                {space.availableForStudents ? "Abierto" : "Restringido"}
-                                            </span>
+                                        <span className={space.availableForStudents ? tableStyles.AbiertoText : tableStyles.RestringidoText}>
+                                            {space.availableForStudents ? "Abierto" : "Restringido"}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span className={`${tableStyles.badge} ${tableStyles[space.status] || ''}`}>
+                                            {space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
+                                        </span>
                                     </td>
 
                                     <td>
                                         <label className={tableStyles.switch}>
                                             <input
                                                 type="checkbox"
-                                                checked={space.status === "AVAILABLE"}
+                                                checked={space.active ?? true}
                                                 readOnly
                                             />
                                             <span className={tableStyles.slider}></span>
                                         </label>
                                     </td>
 
-                                    <td>
-                                            <span
-                                                className={`${tableStyles.badge} ${
-                                                    tableStyles[space.status] || ''
-                                                }`}
-                                            >
-                                                {space.status}
-                                            </span>
-                                    </td>
-
                                     <td className={tableStyles.actions}>
-                                        <button className={tableStyles.iconButton}>
+                                        <button 
+                                            className={tableStyles.iconButton}
+                                            onClick={() => navigate(`/spaces/${space.id}`)}
+                                            title="Ver detalle"
+                                        >
                                             <FiEye />
                                         </button>
 
-                                        <button className={tableStyles.iconButton}>
+                                        <button 
+                                            className={tableStyles.iconButton}
+                                            onClick={() => navigate(`/spaces/edit/${space.id}`)}
+                                            title="Editar espacio"
+                                        >
                                             <FiEdit2 />
                                         </button>
                                     </td>

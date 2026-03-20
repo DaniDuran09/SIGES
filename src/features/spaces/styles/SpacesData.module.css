@@ -1,18 +1,20 @@
 .wrapper {
     flex: 1;
     background-color: #ffffff;
-    border-radius: 20px;
-    border: 1px solid #e9e9ee;
-    padding: 24px;
-    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid #eef0f3;
+    padding: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     min-height: 500px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
+    background-color: white;
 }
 
 .empty {
@@ -25,22 +27,40 @@
 }
 
 .table thead {
-    background-color: #f6f7fb;
+    background-color: #f8fafc;
 }
 
 .table th {
-    text-align: left;
+    text-align: center;
     padding: 18px 16px;
     font-size: 14px;
-    font-weight: 600;
-    color: #6b7280;
+    font-weight: 500;
+    color: #64748B;
+    border-bottom: 2px solid #F1F5F9;
 }
 
 .table td {
     padding: 20px 16px;
     font-size: 14px;
-    border-bottom: 1px solid #f0f0f0;
-    color: #374151;
+    border-bottom: 1px solid #F1F5F9;
+    color: #334155;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.projectName {
+    font-weight: 700;
+    color: #111827;
+}
+
+.AbiertoText {
+    color: #10b981;
+    font-weight: 500;
+}
+
+.RestringidoText {
+    color: #f87171;
+    font-weight: 500;
 }
 
 .table tr:last-child td {
@@ -48,14 +68,14 @@
 }
 
 .table tr:hover {
-    background-color: #fafbff;
+    background-color: #f8fafc;
 }
 
 .badge {
-    padding: 6px 14px;
-    border-radius: 20px;
+    padding: 6px 16px;
+    border-radius: 24px;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
     display: inline-block;
 }
 
@@ -67,24 +87,27 @@
     color: #dc2626;
 }
 
-.disponible {
-    background-color: #d1f0e8;
-    color: #0f766e;
+.AVAILABLE {
+    background-color: #dcfce7;
+    color: #10b981;
 }
 
-.enUso {
+.IN_USE {
     background-color: #fee2e2;
-    color: #dc2626;
+    color: #ef4444;
 }
 
-.mantenimiento {
-    background-color: #e5e7eb;
-    color: #6b7280;
+.MAINTENANCE {
+    background-color: #f3f4f6;
+    color: #4b5563;
 }
 
 .actions {
     display: flex;
     gap: 10px;
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .iconButton {
@@ -142,10 +165,10 @@
     transition: 0.3s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: #6d5cae;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(18px);
 }
