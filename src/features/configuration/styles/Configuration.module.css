@@ -1,85 +1,85 @@
-.wrapper {
-    flex: 1;
-    background-color: #ffffff;
-    border-radius: 20px;
-    border: 1px solid #e9e9ee;
+.container {
     padding: 20px;
-    overflow-y: auto;
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table thead {
-    background-color: #f6f7fb;
-}
-
-.table th {
-    text-align: left;
-    padding: 18px 16px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #6b7280;
-}
-
-.table td {
-    padding: 20px 16px;
-    font-size: 14px;
-    border-bottom: 1px solid #f0f0f0;
-    color: #374151;
-}
-
-.table tr:last-child td {
-    border-bottom: none;
-}
-
-.table tr:hover {
-    background-color: #fafbff;
-}
-
-.badge {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
+.header h4 {
+    color: #9ca3af;
     font-weight: 500;
-    display: inline-block;
+    margin-bottom: 5px;
 }
 
-.Abierto {
-    color: #0f766e;
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #111827;
 }
 
-.Restringido {
-    color: #dc2626;
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 }
 
-.disponible {
-    background-color: #d1f0e8;
-    color: #0f766e;
-}
-
-.enUso {
-    background-color: #fee2e2;
-    color: #dc2626;
-}
-
-.mantenimiento {
-    background-color: #e5e7eb;
-    color: #6b7280;
-}
-
-.detailsButton {
-    padding: 6px 14px;
-    border-radius: 16px;
+.card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
     border: 1px solid #e5e7eb;
+    border-radius: 12px;
     background-color: #ffffff;
-    font-size: 13px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.detailsButton:hover {
-    background-color: #f3f4f6;
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon svg {
+    font-size: 18px;
+}
+
+.purple {
+    background-color: #ede9fe;
+    color: #6d28d9;
+}
+
+.purpleLight {
+    background-color: #ede9fe;
+    color: #7c3aed;
+}
+
+.green {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.red {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #111827;
+}
+
+.card p {
+    font-size: 13px;
+    margin: 2px 0 0 0;
+    color: #6b7280;
 }
