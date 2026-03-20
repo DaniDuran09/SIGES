@@ -63,3 +63,26 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
             --paths "/*"
+
+      - name: Notify deploy
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          EMOJI=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
+          
+          # Convierte "a@mail.com,b@mail.com" → ["a@mail.com","b@mail.com"]
+          TO_JSON=$(echo "${{ secrets.DEPLOY_NOTIFICATION_TO }}" | \
+            tr ',' '\n' | \
+            sed 's/^/"/;s/$/"/' | \
+            paste -sd',' | \
+            sed 's/^/[/;s/$/]/')
+          
+          curl -s -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer ${{ secrets.RESEND_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"from\": \"${{ secrets.DEPLOY_NOTIFICATION_FROM }}\",
+              \"to\": $TO_JSON,
+              \"subject\": \"$EMOJI SIGES Deploy $STATUS\",
+              \"html\": \"<p>Branch <strong>${{ github.ref_name }}</strong> — <strong>$STATUS</strong></p><p>Commit: ${{ github.sha }}</p><p>Por: ${{ github.actor }}</p>\"
+            }"
