@@ -118,6 +118,7 @@ function Equipments() {
                                     <th>Nº Inventario</th>
                                     <th>Edificio</th>
                                     <th>Estudiantes</th>
+                                    <th>Disponibilidad</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -141,18 +142,29 @@ function Equipments() {
                                             <td>
                                                 {getStatusBadge(equipment.status)}
                                             </td>
+                                            <td>
+                                                <label className={tableStyles.switch}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={equipment.availableForStudents}
+                                                        readOnly
+                                                    />
+                                                    <span className={tableStyles.slider}></span>
+                                                </label>
+                                            </td>
+
 
                                             <td>
                                                 <div className={tableStyles.actions}>
-                                                    <button 
-                                                        className={tableStyles.iconButton} 
+                                                    <button
+                                                        className={tableStyles.iconButton}
                                                         title="Ver detalles"
                                                         onClick={() => navigate(`/equipment/${equipment.id}`)}
                                                     >
                                                         <FiEye size={18} />
                                                     </button>
-                                                    <button 
-                                                        className={tableStyles.iconButton} 
+                                                    <button
+                                                        className={tableStyles.iconButton}
                                                         title="Editar equipo"
                                                         onClick={() => navigate(`/equipment/edit/${equipment.id}`)}
                                                     >
@@ -172,10 +184,10 @@ function Equipments() {
                             </tbody>
                         </table>
                     </div>
-                    <Pagination 
-                        currentPage={page} 
-                        totalPages={b_equipments?.totalPages || 0} 
-                        onPageChange={(newPage) => setPage(newPage)} 
+                    <Pagination
+                        currentPage={page}
+                        totalPages={b_equipments?.totalPages || 0}
+                        onPageChange={(newPage) => setPage(newPage)}
                     />
                 </div>
             )}

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import { FiArrowLeft, FiTrash2, FiEdit2 } from "react-icons/fi";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
-import styles from "./EquipmentDetail.module.css";
+import styles from "../styles/EquipmentDetail.module.css";
 
 function EquipmentDetail() {
     const { id } = useParams();

@@ -109,8 +109,6 @@ export const NewEquipmentModal = ({ onClose }) => {
         WEDNESDAY: "Miércoles",
         THURSDAY: "Jueves",
         FRIDAY: "Viernes",
-        SATURDAY: "Sábado",
-        SUNDAY: "Domingo"
     };
 
     const formatTime = (timeStr) => {
@@ -378,8 +376,6 @@ export const NewEquipmentModal = ({ onClose }) => {
                                         <option value="WEDNESDAY">Miércoles</option>
                                         <option value="THURSDAY">Jueves</option>
                                         <option value="FRIDAY">Viernes</option>
-                                        <option value="SATURDAY">Sábado</option>
-                                        <option value="SUNDAY">Domingo</option>
                                     </select>
                                 </div>
                             </div>
