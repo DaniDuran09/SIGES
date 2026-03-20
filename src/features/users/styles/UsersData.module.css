@@ -106,3 +106,33 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(18px);
 }
+
+.actions {
+    display: flex;
+    gap: 10px;
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconButton {
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.iconButton:hover {
+    background-color: #e5e7eb;
+}
+
+.iconButton svg {
+    width: 18px;
+    height: 18px;
+    color: #4b5563;
+}

@@ -1,4 +1,5 @@
 import { FiPlus, FiSearch, FiEye, FiEdit2 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/Spaces.module.css";
 import tableStyles from "../styles/SpacesData.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +11,7 @@ import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 
 function Spaces() {
+    const navigate = useNavigate();
     const [modalVisible, setModalVisible] = useState(false);
     const [searchSpace, setSearchSpace] = useState('');
     const [state, setState] = useState('ALL');
@@ -179,11 +181,19 @@ function Spaces() {
                                     </td>
 
                                     <td className={tableStyles.actions}>
-                                        <button className={tableStyles.iconButton}>
+                                        <button 
+                                            className={tableStyles.iconButton}
+                                            onClick={() => navigate(`/spaces/${space.id}`)}
+                                            title="Ver detalle"
+                                        >
                                             <FiEye />
                                         </button>
 
-                                        <button className={tableStyles.iconButton}>
+                                        <button 
+                                            className={tableStyles.iconButton}
+                                            onClick={() => navigate(`/spaces/edit/${space.id}`)}
+                                            title="Editar espacio"
+                                        >
                                             <FiEdit2 />
                                         </button>
                                     </td>

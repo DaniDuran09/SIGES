@@ -1,0 +1,266 @@
+.container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.header {
+    margin-bottom: 24px;
+}
+
+.header h4 {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerRow h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+}
+
+.backButton:hover {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+/* Main Card */
+.mainCard {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardHeader {
+    background: #E8DFF5;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cardHeader h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.statusBadge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.available {
+    background-color: #d1f0e8;
+    color: #0f766e;
+}
+
+.unavailable {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+/* Content Grid */
+.cardContent {
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+}
+
+@media (max-width: 1024px) {
+    .cardContent {
+        grid-template-columns: 1fr;
+    }
+}
+
+.section {
+    margin-bottom: 32px;
+}
+
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.infoItem {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.infoLabel {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.infoValue {
+    color: #111827;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.restrictionAlert {
+    color: #ee6c4d;
+    /* Coral/Orange from mockup */
+}
+
+/* Equipment Tags */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.tag {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: #4b5563;
+}
+
+/* Schedule */
+.scheduleItem {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.scheduleDay h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: #111827;
+}
+
+.scheduleDay p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.deleteIcon {
+    color: #fecaca;
+    cursor: pointer;
+}
+
+/* Right Column Stats */
+.statsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.statCard {
+    background: white;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+}
+
+.statValue {
+    font-size: 32px;
+    font-weight: 800;
+    color: #111827;
+    display: block;
+}
+
+.statLabel {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 8px;
+    display: block;
+}
+
+/* Description & Observations */
+.descriptionBox {
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.observationCard {
+    background: #f5f3ff;
+    border-left: 4px solid #6d28d9;
+    padding: 16px;
+    border-radius: 0 8px 8px 0;
+}
+
+.obsHeader {
+    font-weight: 700;
+    color: #111827;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.obsContent {
+    color: #4b5563;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.plusIcon {
+    background: #f3f4f6;
+    color: #6b7280;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}

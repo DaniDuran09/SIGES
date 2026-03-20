@@ -6,7 +6,11 @@ import Login from "../../features/auth/screens/Login";
 import Home from "../../features/home/screens/Home";
 import Requests from "../../features/requests/screens/Requests";
 import Spaces from "../../features/spaces/screens/Spaces";
+import SpaceDetail from "../../features/spaces/screens/SpaceDetail";
+import EditSpace from "../../features/spaces/screens/EditSpace";
 import Equipment from "../../features/equipment/screens/Equipment";
+import EquipmentDetail from "../../features/equipment/screens/EquipmentDetail";
+import EditEquipment from "../../features/equipment/screens/EditEquipment";
 import Users from "../../features/users/screens/Users";
 import History from "../../features/history/screens/History";
 import Configuration from "../../features/configuration/screens/Configuration";
@@ -31,7 +35,11 @@ function AppRouter() {
                     <Route index element={<Home />} />
                     <Route path="requests" element={<Requests />} />
                     <Route path="spaces" element={<Spaces />} />
+                    <Route path="spaces/:id" element={<SpaceDetail />} />
+                    <Route path="spaces/edit/:id" element={<EditSpace />} />
                     <Route path="equipment" element={<Equipment />} />
+                    <Route path="equipment/:id" element={<EquipmentDetail />} />
+                    <Route path="equipment/edit/:id" element={<EditEquipment />} />
                     <Route path="users" element={<Users />} />
                     <Route path="history" element={<History />} />
                     <Route path="configuration" element={<Configuration />} />

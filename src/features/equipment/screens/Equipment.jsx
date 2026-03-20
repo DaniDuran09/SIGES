@@ -3,6 +3,7 @@ import styles from "../styles/Equipment.module.css";
 import tableStyles from "../styles/EquipmentData.module.css";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import NewEquipmentModal from "../components/NewEquipmentModal";
@@ -13,6 +14,7 @@ function Equipments() {
     const [searchEquipment, setSearchEquipment] = useState('');
     const [state, setState] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const navigate = useNavigate();
     const [page, setPage] = useState(0);
 
     const {
@@ -142,10 +144,18 @@ function Equipments() {
 
                                             <td>
                                                 <div className={tableStyles.actions}>
-                                                    <button className={tableStyles.iconButton} title="Ver detalles">
+                                                    <button 
+                                                        className={tableStyles.iconButton} 
+                                                        title="Ver detalles"
+                                                        onClick={() => navigate(`/equipment/${equipment.id}`)}
+                                                    >
                                                         <FiEye size={18} />
                                                     </button>
-                                                    <button className={tableStyles.iconButton} title="Editar equipo">
+                                                    <button 
+                                                        className={tableStyles.iconButton} 
+                                                        title="Editar equipo"
+                                                        onClick={() => navigate(`/equipment/edit/${equipment.id}`)}
+                                                    >
                                                         <FiEdit2 size={18} />
                                                     </button>
                                                 </div>

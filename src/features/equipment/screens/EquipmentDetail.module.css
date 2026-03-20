@@ -1,0 +1,234 @@
+.container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.header {
+    margin-bottom: 24px;
+}
+
+.header h4 {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerRow h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+}
+
+.backButton:hover {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+/* Main Card */
+.mainCard {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.cardHeader {
+    background: #E8DFF5; /* Project light purple */
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cardHeader h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.statusBadge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.available {
+    background-color: #d1f0e8;
+    color: #0f766e;
+}
+
+.unavailable {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+/* Content Grid */
+.contentGrid {
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 48px;
+}
+
+.infoSection h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 24px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.infoList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.infoItem {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.infoItem span:first-child {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.infoItem span:last-child {
+    color: #111827;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.coralText {
+    color: #ee6c4d !important;
+}
+
+/* Stats Row */
+.statsRow {
+    display: flex;
+    gap: 24px;
+    margin-top: 48px;
+}
+
+.statCard {
+    flex: 1;
+    background: #fcfcfd;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.statValue {
+    display: block;
+    font-size: 32px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.statLabel {
+    font-size: 12px;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+
+/* Specs, Description, etc */
+.detailsGrid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 32px;
+}
+
+.detailBox h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4b5563;
+    margin: 0 0 16px 0;
+    text-transform: uppercase;
+}
+
+.detailBox p {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Specific Equipment sections */
+.observationBox {
+    margin-top: 24px;
+    background: #f3f0ff;
+    border-radius: 12px;
+    padding: 16px;
+    border-left: 4px solid #6d5cae;
+}
+
+.observationHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6d5cae;
+}
+
+@media (max-width: 1024px) {
+    .contentGrid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    
+    .statsRow {
+        margin-top: 32px;
+    }
+}

@@ -85,6 +85,9 @@
 .actions {
     display: flex;
     gap: 10px;
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .iconButton {
