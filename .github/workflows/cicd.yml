@@ -83,6 +83,6 @@ jobs:
             -d "{
               \"from\": \"${{ secrets.DEPLOY_NOTIFICATION_FROM }}\",
               \"to\": $TO_JSON,
-              \"subject\": \"$EMOJI SIGES Deploy $STATUS\",
-              \"html\": \"<p>Branch <strong>${{ github.ref_name }}</strong> — <strong>$STATUS</strong></p><p>Commit: ${{ github.sha }}</p><p>Por: ${{ github.actor }}</p>\"
-            }"
+              \"subject\": \"$EMOJI SIGES Frontend Deploy $STATUS\",
+              \"html\": \"<p>🖥️ <strong>Frontend</strong> — Branch <strong>${{ github.ref_name }}</strong> — <strong>$STATUS</strong></p><p>Commit: ${{ github.sha }}</p><p>Por: ${{ github.actor }}</p>\"
+          }"
