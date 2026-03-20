@@ -29,11 +29,7 @@ function Equipments() {
     });
 
     if (error) {
-        return (
-            <div className={styles.container}>
-                Error: {error.message}
-            </div>
-        );
+        return <div className={styles.container}>Error: {error.message}</div>;
     }
 
     return (
@@ -85,64 +81,56 @@ function Equipments() {
                 <LoaderCircle />
             ) : (
                 <div className={tableStyles.wrapper}>
-                    {!b_equipments?.content || b_equipments.content.length === 0 ? (
-                        <div className={tableStyles.empty}>
-                            <p>No hay equipos registrados</p>
-                        </div>
-                    ) : (
-                        <table className={tableStyles.table}>
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Tipo</th>
-                                    <th>No°Inventario</th>
-                                    <th>Espacio Asociado</th>
-                                    <th>Estudiantes</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
+                    <table className={tableStyles.table}>
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>No°Inventario</th>
+                            <th>Espacio Asociado</th>
+                            <th>Estdiantes</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
 
-                            <tbody>
-                                {b_equipments.content.map((equipment) => (
-                                    <tr key={equipment.id}>
-                                        <td>{equipment.name}</td>
-                                        <td>{equipment.spaceAttached?.spaceType?.name || '—'}</td>
-                                        <td>{equipment.inventoryIdNum || '—'}</td>
-                                        <td>{equipment.spaceAttached?.name || '—'}</td>
+                        <tbody>
+                        {b_equipments?.content?.length !== 0 ? (
+                            b_equipments.content.map((equipment) => (
+                                <tr key={equipment.id}>
+                                    <td>{equipment.name}</td>
+                                    <td>{equipment.spaceAttached?.spaceType?.name}</td>
+                                    <td>{equipment.inventoryIdNum}</td>
+                                    <td>{equipment.spaceAttached?.name}</td>
 
-                                        <td>
-                                            <span
-                                                className={`${tableStyles.badge} ${
-                                                    equipment.availableForStudents
-                                                        ? tableStyles.true
-                                                        : tableStyles.false
-                                                }`}
-                                            >
+                                    <td>
+                                            <span className={`${tableStyles.badge} ${tableStyles[equipment.availableForStudents]}`}>
                                                 {equipment.availableForStudents ? "Yes" : "No"}
                                             </span>
-                                        </td>
+                                    </td>
 
-                                        <td>
-                                            <span
-                                                className={`${tableStyles.badge} ${
-                                                    tableStyles[equipment.status] || ''
-                                                }`}
-                                            >
+                                    <td>
+                                            <span className={`${tableStyles.badge} ${tableStyles[equipment.status]}`}>
                                                 {equipment.status}
                                             </span>
-                                        </td>
+                                    </td>
 
-                                        <td>
-                                            <button className={tableStyles.detailsButton}>
-                                                {equipment.id}
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                    <td>
+                                        <button className={tableStyles.detailsButton}>
+                                            {equipment.id}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
+                                    No hay equipos registrados
+                                </td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </table>
                 </div>
             )}
         </div>
