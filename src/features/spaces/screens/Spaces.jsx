@@ -6,12 +6,15 @@ import { apiFetch } from "../../../api/client";
 import { NewSpaceModal } from "../components/NewSpaceModal";
 import { useState } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
+import { Alert } from "@mui/material";
+import Pagination from "../../../assets/components/Pagination";
 
 function Spaces() {
     const [modalVisible, setModalVisible] = useState(false);
     const [searchSpace, setSearchSpace] = useState('');
     const [state, setState] = useState('ALL');
     const [type, setType] = useState('');
+    const [page, setPage] = useState(0);
 
     const { data: b_types } = useQuery({
         queryKey: ["GetTypeSpaces"],
@@ -26,7 +29,7 @@ function Spaces() {
         isPending: b_spacesIsPending,
         error: b_spacesIsError,
     } = useQuery({
-        queryKey: ["GetSpaces", searchSpace, state, type],
+        queryKey: ["GetSpaces", searchSpace, state, type, page],
         queryFn: () =>
             apiFetch("/spaces", {
                 method: "GET",
@@ -34,12 +37,19 @@ function Spaces() {
                     searchQuery: searchSpace,
                     showMode: state,
                     buildingId: type,
+                    page: page,
+                    size: 20
                 },
             }),
+        retry: (failureCount, error) => error.status !== 404,
     });
 
-    if (b_spacesIsError) {
-        return <div className={styles.container}>Error: {b_spacesIsError.message}</div>;
+    if (b_spacesIsError && b_spacesIsError.status !== 404) {
+        return (
+            <div className={styles.container}>
+                <Alert severity="error">Error al cargar los espacios: {b_spacesIsError.message}</Alert>
+            </div>
+        );
     }
 
     return (
@@ -107,7 +117,7 @@ function Spaces() {
                 <div className={tableStyles.wrapper}>
                     {b_spaces?.content?.length === 0 ? (
                         <div className={tableStyles.empty}>
-                            <p>No hay espacios registrados</p>
+                            <p>No se encontraron registros</p>
                         </div>
                     ) : (
                         <table className={tableStyles.table}>
@@ -182,6 +192,11 @@ function Spaces() {
                             </tbody>
                         </table>
                     )}
+                    <Pagination 
+                        currentPage={page} 
+                        totalPages={b_spaces?.totalPages || 0} 
+                        onPageChange={(newPage) => setPage(newPage)} 
+                    />
                 </div>
             )}
         </div>

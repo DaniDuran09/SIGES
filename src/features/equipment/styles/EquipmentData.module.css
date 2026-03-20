@@ -3,32 +3,49 @@
     background-color: #ffffff;
     border-radius: 20px;
     border: 1px solid #e9e9ee;
-    padding: 20px;
-    overflow-y: auto;
+    padding: 24px;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.tableContainer {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: 1px solid #F1F5F9;
+    overflow-x: auto;
+    flex: 1;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
+    background-color: white;
 }
 
 .table thead {
-    background-color: #f6f7fb;
+    background-color: #f8fafc;
 }
 
 .table th {
-    text-align: left;
+    text-align: center;
     padding: 18px 16px;
     font-size: 14px;
-    font-weight: 600;
-    color: #6b7280;
+    font-weight: 500;
+    color: #64748B;
+    border-bottom: 2px solid #F1F5F9;
 }
 
 .table td {
     padding: 20px 16px;
     font-size: 14px;
-    border-bottom: 1px solid #f0f0f0;
-    color: #374151;
+    border-bottom: 1px solid #F1F5F9;
+    color: #334155;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .table tr:last-child td {
@@ -36,50 +53,69 @@
 }
 
 .table tr:hover {
-    background-color: #fafbff;
+    background-color: #f8fafc;
+}
+
+.equipmentName {
+    font-weight: 600;
+    color: #1E293B;
 }
 
 .badge {
     padding: 6px 14px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     display: inline-block;
 }
 
-.Abierto {
-    color: #0f766e;
+/* Students Availability Styles */
+.statusAbierto {
+    color: #10B981;
 }
 
-.Restringido {
-    color: #dc2626;
+.statusRestringido {
+    color: #F87171;
 }
 
-.disponible {
-    background-color: #d1f0e8;
-    color: #0f766e;
+/* Equipment Status Badge Styles */
+.badgeDisponible {
+    background-color: #D1FAE5;
+    color: #059669;
 }
 
-.enUso {
-    background-color: #fee2e2;
-    color: #dc2626;
+.badgeEnUso {
+    background-color: #FEE2E2;
+    color: #ef4444;
 }
 
-.mantenimiento {
-    background-color: #e5e7eb;
-    color: #6b7280;
+.badgeMantenimiento {
+    background-color: #F1F5F9;
+    color: #64748B;
 }
 
-.detailsButton {
-    padding: 6px 14px;
-    border-radius: 16px;
-    border: 1px solid #e5e7eb;
-    background-color: #ffffff;
-    font-size: 13px;
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid #F1F5F9;
+    background-color: #F8FAF7;
+    color: #64748B;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.detailsButton:hover {
-    background-color: #f3f4f6;
+.iconButton:hover {
+    background-color: #f1f5f9;
+    color: #334155;
+    border-color: #E2E8F0;
 }

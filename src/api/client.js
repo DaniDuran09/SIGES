@@ -33,7 +33,10 @@ export const apiFetch = async (endpoint, options = {}) => {
     }
 
     if (!response.ok) {
-        throw new Error(response.message || "Error en la petición");
+        const errorData = await response.json().catch(() => ({}));
+        const error = new Error(errorData.message || response.statusText || "Error en la petición");
+        error.status = response.status;
+        throw error;
     }
 
     return response.json();
