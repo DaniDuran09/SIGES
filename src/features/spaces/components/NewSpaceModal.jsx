@@ -20,10 +20,18 @@ export const NewSpaceModal = ({ onClose }) => {
     const [spaceDescription, setSpaceDescription] = useState("");
     const [spaceRestricted, setSpaceRestricted] = useState(true);
 
+    const [newEquipment, setNewEquipment] = useState("");
+    const [equipmentList, setEquipmentList] = useState([]);
+
     const [alertInfo, setAlertInfo] = useState(null);
     const [errors, setErrors] = useState({});
 
     const queryClient = useQueryClient();
+
+    const { data: allSpaces } = useQuery({
+        queryKey: ["getAllSpacesValidation"],
+        queryFn: () => apiFetch("/spaces", { method: "GET" })
+    });
 
     const { data: b_types, isLoading: b_typesLoading, error: b_typesError } = useQuery({
         queryKey: ["getSpaceTypes"],
@@ -103,6 +111,17 @@ export const NewSpaceModal = ({ onClose }) => {
         }
     });
 
+    const handleAddEquipment = () => {
+        if (newEquipment.trim() && !equipmentList.includes(newEquipment.trim())) {
+            setEquipmentList([...equipmentList, newEquipment.trim()]);
+            setNewEquipment("");
+        }
+    };
+
+    const handleRemoveEquipment = (index) => {
+        setEquipmentList(equipmentList.filter((_, i) => i !== index));
+    };
+
     const handleAddSpace = () => {
         let newErrors = {};
         if (!spaceName.trim()) newErrors.spaceName = "Este campo es obligatorio";
@@ -116,7 +135,17 @@ export const NewSpaceModal = ({ onClose }) => {
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            setAlertInfo({ type: 'error', text: 'Todos los campos marcados con un asterisco son obligatorios' });
+            setAlertInfo({ type: 'error', text: 'Complete los campos obligatorios' });
+            return;
+        }
+
+        const isDuplicate = allSpaces?.content?.some(s => 
+            s.name.trim().toLowerCase() === spaceName.trim().toLowerCase() && 
+            s.building?.id === parseInt(spaceBuilding)
+        );
+
+        if (isDuplicate) {
+            setAlertInfo({ type: 'error', text: 'Ya existe un espacio con ese nombre en la ubicación seleccionada' });
             return;
         }
 
@@ -125,15 +154,17 @@ export const NewSpaceModal = ({ onClose }) => {
 
         mutationSpace.mutate({
             status: "AVAILABLE",
-            name: spaceName,
-            description: spaceDescription,
+            name: spaceName.trim(),
+            description: spaceDescription.trim(),
             studentsAvailable: !spaceRestricted,
+            availableForStudents: !spaceRestricted,
             buildingId: parseInt(spaceBuilding) || 0,
             availability: [],
             exceptions: [],
             spaceTypeId: parseInt(spaceType) || 0,
             bookInAdvanceDuration: "PT24H",
-            capacity: parseInt(spaceCapacity) || 0
+            capacity: parseInt(spaceCapacity) || 0,
+            equipment: equipmentList
         });
     };
 
@@ -205,7 +236,7 @@ export const NewSpaceModal = ({ onClose }) => {
                         </div>
                         <div className={styles.formGroup}>
                             <label>Capacidad <span className={styles.requiredStar}>*</span></label>
-                            <input type="number" placeholder="Ej. 200" value={spaceCapacity} onChange={(e) => setSpaceCapacity(e.target.value)} />
+                            <input type="text" placeholder="Ej. 200" value={spaceCapacity} onChange={(e) => setSpaceCapacity(e.target.value.replace(/\D/g, ''))} />
                             {errors.spaceCapacity && <span className={styles.errorText}>{errors.spaceCapacity}</span>}
                         </div>
                     </div>
@@ -213,6 +244,26 @@ export const NewSpaceModal = ({ onClose }) => {
                     <div className={styles.formGroup}>
                         <label>Descripción</label>
                         <textarea placeholder="Descripción del espacio..." value={spaceDescription} onChange={(e) => setSpaceDescription(e.target.value)}></textarea>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label>Equipos incluidos</label>
+                        <div className={styles.inputWithButton}>
+                            <input style={{ flex: 1 }} type="text" placeholder="Ej. Proyector, Pizarrón interactivo..." value={newEquipment} onChange={(e) => setNewEquipment(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddEquipment(); } }} />
+                            <button type="button" className={styles.plusButton} onClick={handleAddEquipment}>
+                                <FiPlus size={20} />
+                            </button>
+                        </div>
+                        {equipmentList.length > 0 && (
+                            <ul className={styles.tagList}>
+                                {equipmentList.map((eq, index) => (
+                                    <li key={index} className={styles.tagItem}>
+                                        {eq}
+                                        <button type="button" onClick={() => handleRemoveEquipment(index)}><FiX size={14} /></button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
 
                     <div className={styles.formGroup}>

@@ -5,10 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import { useState } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
+import NewEquipmentModal from "../components/NewEquipmentModal";
 
 function Equipments() {
     const [searchEquipment, setSearchEquipment] = useState('');
     const [state, setState] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
     const {
         data: b_equipments,
@@ -36,13 +38,14 @@ function Equipments() {
 
     return (
         <div className={styles.container}>
+            {modalVisible && <NewEquipmentModal onClose={() => setModalVisible(false)} />}
             <div className={styles.header}>
                 <h4>Gestión</h4>
 
                 <div className={styles.headerRow}>
                     <h1>Equipos</h1>
 
-                    <button className={styles.newRequestButton}>
+                    <button className={styles.newRequestButton} onClick={() => setModalVisible(true)}>
                         <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
                         <h3 className={styles.newRequestText}>
                             Nuevo Equipo
