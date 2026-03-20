@@ -58,6 +58,8 @@ h1 {
 .icon {
     width: 45px;
     height: 45px;
+    min-width: 45px;
+    min-height: 45px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -105,5 +107,18 @@ h1 {
     .headerRow {
         flex-direction: column;
         gap: 15px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .icon {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        min-height: 45px;
+        aspect-ratio: 1 / 1;
+        flex-shrink: 0;
     }
 }

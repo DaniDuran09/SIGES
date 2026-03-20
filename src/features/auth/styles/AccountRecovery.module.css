@@ -1,0 +1,95 @@
+.container {
+    display: flex;
+    place-content: center;
+    min-height: 100vh;
+    background-color: #f3f0f7;
+}
+
+.card {
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: left;
+}
+
+.title {
+    color: #2d3447;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.description {
+    color: #667085;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+}
+
+.inputGroup {
+    margin-bottom: 2rem;
+}
+
+.label {
+    display: block;
+    color: #667085;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input::placeholder {
+    color: #c0c0c0;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.btnCancel {
+    flex: 1;
+    background: white;
+    border: 1px solid #e0e0e0;
+    color: #2d3447;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.btnCancel:hover {
+    background: #f9f9f9;
+}
+
+.btnReset {
+    flex: 1;
+    background-color: #6b5fa3;
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.btnReset:hover {
+    background-color: #584d8a;
+}

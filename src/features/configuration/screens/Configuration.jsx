@@ -8,7 +8,6 @@ function Configuration() {
 
     const navigate = useNavigate();
     const { logout } = useAuth();
-
     const handleLogout = () => {
         logout();
         navigate("/login");

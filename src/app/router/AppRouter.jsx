@@ -19,6 +19,7 @@ import ProtectedRoute from "../../routes/ProtectedRoute";
 import PublicRoute from "../../routes/PublicRoute";
 import EditProfile from "../../features/configuration/screens/EditProfile.jsx";
 import Notifications from "../../features/configuration/screens/Notifications.jsx";
+import AccountRecovery from "../../features/auth/screens/AccountRecovery.jsx";
 
 function AppRouter() {
     return (
@@ -46,6 +47,8 @@ function AppRouter() {
                     <Route path="EditProfile" element={<EditProfile />}/>
                     <Route path="Notificactions" element={<Notifications />}/>
 
+
+
                 </Route>
 
                 <Route path="/login"
@@ -56,6 +59,7 @@ function AppRouter() {
                     }
                 />
 
+                <Route path="AccountRecovery" element={<AccountRecovery />}/>
                 <Route path="*" element={<Navigate to="/" />} />
 
             </Routes>
