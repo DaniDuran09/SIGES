@@ -13,6 +13,8 @@ import Configuration from "../../features/configuration/screens/Configuration";
 import Layout from "../../layout/Layout.jsx";
 import ProtectedRoute from "../../routes/ProtectedRoute";
 import PublicRoute from "../../routes/PublicRoute";
+import EditProfile from "../../features/configuration/screens/EditProfile.jsx";
+import Notifications from "../../features/configuration/screens/Notifications.jsx";
 
 function AppRouter() {
     return (
@@ -33,6 +35,9 @@ function AppRouter() {
                     <Route path="users" element={<Users />} />
                     <Route path="history" element={<History />} />
                     <Route path="configuration" element={<Configuration />} />
+                    <Route path="EditProfile" element={<EditProfile />}/>
+                    <Route path="Notificactions" element={<Notifications />}/>
+
                 </Route>
 
                 <Route path="/login"
