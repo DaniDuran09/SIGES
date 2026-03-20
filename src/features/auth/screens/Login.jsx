@@ -108,8 +108,9 @@ function Login() {
                         </div>
                     </div>
 
-                    <div className={styles.inputGroup}>
-                        <a className={styles.forgotPassword}>
+                    <div className={styles.inputGroup}
+                         onClick={() => navigate("/AccountRecovery")}>
+                        <a className={styles.forgotPassword} >
                             ¿Olvidaste tu contraseña?
                         </a>
                     </div>
