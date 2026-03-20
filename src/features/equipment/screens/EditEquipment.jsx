@@ -5,7 +5,7 @@ import { apiFetch } from "../../../api/client";
 import { FiArrowLeft, FiPlus, FiTrash2 } from "react-icons/fi";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert, Snackbar } from "@mui/material";
-import styles from "./EditEquipment.module.css";
+import styles from "../styles/EditEquipment.module.css";
 
 function EditEquipment() {
     const { id } = useParams();
