@@ -1,18 +1,35 @@
 .container {
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
 }
 
-.header h4 {
-    color: #9ca3af;
-    font-weight: 500;
-    margin-bottom: 5px;
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+    flex-shrink: 0;
 }
 
-.header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 25px;
-    color: #111827;
+h4 {
+    padding-left: 10px;
+    margin: 10px 0;
+}
+
+h1 {
+    font-size: 40px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .cards {
@@ -82,4 +99,11 @@
     font-size: 13px;
     margin: 2px 0 0 0;
     color: #6b7280;
+}
+
+@media (max-width: 768px) {
+    .headerRow {
+        flex-direction: column;
+        gap: 15px;
+    }
 }

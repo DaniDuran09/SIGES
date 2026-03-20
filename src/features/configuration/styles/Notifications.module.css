@@ -1,0 +1,131 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+h4 {
+    padding-left: 10px;
+    margin: 10px 0;
+}
+
+h1 {
+    font-size: 40px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.returnButton {
+    margin-left: 10px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.card {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.cardHeader {
+    background: #c7bedb;
+    padding: 15px 20px;
+}
+
+.cardHeader h2 {
+    margin: 0;
+}
+
+.table {
+    padding: 20px;
+    background: #f3f4f6;
+}
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px;
+    padding: 10px 15px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 10px;
+}
+
+.row span {
+    font-size: 14px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch span {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #d1d5db;
+    border-radius: 20px;
+    transition: 0.2s;
+}
+
+.switch span:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.switch input:checked + span {
+    background: #6B5B95;
+}
+
+.switch input:checked + span:before {
+    transform: translateX(18px);
+}
