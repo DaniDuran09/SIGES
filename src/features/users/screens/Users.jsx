@@ -7,12 +7,14 @@ import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { useState } from "react";
 import NewUserModal from "../components/NewUserModal";
 import { Alert } from "@mui/material";
+import Pagination from "../../../assets/components/Pagination";
 
 function Users() {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [state, setState] = useState("ALL");
     const [type, setType] = useState("");
+    const [page, setPage] = useState(0);
 
     const handleSetType = (type) => {
         setType(type);
@@ -23,7 +25,7 @@ function Users() {
         isLoading: b_usersIsLoading,
         isError: b_usersIsError,
     } = useQuery({
-        queryKey: ["GetUsers", type, state, search],
+        queryKey: ["GetUsers", type, state, search, page],
         queryFn: () =>
             apiFetch("/users", {
                 method: "GET",
@@ -32,12 +34,19 @@ function Users() {
                     sort: ['firstName,asc', 'lastName,asc'],
                     userTypes: type,
                     search: search,
+                    page: page,
+                    size: 20
                 },
             }),
+        retry: (failureCount, error) => error.status !== 404,
     });
 
-    if (b_usersIsError) {
-        return <Alert severity="error">Error al cargar los usuarios</Alert>;
+    if (b_usersIsError && b_usersIsError.status !== 404) {
+        return (
+            <div className={styles.container}>
+                <Alert severity="error">Error al cargar los usuarios: {b_usersIsError.message}</Alert>
+            </div>
+        );
     }
 
     return (
@@ -96,69 +105,76 @@ function Users() {
             {b_usersIsLoading ? (
                 <LoaderCircle />
             ) : (
-                <div className={tableStyles.wrapper}>
-                    <table className={tableStyles.table}>
-                        <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Matrícula</th>
-                            <th>Correo</th>
-                            <th>Teléfono</th>
-                            <th>Estado</th>
-                        </tr>
-                        </thead>
+                <>
+                    <div className={tableStyles.wrapper}>
+                        <table className={tableStyles.table}>
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Matrícula</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                            </tr>
+                            </thead>
 
-                        <tbody>
-                        {b_users?.content?.length > 0 ? (
-                            b_users.content.map((user) => (
-                                <tr key={user.id}>
-                                    <td>{user.firstName + " " + user.lastName}</td>
+                            <tbody>
+                            {b_users?.content?.length > 0 ? (
+                                b_users.content.map((user) => (
+                                    <tr key={user.id}>
+                                        <td>{user.firstName + " " + user.lastName}</td>
 
-                                    <td>
-                                            <span
-                                                className={`${tableStyles.badge} ${
-                                                    user.role === "ADMIN"
-                                                        ? tableStyles.ADMIN
+                                        <td>
+                                                <span
+                                                    className={`${tableStyles.badge} ${
+                                                        user.role === "ADMIN"
+                                                            ? tableStyles.ADMIN
+                                                            : user.role === "STUDENT"
+                                                                ? tableStyles.STUDENT
+                                                                : tableStyles.INSTITUTIONAL_STAFF
+                                                    }`}
+                                                >
+                                                    {user.role === "ADMIN"
+                                                        ? "Administrador"
                                                         : user.role === "STUDENT"
-                                                            ? tableStyles.STUDENT
-                                                            : tableStyles.INSTITUTIONAL_STAFF
-                                                }`}
-                                            >
-                                                {user.role === "ADMIN"
-                                                    ? "Administrador"
-                                                    : user.role === "STUDENT"
-                                                        ? "Estudiante"
-                                                        : "Personal"}
-                                            </span>
-                                    </td>
+                                                            ? "Estudiante"
+                                                            : "Personal"}
+                                                </span>
+                                        </td>
 
-                                    <td>{user.registrationNumber || user.employeeNumber || '—'}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.phoneNumber}</td>
+                                        <td>{user.registrationNumber || user.employeeNumber || '—'}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.phoneNumber}</td>
 
-                                    <td>
-                                        <label className={tableStyles.switch}>
-                                            <input
-                                                type="checkbox"
-                                                checked={user.enabled ?? user.active}
-                                                readOnly
-                                            />
-                                            <span className={tableStyles.slider}></span>
-                                        </label>
+                                        <td>
+                                            <label className={tableStyles.switch}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={user.enabled ?? user.active}
+                                                    readOnly
+                                                />
+                                                <span className={tableStyles.slider}></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                                        No se encontraron registros
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-                                    No hay usuarios registrados
-                                </td>
-                            </tr>
-                        )}
-                        </tbody>
-                    </table>
-                </div>
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
+                    <Pagination 
+                        currentPage={page} 
+                        totalPages={b_users?.totalPages || 0} 
+                        onPageChange={(newPage) => setPage(newPage)} 
+                    />
+                </>
             )}
         </div>
     );
