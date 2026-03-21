@@ -1,43 +1,24 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 import styles from '../styles/Home.module.css';
 import { FiPlus } from "react-icons/fi";
-import { FaBuilding } from "react-icons/fa";
 import { Colors } from "../../../assets/Colors";
 import { PiBuildingsBold } from "react-icons/pi";
 import StatsComponent from "../components/StatsComponent.jsx";
 import PendingRequestComponent from "../components/PendingRequestComponent.jsx";
 import { NewSpaceModal } from "../../spaces/components/NewSpaceModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client.js";
 import { Alert } from "@mui/material";
 import LoaderCircle from "../../../assets/components/LoaderCircle.jsx";
 
-const pendingRequests = [
-    {
-        ApplierName: 'Juan Perez',
-        objectName: 'Aula 101',
-        date: '2022-01-01'
-    },
-    {
-        ApplierName: 'Maria Lopez',
-        objectName: 'Aula 102',
-        date: '2022-01-02'
-    },
-    {
-        ApplierName: 'Pedro Ramirez',
-        objectName: 'Aula 103',
-        date: '2022-01-03'
-    },
-];
-
 function Home() {
     const [modalVisible, setModalVisible] = useState(false);
     const navigate = useNavigate();
 
     const {
-        data,
+        data: b_reports,
         isPending,
         error
     } = useQuery({
@@ -48,6 +29,12 @@ function Home() {
             }),
         retry: (failureCount, error) => error.status !== 404,
     });
+
+    useEffect(() => {
+        if (b_reports) {
+            console.log("backend reports : ", b_reports);
+        }
+    }, [b_reports]);
 
     if (error && error.status !== 404) {
         return (
@@ -63,32 +50,25 @@ function Home() {
         return <LoaderCircle />;
     }
 
-    const options = data ? [
+    const reports = b_reports ?? {};
+
+    const pendingRequests = [
         {
-            name: 'SOLICITUDES PENDIENTES',
-            number: data.pendingRequests ?? 0,
-            stats: `${data.pendingRequestsPercentage ?? 0}%`,
-            type: (data.pendingRequestsDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
+            ApplierName: 'Juan Perez',
+            objectName: 'Aula 101',
+            date: '2022-01-01'
         },
         {
-            name: 'ESPACIOS DISPONIBLES',
-            number: `${data.availableSpaces ?? 0}/${data.totalSpaces ?? 0}`,
-            stats: `${data.availableSpacesPercentage ?? 0}%`,
-            type: (data.availableSpacesDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
+            ApplierName: 'Maria Lopez',
+            objectName: 'Aula 102',
+            date: '2022-01-02'
         },
         {
-            name: 'EQUIPOS EN USO',
-            number: `${data.inUseEquipments ?? 0}/${data.totalEquipments ?? 0}`,
-            stats: `${data.inUseEquipmentsPercentage ?? 0}%`,
-            type: (data.inUseEquipmentsDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
+            ApplierName: 'Pedro Ramirez',
+            objectName: 'Aula 103',
+            date: '2022-01-03'
         },
-        {
-            name: 'RESERVACIONES HOY',
-            number: data.todayReservations ?? 0,
-            stats: `${(data.todayReservationsDiffAvg ?? 0) >= 0 ? '+' : ''}${data.todayReservationsDiffAvg ?? 0} VS PROMEDIO`,
-            type: (data.todayReservationsDiffAvg ?? 0) >= 0 ? 'positive' : 'negative'
-        },
-    ] : [];
+    ];
 
     return (
         <div className={styles.container}>
@@ -97,13 +77,12 @@ function Home() {
             <h4 style={{ paddingLeft: '10px', margin: '10px 0' }}>Buenos dias</h4>
 
             <div className={styles.topBar}>
-
                 <div className={styles.titleSection}>
                     <h1 className={styles.title}>Panel de control</h1>
                 </div>
                 <div className={styles.actionsSection}>
                     <button className={styles.notificationButton}>
-                        {true && (
+                        {reports.pendingRequests > 0 && (
                             <div style={{ width: '15px', height: '15px', backgroundColor: '#FF9B85', borderRadius: '50%', position: 'absolute', top: '5px', right: '5px' }} />
                         )}
                         <IoMdNotificationsOutline style={{ width: '30px', height: '30px' }} />
@@ -120,9 +99,33 @@ function Home() {
             </div>
 
             <div className={styles.statsGrid}>
-                {options.map((option, index) => (
-                    <StatsComponent key={index} props={option} />
-                ))}
+                <StatsComponent props={{
+                    name: "Solicitudes pendientes",
+                    number: reports.pendingRequests ?? 0,
+                    stats: `${reports.pendingRequestsDiffYesterday ?? 0}`,
+                    type: (reports.pendingRequestsDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
+                }} />
+
+                <StatsComponent props={{
+                    name: "Espacios disponibles",
+                    number: reports.availableSpaces ?? 0,
+                    stats: `${reports.availableSpacesDiffYesterday ?? 0}`,
+                    type: (reports.availableSpacesDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
+                }} />
+
+                <StatsComponent props={{
+                    name: "Equipos en uso",
+                    number: reports.inUseEquipments ?? 0,
+                    stats: `${reports.inUseEquipmentsDiffYesterday ?? 0}`,
+                    type: (reports.inUseEquipmentsDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
+                }} />
+
+                <StatsComponent props={{
+                    name: "Reservaciones hoy",
+                    number: reports.todayReservations ?? 0,
+                    stats: `${reports.todayReservationsDiffAvg ?? 0}`,
+                    type: (reports.todayReservationsDiffAvg ?? 0) >= 0 ? 'positive' : 'negative'
+                }} />
             </div>
 
             <div className={styles.bottomSection}>
@@ -138,41 +141,40 @@ function Home() {
                     ))}
                 </div>
 
-                <div className={styles.quickActionsContainer} >
+                <div className={styles.quickActionsContainer}>
                     <h3>Acciones rapidas</h3>
-                    <div className={styles.quickActionsGrid} >
-                        <button onClick={() => { setModalVisible(true) }} className={styles.quickActionButton} style={{ backgroundColor: Colors.primaryColor }} >
-                            <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
+                    <div className={styles.quickActionsGrid}>
+                        <button onClick={() => { setModalVisible(true) }} className={styles.quickActionButton} style={{ backgroundColor: Colors.primaryColor }}>
+                            <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}>
                                 <PiBuildingsBold size={50} />
                             </div>
-                            <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
+                            <div style={{ flex: 1, flexDirection: 'column' }}>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }}>Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }}>Agregar un nuevo espacio</h2>
                             </div>
                         </button>
 
-                        <button className={styles.quickActionButton} style={{ backgroundColor: '#D4F1E8' }} >
-                            <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
+                        <button className={styles.quickActionButton} style={{ backgroundColor: '#D4F1E8' }}>
+                            <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}>
                                 <PiBuildingsBold size={50} />
                             </div>
-                            <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
+                            <div style={{ flex: 1, flexDirection: 'column' }}>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }}>Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }}>Agregar un nuevo espacio</h2>
                             </div>
                         </button>
 
-                        <button className={styles.quickActionButton} style={{ backgroundColor: '#FFF4D4' }} >
-                            <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}  >
+                        <button className={styles.quickActionButton} style={{ backgroundColor: '#FFF4D4' }}>
+                            <div style={{ flex: 1, display: 'flex', justifyContent: 'left' }}>
                                 <PiBuildingsBold size={50} />
                             </div>
-                            <div style={{ flex: 1, flexDirection: 'column' }} >
-                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Registrar Espacio</h2>
-                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }} >Agregar un nuevo espacio</h2>
+                            <div style={{ flex: 1, flexDirection: 'column' }}>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }}>Registrar Espacio</h2>
+                                <h2 style={{ display: 'flex', justifyContent: 'left', fontSize: '16px' }}>Agregar un nuevo espacio</h2>
                             </div>
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     )
