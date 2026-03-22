@@ -102,28 +102,44 @@ function Home() {
                 <StatsComponent props={{
                     name: "Solicitudes pendientes",
                     number: reports.pendingRequests ?? 0,
-                    stats: `${reports.pendingRequestsDiffYesterday ?? 0}`,
+                    stats: (reports.pendingRequestsDiffYesterday ?? 0) === 0
+                        ? "Sin cambios"
+                        : (reports.pendingRequestsDiffYesterday > 0
+                            ? `+${reports.pendingRequestsDiffYesterday} respecto a ayer`
+                            : `${reports.pendingRequestsDiffYesterday} respecto a ayer`),
                     type: (reports.pendingRequestsDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
                 }} />
 
                 <StatsComponent props={{
                     name: "Espacios disponibles",
                     number: reports.availableSpaces ?? 0,
-                    stats: `${reports.availableSpacesDiffYesterday ?? 0}`,
+                    stats: (reports.availableSpacesDiffYesterday ?? 0) === 0
+                        ? "Sin cambios"
+                        : (reports.availableSpacesDiffYesterday > 0
+                            ? `+${reports.availableSpacesDiffYesterday} respecto a ayer`
+                            : `${reports.availableSpacesDiffYesterday} respecto a ayer`),
                     type: (reports.availableSpacesDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
                 }} />
 
                 <StatsComponent props={{
                     name: "Equipos en uso",
                     number: reports.inUseEquipments ?? 0,
-                    stats: `${reports.inUseEquipmentsDiffYesterday ?? 0}`,
+                    stats: (reports.inUseEquipmentsDiffYesterday ?? 0) === 0
+                        ? "Sin cambios"
+                        : (reports.inUseEquipmentsDiffYesterday > 0
+                            ? `+${reports.inUseEquipmentsDiffYesterday} respecto a ayer`
+                            : `${reports.inUseEquipmentsDiffYesterday} respecto a ayer`),
                     type: (reports.inUseEquipmentsDiffYesterday ?? 0) >= 0 ? 'positive' : 'negative'
                 }} />
 
                 <StatsComponent props={{
                     name: "Reservaciones hoy",
                     number: reports.todayReservations ?? 0,
-                    stats: `${reports.todayReservationsDiffAvg ?? 0}`,
+                    stats: (reports.todayReservationsDiffAvg ?? 0) === 0
+                        ? "Sin cambios"
+                        : (reports.todayReservationsDiffAvg > 0
+                            ? `+${reports.todayReservationsDiffAvg} respecto al promedio`
+                            : `${reports.todayReservationsDiffAvg} respecto al promedio`),
                     type: (reports.todayReservationsDiffAvg ?? 0) >= 0 ? 'positive' : 'negative'
                 }} />
             </div>
