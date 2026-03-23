@@ -8,6 +8,7 @@ import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
+import SearchBar from "../../../assets/components/SearchBar.jsx";
 
 function Requests() {
     const [search, setSearch] = useState("");
@@ -63,16 +64,13 @@ function Requests() {
                 </div>
 
                 <div className={styles.searchBar}>
-                    <div className={styles.searchContainer}>
-                        <FiSearch className={styles.searchIcon} />
-                        <input 
-                            className={styles.search} 
-                            type="search" 
-                            placeholder="Buscar solicitudes..." 
-                            value={search}
-                            onChange={(e) => {setSearch(e.target.value); setPage(0);}}
-                        />
-                    </div>
+
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar Solicitudes..."
+                        value={search}
+                        onChange={(e) =>{setSearch(e.target.value); setPage(0);}}
+                    />
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>

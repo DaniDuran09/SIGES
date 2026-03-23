@@ -10,6 +10,7 @@ import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
+import SearchBar from "../../../assets/components/SearchBar.jsx";
 
 function Spaces() {
     const navigate = useNavigate();
@@ -72,16 +73,12 @@ function Spaces() {
                 </div>
 
                 <div className={styles.searchBar}>
-                    <div className={styles.searchContainer}>
-                        <FiSearch className={styles.searchIcon} />
-                        <input
-                            className={styles.search}
-                            type="search"
-                            placeholder="Buscar espacio..."
-                            value={searchSpace}
-                            onChange={(e) => setSearchSpace(e.target.value)}
-                        />
-                    </div>
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar Espacios..."
+                        value={searchSpace}
+                        onChange={(e) => setSearchSpace(e.target.value)}
+                    />
 
                     <button className={styles.refreshIcon} title="Refrescar">
                         <FiRefreshCw />

@@ -10,6 +10,7 @@ import NewEquipmentModal from "../components/NewEquipmentModal";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
+import SearchBar from "../../../assets/components/SearchBar.jsx";
 
 function Equipments() {
     const [searchEquipment, setSearchEquipment] = useState('');
@@ -76,16 +77,13 @@ function Equipments() {
                 </div>
 
                 <div className={styles.searchBar}>
-                    <div className={styles.searchContainer}>
-                        <FiSearch className={styles.searchIcon} />
-                        <input
-                            className={styles.search}
-                            type="search"
-                            placeholder="Buscar equipo..."
-                            value={searchEquipment}
-                            onChange={(e) => setSearchEquipment(e.target.value)}
-                        />
-                    </div>
+
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar Equipos..."
+                        value={searchEquipment}
+                        onChange={(e) => setSearchEquipment(e.target.value)}
+                    />
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
