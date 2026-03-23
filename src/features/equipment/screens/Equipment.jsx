@@ -9,6 +9,7 @@ import LoaderCircle from "../../../assets/components/LoaderCircle";
 import NewEquipmentModal from "../components/NewEquipmentModal";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
+import PlusButton from "../../../assets/components/PlusButton.jsx";
 
 function Equipments() {
     const [searchEquipment, setSearchEquipment] = useState('');
@@ -68,12 +69,10 @@ function Equipments() {
                 <div className={styles.headerRow}>
                     <h1>Equipos</h1>
 
-                    <button className={styles.newRequestButton} onClick={() => setModalVisible(true)}>
-                        <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
-                        <h3 className={styles.newRequestText}>
-                            Nuevo Equipo
-                        </h3>
-                    </button>
+                    <PlusButton
+                        text="Nuevo Equipo"
+                        onClick={() => setModalVisible(true)}
+                    />
                 </div>
 
                 <div className={styles.searchBar}>

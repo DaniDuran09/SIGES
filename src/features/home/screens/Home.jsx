@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client.js";
 import { Alert } from "@mui/material";
 import LoaderCircle from "../../../assets/components/LoaderCircle.jsx";
+import PlusButton from "../../../assets/components/PlusButton.jsx";
 
 function Home() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -88,12 +89,9 @@ function Home() {
                         <IoMdNotificationsOutline style={{ width: '30px', height: '30px' }} />
                     </button>
                     <div>
-                        <button className={styles.newRequestButton}>
-                            <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
-                            <h3 className={styles.newRequestText}>
-                                Nueva Solicitud
-                            </h3>
-                        </button>
+                        <PlusButton
+                            text="Nueva Solicitud"
+                        />
                     </div>
                 </div>
             </div>

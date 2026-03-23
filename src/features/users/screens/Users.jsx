@@ -8,6 +8,7 @@ import { useState } from "react";
 import NewUserModal from "../components/NewUserModal";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
+import PlusButton from "../../../assets/components/PlusButton.jsx";
 
 function Users() {
     const [open, setOpen] = useState(false);
@@ -59,12 +60,10 @@ function Users() {
                 <div className={styles.headerRow}>
                     <h1>Usuarios</h1>
 
-                    <button className={styles.newRequestButton} onClick={() => setOpen(true)}>
-                        <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
-                        <h3 className={styles.newRequestText}>
-                            Nuevo Usuario
-                        </h3>
-                    </button>
+                    <PlusButton
+                        text="Nuevo Usuario"
+                        onClick={() => setOpen(true)}
+                    />
                 </div>
 
                 <div className={styles.tabs}>

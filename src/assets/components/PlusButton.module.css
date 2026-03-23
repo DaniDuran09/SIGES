@@ -1,0 +1,31 @@
+.PlusButton {
+    background-color: #6B5B95;
+    border-radius: 20px;
+    padding: 0 20px;
+    height: 50px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Esto separa el icono del texto automáticamente */
+
+    /* La magia de la suavidad */
+    transition: background-color 0.3s ease;
+}
+
+/* Solo cambia el color al pasar el mouse */
+.PlusButton:hover {
+    background-color: #8474ac;
+}
+
+.icon {
+    width: 25px;
+    height: 25px;
+    color: white;
+}
+
+.newText {
+    color: white;
+    font-size: 20px;
+    margin: 0;
+}

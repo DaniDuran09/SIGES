@@ -9,6 +9,7 @@ import { useState } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
+import PlusButton from "../../../assets/components/PlusButton.jsx";
 
 function Spaces() {
     const navigate = useNavigate();
@@ -64,12 +65,10 @@ function Spaces() {
                 <div className={styles.headerRow}>
                     <h1>Espacios</h1>
 
-                    <button onClick={() => setModalVisible(true)} className={styles.newRequestButton}>
-                        <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
-                        <h3 className={styles.newRequestText}>
-                            Nuevo espacio
-                        </h3>
-                    </button>
+                    <PlusButton
+                        text="Nuevo Espacio"
+                        onClick={() => setModalVisible(true)}
+                    />
                 </div>
 
                 <div className={styles.searchBar}>
