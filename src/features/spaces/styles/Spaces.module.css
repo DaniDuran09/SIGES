@@ -209,10 +209,23 @@ h1 {
     .searchBar {
         flex-direction: column;
         align-items: stretch;
+
+    }
+
+    Filter{
+        width: 90%;
     }
 
     .title {
         font-size: 32px;
+    }
+    .componentSearch {
+        flex-direction: column;
+        width: 100%;
+    }
+    .optionAndState {
+        width: 100%;
+        justify-content: space-between;
     }
 }
 
@@ -222,10 +235,6 @@ h1 {
         flex: 1;
     }
 
-    .optionAndState {
-        width: 100%;
-        justify-content: space-between;
-    }
 
     .headerRow {
         flex-direction: column;

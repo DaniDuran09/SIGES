@@ -22,3 +22,10 @@
     padding-right: 20px;
     outline: none;
 }
+
+@media (max-width: 1024px) {
+    .searchContainer{
+        width: 100%;
+    }
+
+}

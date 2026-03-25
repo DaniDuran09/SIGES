@@ -11,6 +11,7 @@ import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
+import Filter from "../../../assets/components/Filter.jsx";
 
 function Spaces() {
     const navigate = useNavigate();
@@ -19,6 +20,16 @@ function Spaces() {
     const [state, setState] = useState('ALL');
     const [type, setType] = useState('');
     const [page, setPage] = useState(0);
+
+    const opcionesEstado = [
+        { value: "All", text: "Todos" },
+        { value: "ACTIVE", text: "Activo" },
+        { value: "INACTIVE", text: "Inactivo" }
+    ];
+
+    const opcionesTipo = [
+        { value: "ACTIVE", text: "Aula" }
+    ];
 
     const { data: b_types } = useQuery({
         queryKey: ["GetTypeSpaces"],
@@ -73,6 +84,7 @@ function Spaces() {
                 </div>
 
                 <div className={styles.searchBar}>
+
                     <SearchBar
                         type="search"
                         placeholder="Buscar Espacios..."
@@ -80,34 +92,27 @@ function Spaces() {
                         onChange={(e) => setSearchSpace(e.target.value)}
                     />
 
-                    <button className={styles.refreshIcon} title="Refrescar">
-                        <FiRefreshCw />
-                    </button>
-
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
-                            <select
-                                className={styles.state}
-                                value={type}
-                                onChange={(e) => setType(e.target.value)}
-                            >
-                                <option value="">Tipo: Todos</option>
-                                {b_types?.map((t) => (
-                                    <option key={t.id} value={t.id}>
-                                        {t.name}
-                                    </option>
-                                ))}
-                            </select>
 
-                            <select
-                                className={styles.sort}
+                            <button className={styles.refreshIcon} title="Refrescar">
+                                <FiRefreshCw />
+                            </button>
+
+                            <Filter
+                                label="Tipo"
                                 value={state}
                                 onChange={(e) => setState(e.target.value)}
-                            >
-                                <option value="ALL">Estado: Todos</option>
-                                <option value="ACTIVE">Activo</option>
-                                <option value="INACTIVE">Inactivo</option>
-                            </select>
+                                options={opcionesTipo}
+                            />
+
+                            <Filter
+                                label="Estado"
+                                value={state}
+                                onChange={(e) => setState(e.target.value)}
+                                options={opcionesEstado}
+                            />
+
                         </div>
                     </div>
                 </div>

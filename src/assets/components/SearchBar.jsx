@@ -1,7 +1,7 @@
 import { FiSearch } from "react-icons/fi";
 import styles from "./SearchBar.module.css";
 
-function SearchBar({ value, onChange, placeholder = "Buscar..." }) {
+function SearchBar({ value, onChange, placeholder = "Buscar..."}) {
     return (
         <div className={styles.searchContainer}>
             <FiSearch className={styles.searchIcon} />

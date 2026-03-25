@@ -8,11 +8,19 @@ import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
+import Filter from "../../../assets/components/Filter.jsx";
 
 function History() {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("");
     const [page, setPage] = useState(0);
+
+    const opcionesEstado = [
+        { value: "All", text: "Todos" },
+        { value: "ACTIVE", text: "Activo" },
+        { value: "INACTIVE", text: "Inactivo" }
+
+    ];
 
     const {
         data: b_history,
