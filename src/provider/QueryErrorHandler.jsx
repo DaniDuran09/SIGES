@@ -9,9 +9,9 @@ export function QueryErrorHandler() {
     useEffect(() => {
         const unsubscribe = queryClient.getQueryCache().subscribe(event => {
             const error = event?.query?.state?.error;
-                if(error.status === 401) {
-                    logout();
-                }
+            if (error?.status === 401) {
+                logout();
+            }
         });
 
         return unsubscribe;

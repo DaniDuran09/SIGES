@@ -28,7 +28,7 @@ export const apiFetch = async (endpoint, options = {}) => {
 
     if (response.status === 204) return null;
 
-    if (response.status ) {
+    if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         const error = new Error(errorData.message || response.statusText || "Error en la petición");
         error.status = response.status;
