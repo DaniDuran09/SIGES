@@ -8,6 +8,9 @@ import { useState } from "react";
 import NewUserModal from "../components/NewUserModal";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
+import PlusButton from "../../../assets/components/PlusButton.jsx";
+import SearchBar from "../../../assets/components/SearchBar.jsx";
+import Filter from "../../../assets/components/Filter.jsx";
 
 function Users() {
     const [open, setOpen] = useState(false);
@@ -15,6 +18,13 @@ function Users() {
     const [state, setState] = useState("ALL");
     const [type, setType] = useState("");
     const [page, setPage] = useState(0);
+
+    const opcionesEstado = [
+        { value: "All", text: "Todos" },
+        { value: "ACTIVE", text: "Activo" },
+        { value: "INACTIVE", text: "Inactivo" }
+
+    ];
 
     const handleSetType = (type) => {
         setType(type);
@@ -59,12 +69,10 @@ function Users() {
                 <div className={styles.headerRow}>
                     <h1>Usuarios</h1>
 
-                    <button className={styles.newRequestButton} onClick={() => setOpen(true)}>
-                        <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
-                        <h3 className={styles.newRequestText}>
-                            Nuevo Usuario
-                        </h3>
-                    </button>
+                    <PlusButton
+                        text="Nuevo Usuario"
+                        onClick={() => setOpen(true)}
+                    />
                 </div>
 
                 <div className={styles.tabs}>
@@ -75,16 +83,12 @@ function Users() {
                 </div>
 
                 <div className={styles.searchBar}>
-                    <div className={styles.searchContainer}>
-                        <FiSearch className={styles.searchIcon} />
-                        <input
-                            className={styles.search}
-                            type="search"
-                            placeholder="Buscar Usuario..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                    </div>
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar Usuario..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
@@ -99,6 +103,12 @@ function Users() {
                             </select>
                         </div>
                     </div>
+                    <Filter
+                        label="Tipo"
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        options={opcionesEstado}
+                    />
                 </div>
             </div>
 

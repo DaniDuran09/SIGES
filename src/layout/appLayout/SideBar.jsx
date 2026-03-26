@@ -12,12 +12,21 @@ import { FaBuilding } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FiHome } from "react-icons/fi";
 import styles from "./SideBar.module.css"
+import { useAuth } from "../../context/AuthContext.jsx";
+import { FiLogOut } from "react-icons/fi";
+import Building_04 from "../../assets/icons/Building_04.svg"
 
 
 function SideBar() {
     const [collapsed, setCollapsed] = useState(window.innerWidth < 768);
     const navigate = useNavigate();
     const location = useLocation();
+
+    const { logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+    }
 
     useEffect(() => {
         const handleResize = () => {
@@ -188,6 +197,20 @@ function SideBar() {
                         </p>
                     </div>
                 )}
+                <button
+                    onClick={handleLogout}
+                    style={{
+                        borderWidth: "0px",
+                        backgroundColor: "transparent",
+                        width: collapsed ? "auto" : "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        cursor: "pointer"
+                    }}
+                >
+                    <FiLogOut style={{ width: "20px", height: "20px" }} />
+                </button>
 
             </div>
 

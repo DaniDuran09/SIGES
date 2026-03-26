@@ -9,6 +9,9 @@ import { useState } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
+import PlusButton from "../../../assets/components/PlusButton.jsx";
+import SearchBar from "../../../assets/components/SearchBar.jsx";
+import Filter from "../../../assets/components/Filter.jsx";
 
 function Spaces() {
     const navigate = useNavigate();
@@ -17,6 +20,16 @@ function Spaces() {
     const [state, setState] = useState('ALL');
     const [type, setType] = useState('');
     const [page, setPage] = useState(0);
+
+    const opcionesEstado = [
+        { value: "All", text: "Todos" },
+        { value: "ACTIVE", text: "Activo" },
+        { value: "INACTIVE", text: "Inactivo" }
+    ];
+
+    const opcionesTipo = [
+        { value: "ACTIVE", text: "Aula" }
+    ];
 
     const { data: b_types } = useQuery({
         queryKey: ["GetTypeSpaces"],
@@ -64,54 +77,42 @@ function Spaces() {
                 <div className={styles.headerRow}>
                     <h1>Espacios</h1>
 
-                    <button onClick={() => setModalVisible(true)} className={styles.newRequestButton}>
-                        <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
-                        <h3 className={styles.newRequestText}>
-                            Nuevo espacio
-                        </h3>
-                    </button>
+                    <PlusButton
+                        text="Nuevo Espacio"
+                        onClick={() => setModalVisible(true)}
+                    />
                 </div>
 
                 <div className={styles.searchBar}>
-                    <div className={styles.searchContainer}>
-                        <FiSearch className={styles.searchIcon} />
-                        <input
-                            className={styles.search}
-                            type="search"
-                            placeholder="Buscar espacio..."
-                            value={searchSpace}
-                            onChange={(e) => setSearchSpace(e.target.value)}
-                        />
-                    </div>
 
-                    <button className={styles.refreshIcon} title="Refrescar">
-                        <FiRefreshCw />
-                    </button>
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar Espacios..."
+                        value={searchSpace}
+                        onChange={(e) => setSearchSpace(e.target.value)}
+                    />
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
-                            <select
-                                className={styles.state}
-                                value={type}
-                                onChange={(e) => setType(e.target.value)}
-                            >
-                                <option value="">Tipo: Todos</option>
-                                {b_types?.map((t) => (
-                                    <option key={t.id} value={t.id}>
-                                        {t.name}
-                                    </option>
-                                ))}
-                            </select>
 
-                            <select
-                                className={styles.sort}
+                            <button className={styles.refreshIcon} title="Refrescar">
+                                <FiRefreshCw />
+                            </button>
+
+                            <Filter
+                                label="Tipo"
                                 value={state}
                                 onChange={(e) => setState(e.target.value)}
-                            >
-                                <option value="ALL">Estado: Todos</option>
-                                <option value="ACTIVE">Activo</option>
-                                <option value="INACTIVE">Inactivo</option>
-                            </select>
+                                options={opcionesTipo}
+                            />
+
+                            <Filter
+                                label="Estado"
+                                value={state}
+                                onChange={(e) => setState(e.target.value)}
+                                options={opcionesEstado}
+                            />
+
                         </div>
                     </div>
                 </div>

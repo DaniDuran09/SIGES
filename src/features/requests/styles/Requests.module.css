@@ -85,11 +85,12 @@ h1 {
     padding: 10px;
     gap: 15px;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .searchContainer {
     position: relative;
-    width: 50%;
+    width: 100%;
     min-width: 200px;
 }
 
@@ -139,12 +140,18 @@ h1 {
 @media (max-width: 1024px) {
     .searchBar {
         flex-direction: column;
+        width: 100%;
     }
 
     .searchContainer {
         position: relative;
         width: 100%;
         min-width: 200px;
+    }
+
+    .optionAndState {
+        width: 100%;
+        justify-content: space-between;
     }
 
 }
@@ -160,8 +167,4 @@ h1 {
         width: 100%;
     }
 
-    .optionAndState {
-        width: 100%;
-        justify-content: space-between;
-    }
 }

@@ -20,7 +20,6 @@ function EditProfile() {
             apiFetch(`/users/me`, {
                 method: "GET",
             }),
-
         retry: (failureCount, error) => error.status !== 404,
     });
 

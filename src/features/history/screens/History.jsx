@@ -7,11 +7,20 @@ import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
+import SearchBar from "../../../assets/components/SearchBar.jsx";
+import Filter from "../../../assets/components/Filter.jsx";
 
 function History() {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("");
     const [page, setPage] = useState(0);
+
+    const opcionesEstado = [
+        { value: "All", text: "Todos" },
+        { value: "ACTIVE", text: "Activo" },
+        { value: "INACTIVE", text: "Inactivo" }
+
+    ];
 
     const {
         data: b_history,
@@ -46,16 +55,13 @@ function History() {
                 <h1>Historial</h1>
 
                 <div className={styles.searchBar}>
-                    <div className={styles.searchContainer}>
-                        <FiSearch className={styles.searchIcon} />
-                        <input
-                            className={styles.search}
-                            type="search"
-                            placeholder="Buscar en historial..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                    </div>
+
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar en Historial..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
 
                     <div className={styles.componentSearch}>
                         <input className={styles.date} type="datetime-local" />

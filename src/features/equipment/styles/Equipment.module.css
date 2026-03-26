@@ -120,6 +120,7 @@ h1 {
     flex-direction: row-reverse;
     gap: 10px;
     flex-wrap: wrap;
+    width: 50%;
 }
 
 .date,
@@ -180,6 +181,11 @@ h1 {
 
     .title {
         font-size: 32px;
+    }
+
+    .componentSearch{
+        width: 50%;
+        flex-direction: column;
     }
 }
 

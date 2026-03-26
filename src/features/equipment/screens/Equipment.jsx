@@ -9,6 +9,9 @@ import LoaderCircle from "../../../assets/components/LoaderCircle";
 import NewEquipmentModal from "../components/NewEquipmentModal";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
+import PlusButton from "../../../assets/components/PlusButton.jsx";
+import SearchBar from "../../../assets/components/SearchBar.jsx";
+import Filter from "../../../assets/components/Filter.jsx";
 
 function Equipments() {
     const [searchEquipment, setSearchEquipment] = useState('');
@@ -16,6 +19,11 @@ function Equipments() {
     const [modalVisible, setModalVisible] = useState(false);
     const navigate = useNavigate();
     const [page, setPage] = useState(0);
+    const opcionesEstado = [
+        { value: "AVAILABLE", text: "Disponible" },
+        { value: "MAINTENANCE", text: "Mantenimiento" },
+        { value: "DAMAGED", text: "Dañado" },
+    ];
 
     const {
         data: b_equipments,
@@ -68,40 +76,32 @@ function Equipments() {
                 <div className={styles.headerRow}>
                     <h1>Equipos</h1>
 
-                    <button className={styles.newRequestButton} onClick={() => setModalVisible(true)}>
-                        <FiPlus style={{ width: '25px', height: '25px', color: 'white' }} />
-                        <h3 className={styles.newRequestText}>
-                            Nuevo Equipo
-                        </h3>
-                    </button>
+                    <PlusButton
+                        text="Nuevo Equipo"
+                        onClick={() => setModalVisible(true)}
+                    />
                 </div>
 
                 <div className={styles.searchBar}>
-                    <div className={styles.searchContainer}>
-                        <FiSearch className={styles.searchIcon} />
-                        <input
-                            className={styles.search}
-                            type="search"
-                            placeholder="Buscar equipo..."
-                            value={searchEquipment}
-                            onChange={(e) => setSearchEquipment(e.target.value)}
-                        />
-                    </div>
+
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar Equipos..."
+                        value={searchEquipment}
+                        onChange={(e) => setSearchEquipment(e.target.value)}
+                    />
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
-                            <select
-                                className={styles.sort}
+                            <Filter
+                                label="Tipo"
                                 value={state}
                                 onChange={(e) => setState(e.target.value)}
-                            >
-                                <option value="">Estado: Todos</option>
-                                <option value="AVAILABLE">Disponible</option>
-                                <option value="MAINTENANCE">Mantenimiento</option>
-                                <option value="DAMAGED">Dañado</option>
-                            </select>
+                                options={opcionesEstado}
+                            />
                         </div>
                     </div>
+
                 </div>
             </div>
 
