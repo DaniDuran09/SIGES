@@ -1,13 +1,20 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "../styles/NewPassword.module.css";
+import {useMutation} from "@tanstack/react-query";
+import {apiFetch} from "../../../api/client.js";
+import {Alert} from "@mui/material";
 
 export default function NewPassword() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+
     
     const token = searchParams.get("token");
     const email = searchParams.get("email");
+    const [alertSeverity, setAlertSeverity] = useState('false');
+    const [alertMessage, setAlertMessage] = useState("");
+    const [localAlert, setLocalAlert] = useState("");
 
     const [formData, setFormData] = useState({
         password: '',
@@ -26,11 +33,46 @@ export default function NewPassword() {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
-            alert("Las contraseñas no coinciden");
+            setAlertSeverity("error");
+            setAlertMessage("las contraseñas no coinciden")
+            setLocalAlert(true);
             return;
         }
-        console.log("Submit new password logic here");
+        setLocalAlert(false)
+        mutation.mutate({
+            token: token,
+            newPassword: formData.password,
+        })
     };
+
+    const mutation = useMutation({
+        mutationFn: (credentials) =>
+            apiFetch('/password-recovery/reset', {
+                method: 'PATCH',
+                body: JSON.stringify(credentials),
+            }),
+        onSuccess: () => {
+            setAlertSeverity("success");
+            setAlertMessage("Contraseña cambiada correctamente");
+            setLocalAlert(true);
+            setTimeout(()=>{
+                navigate("/login", { replace: true });
+            },5000)
+
+        },
+        onError: (e) => {
+            const messages = {
+                403: "No tienes permisos para esta acción.",
+                404: "Recurso no encontrado.",
+                409: "Conflicto con los datos enviados.",
+                500: "Error del servidor, intenta más tarde.",
+            };
+            setAlertSeverity("error");
+            setAlertMessage(messages[e.status] ?? e.message ?? "Error inesperado");
+            console.log(e)
+            setLocalAlert(true);
+        }
+    });
 
     const navigateToLogin = () => {
         navigate("/login");
@@ -39,6 +81,11 @@ export default function NewPassword() {
     return (
         <div className={styles.container}>
             <div className={styles.card}>
+                {localAlert && (
+                    <Alert severity={alertSeverity} >
+                        {alertMessage}
+                    </Alert>
+                )}
                 <h1 className={styles.title}>Restablecer contraseña</h1>
                 <form onSubmit={handleFormSubmit}>
                     <div className={styles.formGroup}>
