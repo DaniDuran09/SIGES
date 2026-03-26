@@ -9,11 +9,18 @@ import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
+import Filter from "../../../assets/components/Filter.jsx";
 
 function Requests() {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
     const [status, setStatus] = useState("ALL");
+
+    const opcionesEstado = [
+        { value: "AVAILABLE", text: "Disponible" },
+        { value: "MAINTENANCE", text: "Mantenimiento" },
+        { value: "DAMAGED", text: "Dañado" }
+    ];
 
     const {
         data: b_requests,
@@ -72,15 +79,12 @@ function Requests() {
                         onChange={(e) =>{setSearch(e.target.value); setPage(0);}}
                     />
 
-                    <div className={styles.componentSearch}>
-                        <div className={styles.optionAndState}>
-                            <select className={styles.sort}>
-                                <option value="">Tipo: Todos</option>
-                                <option value="fecha">Fecha</option>
-                                <option value="usuario">Usuario</option>
-                            </select>
-                        </div>
-                    </div>
+                    <Filter
+                        label="Tipo"
+                        value=""
+                        options={opcionesEstado}
+                    />
+
                 </div>
             </div>
 

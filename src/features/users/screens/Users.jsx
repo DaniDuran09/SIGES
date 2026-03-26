@@ -10,6 +10,7 @@ import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
+import Filter from "../../../assets/components/Filter.jsx";
 
 function Users() {
     const [open, setOpen] = useState(false);
@@ -17,6 +18,13 @@ function Users() {
     const [state, setState] = useState("ALL");
     const [type, setType] = useState("");
     const [page, setPage] = useState(0);
+
+    const opcionesEstado = [
+        { value: "All", text: "Todos" },
+        { value: "ACTIVE", text: "Activo" },
+        { value: "INACTIVE", text: "Inactivo" }
+
+    ];
 
     const handleSetType = (type) => {
         setType(type);
@@ -95,6 +103,12 @@ function Users() {
                             </select>
                         </div>
                     </div>
+                    <Filter
+                        label="Tipo"
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        options={opcionesEstado}
+                    />
                 </div>
             </div>
 
