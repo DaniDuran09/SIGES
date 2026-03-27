@@ -1,13 +1,11 @@
-import { FiPlus, FiSearch, FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
+import { FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/Spaces.module.css";
 import tableStyles from "../styles/SpacesData.module.css";
 import { useQuery } from "@tanstack/react-query";
-import { apiFetch } from "../../../api/client";
-import { NewSpaceModal } from "../components/NewSpaceModal";
+import {apiFetch} from "../../../api/client.js";
 import { useState } from "react";
-import LoaderCircle from "../../../assets/components/LoaderCircle";
-import { Alert } from "@mui/material";
+import LoaderCircle from "../../../assets/components/LoaderCircle.jsx";
 import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
@@ -15,43 +13,45 @@ import Filter from "../../../assets/components/Filter.jsx";
 
 function Spaces() {
     const navigate = useNavigate();
-    const [modalVisible, setModalVisible] = useState(false);
     const [searchSpace, setSearchSpace] = useState('');
-    const [state, setState] = useState('ALL');
+    const [state, setState] = useState('');
     const [type, setType] = useState('');
     const [page, setPage] = useState(0);
+    const [modalVisible, setModalVisible] = useState(false);
 
-    const opcionesEstado = [
-        { value: "All", text: "Todos" },
+    const statusOptions = [
+        { value: "ALL", text: "Todos" },
         { value: "ACTIVE", text: "Activo" },
-        { value: "INACTIVE", text: "Inactivo" }
-    ];
-
-    const opcionesTipo = [
-        { value: "ACTIVE", text: "Aula" }
+        { value: "INACTIVE", text: "Inactivo" },
     ];
 
     const { data: b_types } = useQuery({
         queryKey: ["GetTypeSpaces"],
-        queryFn: () =>
-            apiFetch("/space-types", {
-                method: "GET",
-            }),
+        queryFn: () => apiFetch("/space-types", { method: "GET" }),
     });
+
+    const typeOptions = [
+        { value: "", text: "Todos" },
+        ...(b_types?.map((t) => ({
+            value: t.id.toString(),
+            text: t.name,
+        })) || []),
+    ];
 
     const {
         data: b_spaces,
         isPending: b_spacesIsPending,
         error: b_spacesIsError,
+        refetch
     } = useQuery({
         queryKey: ["GetSpaces", searchSpace, state, type, page],
         queryFn: () =>
             apiFetch("/spaces", {
                 method: "GET",
                 params: {
-                    searchQuery: searchSpace,
+                    q: searchSpace,
                     showMode: state,
-                    buildingId: type,
+                    spaceTypeId: type,
                     page: page,
                     size: 20
                 },
@@ -59,24 +59,13 @@ function Spaces() {
         retry: (failureCount, error) => error.status !== 404,
     });
 
-    if (b_spacesIsError && b_spacesIsError.status !== 404) {
-        return (
-            <div className={styles.container}>
-                <Alert severity="error">Error al cargar los espacios: {b_spacesIsError.message}</Alert>
-            </div>
-        );
-    }
-
     return (
         <div className={styles.container}>
-            {modalVisible && <NewSpaceModal onClose={() => setModalVisible(false)} />}
-
             <div className={styles.header}>
                 <h4>Gestión</h4>
 
                 <div className={styles.headerRow}>
                     <h1>Espacios</h1>
-
                     <PlusButton
                         text="Nuevo Espacio"
                         onClick={() => setModalVisible(true)}
@@ -84,35 +73,45 @@ function Spaces() {
                 </div>
 
                 <div className={styles.searchBar}>
-
                     <SearchBar
                         type="search"
                         placeholder="Buscar Espacios..."
                         value={searchSpace}
-                        onChange={(e) => setSearchSpace(e.target.value)}
+                        onChange={(e) => {
+                            setSearchSpace(e.target.value);
+                            setPage(0);
+                        }}
                     />
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
-
-                            <button className={styles.refreshIcon} title="Refrescar">
+                            <button
+                                className={styles.refreshIcon}
+                                title="Refrescar"
+                                onClick={() => refetch()}
+                            >
                                 <FiRefreshCw />
                             </button>
 
                             <Filter
-                                label="Tipo"
-                                value=""
-                                onChange={(e) => setState(e.target.value)}
-                                options={opcionesTipo}
+                                label="Tipo:"
+                                value={type}
+                                onChange={(e) => {
+                                    setType(e.target.value);
+                                    setPage(0);
+                                }}
+                                options={typeOptions}
                             />
 
                             <Filter
-                                label="Estado"
-                                value=""
-                                onChange={(e) => setState(e.target.value)}
-                                options={opcionesEstado}
+                                label="Estado:"
+                                value={state}
+                                onChange={(e) => {
+                                    setState(e.target.value);
+                                    setPage(0);
+                                }}
+                                options={statusOptions}
                             />
-
                         </div>
                     </div>
                 </div>
@@ -122,27 +121,23 @@ function Spaces() {
                 <LoaderCircle />
             ) : (
                 <div className={tableStyles.wrapper}>
-                    {b_spaces?.content?.length === 0 ? (
-                        <div className={tableStyles.empty}>
-                            <p>No se encontraron registros</p>
-                        </div>
-                    ) : (
-                        <table className={tableStyles.table}>
-                            <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Ubicación</th>
-                                <th>Capacidad</th>
-                                <th>Estudiantes</th>
-                                <th>Disponibilidad</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                            </thead>
+                    <table className={tableStyles.table}>
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Edificio</th>
+                            <th>Capacidad</th>
+                            <th>Estudiantes</th>
+                            <th>Estado</th>
+                            <th>Activo</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
 
-                            <tbody>
-                            {b_spaces.content.map((space) => (
+                        <tbody>
+                        {b_spaces?.content?.length > 0 ? (
+                            b_spaces.content.map((space) => (
                                 <tr key={space.id}>
                                     <td className={tableStyles.projectName}>{space.name}</td>
 
@@ -153,15 +148,15 @@ function Spaces() {
                                     <td>{space.capacity ?? '—'}</td>
 
                                     <td>
-                                        <span className={space.availableForStudents ? tableStyles.AbiertoText : tableStyles.RestringidoText}>
-                                            {space.availableForStudents ? "Abierto" : "Restringido"}
-                                        </span>
+                                            <span className={space.availableForStudents ? tableStyles.AbiertoText : tableStyles.RestringidoText}>
+                                                {space.availableForStudents ? "Abierto" : "Restringido"}
+                                            </span>
                                     </td>
 
                                     <td>
-                                        <span className={`${tableStyles.badge} ${tableStyles[space.status] || ''}`}>
-                                            {space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
-                                        </span>
+                                            <span className={`${tableStyles.badge} ${tableStyles[space.status] || ''}`}>
+                                                {space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
+                                            </span>
                                     </td>
 
                                     <td>
@@ -176,31 +171,37 @@ function Spaces() {
                                     </td>
 
                                     <td className={tableStyles.actions}>
-                                        <button 
+                                        <button
                                             className={tableStyles.iconButton}
                                             onClick={() => navigate(`/spaces/${space.id}`)}
                                             title="Ver detalle"
                                         >
-                                            <FiEye />
+                                            <FiEye size={18} />
                                         </button>
-
-                                        <button 
+                                        <button
                                             className={tableStyles.iconButton}
                                             onClick={() => navigate(`/spaces/edit/${space.id}`)}
                                             title="Editar espacio"
                                         >
-                                            <FiEdit2 />
+                                            <FiEdit2 size={18} />
                                         </button>
                                     </td>
                                 </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    )}
-                    <Pagination 
-                        currentPage={page} 
-                        totalPages={b_spaces?.totalPages || 0} 
-                        onPageChange={(newPage) => setPage(newPage)} 
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                    No se encontraron registros
+                                </td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </table>
+
+                    <Pagination
+                        currentPage={page}
+                        totalPages={b_spaces?.totalPages || 0}
+                        onPageChange={(newPage) => setPage(newPage)}
                     />
                 </div>
             )}

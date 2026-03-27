@@ -40,7 +40,7 @@ function Equipments() {
             apiFetch("/equipments", {
                 method: "GET",
                 params: {
-                    searchQuery: searchEquipment,
+                    q: searchEquipment,
                     status: state,
                     page: page,
                     size: 20
@@ -53,7 +53,7 @@ function Equipments() {
         switch (status) {
             case "AVAILABLE":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeDisponible}`}>Disponible</span>;
-            case "IN_USE":
+            case "LOANED":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeEnUso}`}>En uso</span>;
             case "MAINTENANCE":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeMantenimiento}`}>Mantenimiento</span>;

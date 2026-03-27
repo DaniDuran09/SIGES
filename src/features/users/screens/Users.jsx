@@ -11,15 +11,18 @@ import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Users() {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [state, setState] = useState("ALL");
     const [type, setType] = useState("");
     const [page, setPage] = useState(0);
 
-    const opcionesEstado = [
+    const statusOptions = [
+        { value: "ALL", text: "Todos" },
         { value: "ACTIVE", text: "Activo" },
         { value: "INACTIVE", text: "Inactivo" }
 
@@ -96,12 +99,11 @@ function Users() {
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
 
-
                             <Filter
-                                label="Tipo"
-                                value=""
+                                label="Estado"
+                                value={state}
                                 onChange={(e) => setState(e.target.value)}
-                                options={opcionesEstado}
+                                options={statusOptions}
                             />
                         </div>
                     </div>
@@ -128,7 +130,7 @@ function Users() {
                             <tbody>
                             {b_users?.content?.length > 0 ? (
                                 b_users.content.map((user) => (
-                                    <tr key={user.id}>
+                                    <tr key={user.id} onClick={() => navigate(`/users/edit/${user.id}`)} style={{ cursor: "pointer" }}>
                                         <td>{user.firstName + " " + user.lastName}</td>
 
                                         <td>
@@ -175,10 +177,10 @@ function Users() {
                             </tbody>
                         </table>
                     </div>
-                    <Pagination 
-                        currentPage={page} 
-                        totalPages={b_users?.totalPages || 0} 
-                        onPageChange={(newPage) => setPage(newPage)} 
+                    <Pagination
+                        currentPage={page}
+                        totalPages={b_users?.totalPages || 0}
+                        onPageChange={(newPage) => setPage(newPage)}
                     />
                 </>
             )}
