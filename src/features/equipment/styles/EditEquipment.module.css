@@ -281,3 +281,75 @@ input:checked + .slider:before { transform: translateX(24px); }
         grid-column: span 1;
     }
 }
+
+/* Modal classes for Add Availability */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.modal {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modalHeader {
+    padding: 24px 28px 16px 28px;
+}
+
+.modalHeader h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #2D3748;
+}
+
+.modalContent {
+    padding: 0 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.formRow {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+}
+
+.submitAvailButton {
+    background-color: #D1FAE5;
+    color: #10B981;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submitAvailButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -146,7 +146,6 @@ function EquipmentDetail() {
                                         <strong>{slot.daysOfWeek.join(", ")}</strong>
                                         <p>{slot.startTime} - {slot.endTime}</p>
                                     </div>
-                                    <FiTrash2 style={{ color: '#fecaca', cursor: 'pointer' }} size={18} />
                                 </div>
                             ))
                         ) : (

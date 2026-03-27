@@ -1,0 +1,179 @@
+.container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.header {
+    margin-bottom: 24px;
+}
+
+.header h4 {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerRow h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+    width: fit-content;
+}
+
+.backButton:hover {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+/* Main Card */
+.mainCard {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.cardHeader {
+    background: #E8DFF5;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.cardHeader h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #3f3f46;
+    margin: 0;
+}
+
+.statusBadge {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.statusBadge.active {
+    background-color: #d1fae5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.statusBadge.inactive {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.cardContent {
+    padding: 32px;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.formGroup label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.requiredStar {
+    color: #f87171;
+    margin-left: 2px;
+}
+
+.formGroup input, 
+.formGroup select {
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #111827;
+    background-color: white;
+    width: auto;
+}
+
+.bottomSection {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.footerButtons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.cancelBtn {
+    padding: 10px 40px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #111827;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cancelBtn:hover {
+    background-color: #f3f4f6;
+}
+
+.saveBtn {
+    padding: 10px 40px;
+    background: #6d5cae;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.saveBtn:hover {
+    background-color: #5b4d91;
+}
+
+@media (max-width: 640px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+}

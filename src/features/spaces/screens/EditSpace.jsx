@@ -13,6 +13,11 @@ function EditSpace() {
     const queryClient = useQueryClient();
     const [successMessage, setSuccessMessage] = useState("");
 
+    const [showAddAvailModal, setShowAddAvailModal] = useState(false);
+    const [newAvailDay, setNewAvailDay] = useState("");
+    const [newAvailStartTime, setNewAvailStartTime] = useState("");
+    const [newAvailEndTime, setNewAvailEndTime] = useState("");
+
     // Form states
     const [formData, setFormData] = useState({
         name: "",
@@ -74,6 +79,32 @@ function EditSpace() {
         }
     });
 
+    const handleAddAvailability = () => {
+        if (!newAvailDay || !newAvailStartTime || !newAvailEndTime) return;
+        const newItem = {
+            dateFrom: new Date().toISOString().split('T')[0],
+            dateTo: new Date().toISOString().split('T')[0],
+            startTime: newAvailStartTime,
+            endTime: newAvailEndTime,
+            daysOfWeek: [newAvailDay]
+        };
+        setFormData(prev => ({
+            ...prev,
+            availabilitySlots: [...(prev.availabilitySlots || []), newItem]
+        }));
+        setShowAddAvailModal(false);
+        setNewAvailDay("");
+        setNewAvailStartTime("");
+        setNewAvailEndTime("");
+    };
+
+    const removeAvailability = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            availabilitySlots: (prev.availabilitySlots || []).filter((_, i) => i !== index)
+        }));
+    };
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
@@ -85,10 +116,25 @@ function EditSpace() {
     const handleSubmit = (e) => {
         e.preventDefault();
         
+        let bookInAdvanceDurationFormatted = "";
+        if (formData.advanceUnit === "MINUTES" || formData.advanceUnit === "MINUTE") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}M`;
+        else if (formData.advanceUnit === "HOUR" || formData.advanceUnit === "HOURS") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}H`;
+        else if (formData.advanceUnit === "DAY" || formData.advanceUnit === "DAYS") bookInAdvanceDurationFormatted = `P${formData.bookInAdvanceDuration}D`;
+        else bookInAdvanceDurationFormatted = `${formData.bookInAdvanceDuration} ${formData.advanceUnit}`;
+
         const payload = {
-            ...formData,
-            bookInAdvanceDuration: `${formData.bookInAdvanceDuration} ${formData.advanceUnit}`,
-            capacity: parseInt(formData.capacity)
+            name: formData.name.trim(),
+            description: formData.description.trim(),
+            studentsAvailable: formData.availableForStudents,
+            availableForStudents: formData.availableForStudents,
+            buildingId: parseInt(formData.buildingId) || space?.building?.id || 0,
+            availability: formData.availabilitySlots,
+            exceptions: space?.exceptions || [],
+            spaceTypeId: parseInt(formData.spaceTypeId) || space?.spaceType?.id || 0,
+            bookInAdvanceDuration: bookInAdvanceDurationFormatted,
+            capacity: parseInt(formData.capacity) || 0,
+            equipment: space?.equipment || [],
+            status: space?.status || "AVAILABLE"
         };
 
         mutation.mutate(payload);
@@ -213,7 +259,7 @@ function EditSpace() {
                     <div className={styles.scheduleSection}>
                         <div className={styles.scheduleHeader}>
                             <h3>Horarios configurados</h3>
-                            <button type="button" className={styles.addButton}>
+                            <button type="button" className={styles.addButton} onClick={() => setShowAddAvailModal(true)}>
                                 <FiPlus /> Agregar
                             </button>
                         </div>
@@ -225,7 +271,7 @@ function EditSpace() {
                                         <div className={styles.dayLabel}>{slot.daysOfWeek.join(', ')}</div>
                                         <div className={styles.timeLabel}>{slot.startTime} - {slot.endTime}</div>
                                     </div>
-                                    <button type="button" className={styles.deleteBtn}>
+                                    <button type="button" className={styles.deleteBtn} onClick={() => removeAvailability(index)}>
                                         <FiTrash2 size={18} />
                                     </button>
                                 </div>
@@ -267,6 +313,44 @@ function EditSpace() {
                     </div>
                 </form>
             </div>
+
+            {/* Modal for adding Availability */}
+            {showAddAvailModal && (
+                <div className={styles.overlay}>
+                    <div className={styles.modal}>
+                        <div className={styles.modalHeader}>
+                            <h2>Agregar Horario</h2>
+                        </div>
+                        <div className={styles.modalContent}>
+                            <div className={styles.formGroup}>
+                                <label>Día de la semana <span className={styles.requiredStar}>*</span></label>
+                                <select value={newAvailDay} onChange={(e) => setNewAvailDay(e.target.value)}>
+                                    <option value="" disabled>Seleccione un día</option>
+                                    <option value="MONDAY">Lunes</option>
+                                    <option value="TUESDAY">Martes</option>
+                                    <option value="WEDNESDAY">Miércoles</option>
+                                    <option value="THURSDAY">Jueves</option>
+                                    <option value="FRIDAY">Viernes</option>
+                                </select>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label style={{ marginBottom: '-6px' }}>Horario <span className={styles.requiredStar}>*</span></label>
+                                <span style={{ fontSize: '11px', color: '#94A3B8', marginBottom: '8px' }}>Hora inicio y hora de fin</span>
+                                <div className={styles.formRow}>
+                                    <input type="time" value={newAvailStartTime} onChange={(e) => setNewAvailStartTime(e.target.value)} style={{ flex: 1 }} />
+                                    <input type="time" value={newAvailEndTime} onChange={(e) => setNewAvailEndTime(e.target.value)} style={{ flex: 1 }} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles.modalFooter}>
+                            <button type="button" className={styles.cancelBtn} onClick={() => setShowAddAvailModal(false)}>Cancelar</button>
+                            <button type="button" className={styles.submitAvailButton} onClick={handleAddAvailability} disabled={!newAvailDay || !newAvailStartTime || !newAvailEndTime}>
+                                ✓ Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

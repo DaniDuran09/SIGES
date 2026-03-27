@@ -117,7 +117,6 @@ function SpaceDetail() {
                                                 <h4>{slot.daysOfWeek.map(d => dayMapping[d]).join(', ')}</h4>
                                                 <p>{slot.startTime} - {slot.endTime}</p>
                                             </div>
-                                            <FiTrash2 className={styles.deleteIcon} />
                                         </div>
                                     ))
                                 ) : (

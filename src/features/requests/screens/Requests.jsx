@@ -16,10 +16,10 @@ function Requests() {
     const [page, setPage] = useState(0);
     const [status, setStatus] = useState("ALL");
 
-    const opcionesEstado = [
-        { value: "AVAILABLE", text: "Disponible" },
-        { value: "MAINTENANCE", text: "Mantenimiento" },
-        { value: "DAMAGED", text: "Dañado" }
+    const opcionesTipo = [
+        { value: "ALL", text: "Todos" },
+        { value: "EQUIPMENT", text: "Equipo" },
+        { value: "SPACE", text: "Espacio" }
     ];
 
     const {
@@ -84,9 +84,13 @@ function Requests() {
                     </button>
 
                     <Filter
-                        label="Tipo"
-                        value=""
-                        options={opcionesEstado}
+                        label="Tipo:"
+                        value={status}
+                        onChange={(e) => {
+                            setStatus(e.target.value);
+                            setPage(0);
+                        }}
+                        options={opcionesTipo}
                     />
 
                 </div>
