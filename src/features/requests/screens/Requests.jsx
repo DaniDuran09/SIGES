@@ -1,5 +1,5 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { FiSearch, FiEye } from "react-icons/fi";
+import {FiSearch, FiEye, FiRefreshCw} from "react-icons/fi";
 import styles from "../styles/Requests.module.css";
 import tableStyles from "../styles/RequestsData.module.css";
 import { useState } from "react";
@@ -78,6 +78,10 @@ function Requests() {
                         value={search}
                         onChange={(e) =>{setSearch(e.target.value); setPage(0);}}
                     />
+
+                    <button className={styles.refreshIcon} title="Refrescar">
+                        <FiRefreshCw />
+                    </button>
 
                     <Filter
                         label="Tipo"

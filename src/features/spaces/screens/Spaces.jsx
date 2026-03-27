@@ -101,14 +101,14 @@ function Spaces() {
 
                             <Filter
                                 label="Tipo"
-                                value={state}
+                                value=""
                                 onChange={(e) => setState(e.target.value)}
                                 options={opcionesTipo}
                             />
 
                             <Filter
                                 label="Estado"
-                                value={state}
+                                value=""
                                 onChange={(e) => setState(e.target.value)}
                                 options={opcionesEstado}
                             />
