@@ -58,7 +58,7 @@ function EquipmentDetail() {
                     {/* Left Column: Info */}
                     <div>
                         <div className={styles.infoSection}>
-                            <h3>Información</h3>
+                            <h3 style={{ color: '#6B7280' }}>Información</h3>
                             <div className={styles.infoList}>
                                 <div className={styles.infoItem}>
                                     <span>Tipo de equipo</span>
@@ -91,7 +91,7 @@ function EquipmentDetail() {
 
                         {/* Specs */}
                         <div className={`${styles.detailBox} ${styles.specsSection}`} style={{ marginTop: '48px' }}>
-                            <h3>Especificaciones Técnicas +</h3>
+                            <h3 style={{ color: '#6B7280' }}>Especificaciones Técnicas +</h3>
                             <div className={styles.tags}>
                                 <span className={styles.tag}>Proyector 4k</span>
                                 <span className={styles.tag}>Sistema de audio</span>
@@ -103,6 +103,12 @@ function EquipmentDetail() {
 
                     {/* Right Column: Stats & Description */}
                     <div>
+                        <h3 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#6B7280' }}>
+                            ESTADÍSTICAS DE USO
+                            <button onClick={() => { navigate(`/equipment/${id}/history`) }} style={{ backgroundColor: 'transparent', border: '0px', cursor: 'pointer' }}>
+                                <h3 style={{ color: '#9CA3AF' }}>ver historial {'>'}</h3>
+                            </button>
+                        </h3>
                         <div className={styles.statsRow}>
                             <div className={styles.statCard}>
                                 <span className={styles.statValue}>12</span>
@@ -115,12 +121,12 @@ function EquipmentDetail() {
                         </div>
 
                         <div className={styles.detailBox} style={{ marginTop: '48px' }}>
-                            <h3>Descripción</h3>
+                            <h3 style={{ color: '#6B7280' }}>Descripción</h3>
                             <p>{equipment.description || "Router industrial de grado empresarial diseñado para entornos de alta demanda. Ofrece conectividad robusta y segura para laboratorios de cómputo y espacios con múltiples dispositivos simultáneos."}</p>
                         </div>
 
                         <div className={styles.detailBox} style={{ marginTop: '32px' }}>
-                            <h3>Observaciones</h3>
+                            <h3 style={{ color: '#6B7280' }}>Observaciones</h3>
                             <div className={styles.observationBox}>
                                 <div className={styles.observationHeader}>
                                     <span>José Dominguez (Admin)</span>
@@ -132,7 +138,7 @@ function EquipmentDetail() {
 
                     {/* Bottom: Schedule (Full Width) */}
                     <div className={`${styles.detailBox} ${styles.scheduleSection}`} style={{ gridColumn: '1 / -1', borderTop: '1px solid #f3f4f6', paddingTop: '32px' }}>
-                        <h3>Disponibilidad de Horarios</h3>
+                        <h3 style={{ color: '#6B7280' }}>Disponibilidad de Horarios</h3>
                         {equipment.availabilitySlots?.length > 0 ? (
                             equipment.availabilitySlots.map(slot => (
                                 <div key={slot.id} className={styles.observationBox} style={{ background: 'white', border: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
