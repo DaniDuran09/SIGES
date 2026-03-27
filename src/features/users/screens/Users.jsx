@@ -11,8 +11,10 @@ import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Users() {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [state, setState] = useState("ALL");
@@ -128,7 +130,7 @@ function Users() {
                             <tbody>
                             {b_users?.content?.length > 0 ? (
                                 b_users.content.map((user) => (
-                                    <tr key={user.id}>
+                                    <tr key={user.id} onClick={() => navigate(`/users/edit/${user.id}`)} style={{ cursor: "pointer" }}>
                                         <td>{user.firstName + " " + user.lastName}</td>
 
                                         <td>

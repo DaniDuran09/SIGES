@@ -12,6 +12,7 @@ import Equipment from "../../features/equipment/screens/Equipment";
 import EquipmentDetail from "../../features/equipment/screens/EquipmentDetail";
 import EditEquipment from "../../features/equipment/screens/EditEquipment";
 import Users from "../../features/users/screens/Users";
+import EditUsers from "../../features/users/screens/EditUsers";
 import History from "../../features/history/screens/History";
 import Configuration from "../../features/configuration/screens/Configuration";
 import Layout from "../../layout/Layout.jsx";
@@ -47,6 +48,7 @@ function AppRouter() {
                     <Route path="equipment/:id/history" element={<EquipmentHistory />} />
                     <Route path="equipment/edit/:id" element={<EditEquipment />} />
                     <Route path="users" element={<Users />} />
+                    <Route path="users/edit/:id" element={<EditUsers />} />
                     <Route path="history" element={<History />} />
                     <Route path="configuration" element={<Configuration />} />
                     <Route path="EditProfile" element={<EditProfile />} />
