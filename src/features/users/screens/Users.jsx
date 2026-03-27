@@ -21,7 +21,8 @@ function Users() {
     const [type, setType] = useState("");
     const [page, setPage] = useState(0);
 
-    const opcionesEstado = [
+    const statusOptions = [
+        { value: "ALL", text: "Todos" },
         { value: "ACTIVE", text: "Activo" },
         { value: "INACTIVE", text: "Inactivo" }
 
@@ -98,12 +99,11 @@ function Users() {
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
 
-
                             <Filter
-                                label="Tipo"
-                                value=""
+                                label="Estado"
+                                value={state}
                                 onChange={(e) => setState(e.target.value)}
-                                options={opcionesEstado}
+                                options={statusOptions}
                             />
                         </div>
                     </div>

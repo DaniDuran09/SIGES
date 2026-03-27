@@ -1,29 +1,29 @@
 .wrapper {
     flex: 1;
     background-color: #ffffff;
-    border-radius: 16px;
-    border: 1px solid #eef0f3;
-    padding: 0;
-    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid #e9e9ee;
+    padding: 24px;
+    overflow-x: auto;
     display: flex;
     flex-direction: column;
     min-height: 500px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.tableContainer {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: 1px solid #F1F5F9;
+    overflow-x: auto;
+    flex: 1;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-}
-
-.empty {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    font-size: 24px;
-    color: #161616;
 }
 
 .table thead {
@@ -49,86 +49,69 @@
 }
 
 .projectName {
-    font-weight: 700;
-    color: #111827;
-}
-
-.AbiertoText {
-    color: #10b981;
-    font-weight: 500;
-}
-
-.RestringidoText {
-    color: #f87171;
-    font-weight: 500;
-}
-
-.table tr:last-child td {
-    border-bottom: none;
-}
-
-.table tr:hover {
-    background-color: #f8fafc;
+    font-weight: 600;
+    color: #1E293B;
 }
 
 .badge {
-    padding: 6px 16px;
-    border-radius: 24px;
-    font-size: 12px;
-    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
     display: inline-block;
 }
 
-.abierto {
-    color: #0f766e;
+.statusAbierto {
+    color: #10B981;
+    font-weight: 500;
 }
 
-.restringido {
-    color: #dc2626;
+.statusRestringido {
+    color: #F87171;
+    font-weight: 500;
 }
 
-.AVAILABLE {
-    background-color: #dcfce7;
-    color: #10b981;
+.badgeDisponible {
+    background-color: #D1FAE5;
+    color: #059669;
 }
 
-.IN_USE {
-    background-color: #fee2e2;
+.badgeEnUso {
+    background-color: #FEE2E2;
     color: #ef4444;
 }
 
-.MAINTENANCE {
-    background-color: #f3f4f6;
-    color: #4b5563;
+.badgeMantenimiento {
+    background-color: #F1F5F9;
+    color: #64748B;
 }
 
 .actions {
     display: flex;
-    gap: 10px;
-    white-space: nowrap;
+    gap: 12px;
     justify-content: center;
     align-items: center;
+    white-space: nowrap;
 }
 
 .iconButton {
-    background-color: #f3f4f6;
-    border: none;
-    border-radius: 20px;
-    padding: 6px 10px;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.iconButton svg {
-    width: 16px;
-    height: 16px;
-    color: #374151;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid #F1F5F9;
+    background-color: #F8FAF7;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .iconButton:hover {
-    background-color: #e5e7eb;
+    background-color: #f1f5f9;
+    color: #334155;
+    border-color: #E2E8F0;
 }
 
 .switch {
@@ -146,7 +129,7 @@
 
 .slider {
     position: absolute;
-    cursor: pointer;
+    cursor: default;
     inset: 0;
     background-color: #d1d5db;
     border-radius: 20px;
@@ -165,10 +148,10 @@
     transition: 0.3s;
 }
 
-input:checked+.slider {
+.switch input:checked+.slider {
     background-color: #6d5cae;
 }
 
-input:checked+.slider:before {
+.switch input:checked+.slider:before {
     transform: translateX(18px);
 }

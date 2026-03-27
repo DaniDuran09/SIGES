@@ -1,4 +1,4 @@
-import { FiPlus, FiSearch, FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
+import { FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
 import styles from "../styles/Equipment.module.css";
 import tableStyles from "../styles/EquipmentData.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -14,38 +14,57 @@ import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
 
 function Equipments() {
-    const [searchEquipment, setSearchEquipment] = useState('');
-    const [state, setState] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
     const navigate = useNavigate();
+    const [searchEquipment, setSearchEquipment] = useState('');
+    const [status, setStatus] = useState('');
+    const [type, setType] = useState('');
     const [page, setPage] = useState(0);
-    const opcionesEstado = [
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const statusOptions = [
+        { value: "", text: "Todos" },
         { value: "AVAILABLE", text: "Disponible" },
         { value: "MAINTENANCE", text: "Mantenimiento" },
-        { value: "DAMAGED", text: "Dañado" },
+        { value: "LOANED", text: "En préstamo" },
     ];
 
-    const opcionesTipo = [
-        { value: "AVAILABLE", text: "Cable" },
-        { value: "MAINTENANCE", text: "Proyector" },
+    const { data: e_types } = useQuery({
+        queryKey: ["GetEquipmentTypes"],
+        queryFn: () => apiFetch("/equipment-types", { method: "GET" }),
+    });
+
+    const typeOptions = [
+        { value: "", text: "Todos" },
+        ...(e_types?.map((t) => ({
+            value: t.id.toString(),
+            text: t.name,
+        })) || []),
     ];
 
     const {
         data: b_equipments,
         isPending,
-        error
+        error,
+        refetch
     } = useQuery({
-        queryKey: ["GetEquipments", searchEquipment, state, page],
-        queryFn: () =>
-            apiFetch("/equipments", {
+        queryKey: ["GetEquipments", searchEquipment, status, type, page],
+        queryFn: () => {
+
+            const params = {
+                searchQuery: searchEquipment,
+                page: page,
+                size: 20
+            };
+
+
+            if (status !== "") params.status = status;
+            if (type !== "") params.equipmentTypeId = type;
+
+            return apiFetch("/equipments", {
                 method: "GET",
-                params: {
-                    searchQuery: searchEquipment,
-                    status: state,
-                    page: page,
-                    size: 20
-                },
-            }),
+                params: params,
+            });
+        },
         retry: (failureCount, error) => error.status !== 404,
     });
 
@@ -53,12 +72,13 @@ function Equipments() {
         switch (status) {
             case "AVAILABLE":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeDisponible}`}>Disponible</span>;
+            case "IN_USE":
             case "LOANED":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeEnUso}`}>En uso</span>;
             case "MAINTENANCE":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeMantenimiento}`}>Mantenimiento</span>;
             case "DAMAGED":
-                return <span className={`${tableStyles.badge} ${tableStyles.badgeEnUso}`}>Dañado</span>;
+                return <span className={`${tableStyles.badge} ${tableStyles.badgeMantenimiento}`}>Dañado</span>;
             default:
                 return <span className={tableStyles.badge}>{status}</span>;
         }
@@ -80,7 +100,6 @@ function Equipments() {
 
                 <div className={styles.headerRow}>
                     <h1>Equipos</h1>
-
                     <PlusButton
                         text="Nuevo Equipo"
                         onClick={() => setModalVisible(true)}
@@ -88,32 +107,43 @@ function Equipments() {
                 </div>
 
                 <div className={styles.searchBar}>
-
                     <SearchBar
                         type="search"
                         placeholder="Buscar Equipos..."
                         value={searchEquipment}
-                        onChange={(e) => setSearchEquipment(e.target.value)}
+                        onChange={(e) => {
+                            setSearchEquipment(e.target.value);
+                            setPage(0);
+                        }}
                     />
 
-                    <button className={styles.refreshIcon} title="Refrescar">
+                    <button
+                        className={styles.refreshIcon}
+                        title="Refrescar"
+                        onClick={() => refetch()}
+                    >
                         <FiRefreshCw />
                     </button>
 
                     <Filter
-                        label="Estado"
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
-                        options={opcionesEstado}
+                        label="Tipo:"
+                        value={type}
+                        onChange={(e) => {
+                            setType(e.target.value);
+                            setPage(0);
+                        }}
+                        options={typeOptions}
                     />
 
                     <Filter
-                        label="Tipo"
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
-                        options={opcionesTipo}
+                        label="Estado:"
+                        value={status}
+                        onChange={(e) => {
+                            setStatus(e.target.value);
+                            setPage(0);
+                        }}
+                        options={statusOptions}
                     />
-
                 </div>
             </div>
 
@@ -124,75 +154,68 @@ function Equipments() {
                     <div className={tableStyles.tableContainer}>
                         <table className={tableStyles.table}>
                             <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Tipo</th>
-                                    <th>Nº Inventario</th>
-                                    <th>Edificio</th>
-                                    <th>Estudiantes</th>
-                                    <th>Disponibilidad</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Nº Inventario</th>
+                                <th>Edificio</th>
+                                <th>Estudiantes</th>
+                                <th>Disponibilidad</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
                             </thead>
-
                             <tbody>
-                                {b_equipments?.content?.length !== 0 ? (
-                                    b_equipments?.content?.map((equipment) => (
-                                        <tr key={equipment.id}>
-                                            <td className={tableStyles.equipmentName}>{equipment.name}</td>
-                                            <td>{equipment.type?.name || "N/A"}</td>
-                                            <td>{equipment.inventoryIdNum}</td>
-                                            <td>{equipment.building?.name || "N/A"}</td>
-
-                                            <td>
+                            {b_equipments?.content?.length > 0 ? (
+                                b_equipments.content.map((equipment) => (
+                                    <tr key={equipment.id}>
+                                        <td className={tableStyles.equipmentName}>{equipment.name}</td>
+                                        <td>{equipment.type?.name || "—"}</td>
+                                        <td>{equipment.inventoryIdNum || "—"}</td>
+                                        <td>{equipment.building?.name || "—"}</td>
+                                        <td>
                                                 <span className={`${tableStyles.badge} ${equipment.availableForStudents ? tableStyles.statusAbierto : tableStyles.statusRestringido}`}>
                                                     {equipment.availableForStudents ? "Abierto" : "Restringido"}
                                                 </span>
-                                            </td>
-
-                                            <td>
-                                                {getStatusBadge(equipment.status)}
-                                            </td>
-                                            <td>
-                                                <label className={tableStyles.switch}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={equipment.availableForStudents}
-                                                        readOnly
-                                                    />
-                                                    <span className={tableStyles.slider}></span>
-                                                </label>
-                                            </td>
-
-
-                                            <td>
-                                                <div className={tableStyles.actions}>
-                                                    <button
-                                                        className={tableStyles.iconButton}
-                                                        title="Ver detalles"
-                                                        onClick={() => navigate(`/equipment/${equipment.id}`)}
-                                                    >
-                                                        <FiEye size={18} />
-                                                    </button>
-                                                    <button
-                                                        className={tableStyles.iconButton}
-                                                        title="Editar equipo"
-                                                        onClick={() => navigate(`/equipment/edit/${equipment.id}`)}
-                                                    >
-                                                        <FiEdit2 size={18} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="7" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
-                                            No se encontraron registros
+                                        </td>
+                                        <td>{getStatusBadge(equipment.status)}</td>
+                                        <td>
+                                            <label className={tableStyles.switch}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={equipment.availableForStudents}
+                                                    readOnly
+                                                />
+                                                <span className={tableStyles.slider}></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div className={tableStyles.actions}>
+                                                <button
+                                                    className={tableStyles.iconButton}
+                                                    title="Ver detalles"
+                                                    onClick={() => navigate(`/equipment/${equipment.id}`)}
+                                                >
+                                                    <FiEye size={18} />
+                                                </button>
+                                                <button
+                                                    className={tableStyles.iconButton}
+                                                    title="Editar equipo"
+                                                    onClick={() => navigate(`/equipment/edit/${equipment.id}`)}
+                                                >
+                                                    <FiEdit2 size={18} />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
-                                )}
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                        No se encontraron registros
+                                    </td>
+                                </tr>
+                            )}
                             </tbody>
                         </table>
                     </div>
