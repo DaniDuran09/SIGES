@@ -18,7 +18,7 @@ function History() {
     const [page, setPage] = useState(0);
 
     const statusOptions = [
-        { value: "", text: "Todos" },
+        { value: "", text: "Estado: Todos" },
         { value: "FINISHED", text: "Completada" },
         { value: "APPROVED", text: "Aprobada" },
         { value: "PENDING", text: "Pendiente" },
@@ -28,7 +28,7 @@ function History() {
     ];
 
     const typeOptions = [
-        { value: "", text: "Todos" },
+        { value: "", text: "Tipo: Todos" },
         { value: "SINGLE", text: "Individual" },
         { value: "GROUP", text: "Grupal" }
     ];
@@ -84,15 +84,8 @@ function History() {
                         }}
                     />
 
-                    <button
-                        className={styles.refreshIcon}
-                        title="Refrescar"
-                        onClick={() => refetch()}
-                    >
-                        <FiRefreshCw />
-                    </button>
-
                     <div className={styles.componentSearch}>
+
                         <input
                             className={styles.date}
                             type="date"
@@ -104,9 +97,18 @@ function History() {
                         />
 
                         <div className={styles.optionAndState}>
-                            {/* Filtro de Tipo (SINGLE / GROUP) */}
                             <Filter
-                                label="Tipo:"
+
+                                value={status}
+                                onChange={(e) => {
+                                    setStatus(e.target.value);
+                                    setPage(0);
+                                }}
+                                options={statusOptions}
+                            />
+
+                            <Filter
+
                                 value={type}
                                 onChange={(e) => {
                                     setType(e.target.value);
@@ -115,16 +117,14 @@ function History() {
                                 options={typeOptions}
                             />
 
-                            {/* Filtro de Estado */}
-                            <Filter
-                                label="Estado:"
-                                value={status}
-                                onChange={(e) => {
-                                    setStatus(e.target.value);
-                                    setPage(0);
-                                }}
-                                options={statusOptions}
-                            />
+
+                            <button
+                                className={styles.refreshIcon}
+                                title="Refrescar"
+                                onClick={() => refetch()}
+                            >
+                                <FiRefreshCw />
+                            </button>
                         </div>
                     </div>
                 </div>

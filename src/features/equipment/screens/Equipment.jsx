@@ -19,13 +19,15 @@ function Equipments() {
     const [modalVisible, setModalVisible] = useState(false);
     const navigate = useNavigate();
     const [page, setPage] = useState(0);
-    const opcionesEstado = [
+    const statusOptions = [
+        { value: "", text: "Estado: Todos" },
         { value: "AVAILABLE", text: "Disponible" },
         { value: "MAINTENANCE", text: "Mantenimiento" },
         { value: "DAMAGED", text: "Dañado" },
     ];
 
-    const opcionesTipo = [
+    const typeOptions = [
+        { value: "", text: "Tipo: Todos" },
         { value: "AVAILABLE", text: "Cable" },
         { value: "MAINTENANCE", text: "Proyector" },
     ];
@@ -101,17 +103,15 @@ function Equipments() {
                     </button>
 
                     <Filter
-                        label="Estado"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
-                        options={opcionesEstado}
+                        options={statusOptions}
                     />
 
                     <Filter
-                        label="Tipo"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
-                        options={opcionesTipo}
+                        options={typeOptions}
                     />
 
                 </div>

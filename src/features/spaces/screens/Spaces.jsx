@@ -20,7 +20,7 @@ function Spaces() {
     const [modalVisible, setModalVisible] = useState(false);
 
     const statusOptions = [
-        { value: "ALL", text: "Todos" },
+        { value: "ALL", text: "Estado: Todos" },
         { value: "ACTIVE", text: "Activo" },
         { value: "INACTIVE", text: "Inactivo" },
     ];
@@ -31,7 +31,7 @@ function Spaces() {
     });
 
     const typeOptions = [
-        { value: "", text: "Todos" },
+        { value: "", text: "Tipo: Todos" },
         ...(b_types?.map((t) => ({
             value: t.id.toString(),
             text: t.name,

@@ -17,7 +17,7 @@ function Requests() {
     const [status, setStatus] = useState("ALL");
 
     const opcionesTipo = [
-        { value: "ALL", text: "Todos" },
+        { value: "ALL", text: "Tipo: Todos" },
         { value: "EQUIPMENT", text: "Equipo" },
         { value: "SPACE", text: "Espacio" }
     ];
