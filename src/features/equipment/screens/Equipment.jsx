@@ -1,4 +1,4 @@
-import {FiPlus, FiSearch, FiEye, FiEdit2, FiRefreshCw} from "react-icons/fi";
+import { FiPlus, FiSearch, FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
 import styles from "../styles/Equipment.module.css";
 import tableStyles from "../styles/EquipmentData.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -53,7 +53,7 @@ function Equipments() {
         switch (status) {
             case "AVAILABLE":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeDisponible}`}>Disponible</span>;
-            case "IN_USE":
+            case "LOANED":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeEnUso}`}>En uso</span>;
             case "MAINTENANCE":
                 return <span className={`${tableStyles.badge} ${tableStyles.badgeMantenimiento}`}>Mantenimiento</span>;
