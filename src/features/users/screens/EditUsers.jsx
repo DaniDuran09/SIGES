@@ -40,7 +40,7 @@ function EditUsers() {
     }, [user]);
 
     const mutation = useMutation({
-        mutationFn: (updatedData) => apiFetch(`/users/${id}`, {
+        mutationFn: (updatedData) => apiFetch(`/users/${id}/email`, {
             method: "PUT",
             body: JSON.stringify(updatedData)
         }),
