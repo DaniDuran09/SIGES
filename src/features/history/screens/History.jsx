@@ -1,6 +1,6 @@
 import styles from "../styles/History.module.css";
 import tableStyles from "../styles/HistoryData.module.css";
-import { FiSearch } from "react-icons/fi";
+import {FiRefreshCw, FiSearch} from "react-icons/fi";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
@@ -17,8 +17,14 @@ function History() {
 
     const opcionesEstado = [
         { value: "All", text: "Todos" },
-        { value: "ACTIVE", text: "Activo" },
-        { value: "INACTIVE", text: "Inactivo" }
+        { value: "ACTIVE", text: "Completada" },
+        { value: "INACTIVE", text: "Cancelada" },
+        { value: "INCOMPLETE", text: "Denegada" }
+
+    ];
+    const opcionesOrdenar = [
+        { value: "ACTIVE", text: "Fecha" },
+        { value: "INACTIVE", text: "Nombre" }
 
     ];
 
@@ -63,26 +69,29 @@ function History() {
                         onChange={(e) => setSearch(e.target.value)}
                     />
 
+                    <button className={styles.refreshIcon} title="Refrescar">
+                        <FiRefreshCw />
+                    </button>
+
                     <div className={styles.componentSearch}>
                         <input className={styles.date} type="datetime-local" />
 
                         <div className={styles.optionAndState}>
-                            <select 
-                                className={styles.state}
-                                value={status}
-                                onChange={(e) => setStatus(e.target.value)}
-                            >
-                                <option value="">Estado: Todos</option>
-                                <option value="COMPLETED">Completada</option>
-                                <option value="CANCELLED">Cancelada</option>
-                                <option value="DENIED">Denegada</option>
-                            </select>
 
-                            <select className={styles.sort}>
-                                <option value="">Ordenar por</option>
-                                <option value="fecha">Fecha</option>
-                                <option value="nombre">Nombre</option>
-                            </select>
+
+                            <Filter
+                                label="Estado"
+                                value=""
+                                onChange={(e) => setStatus(e.target.value)}
+                                options={opcionesEstado}
+                            />
+
+                            <Filter
+                                label="Tipo"
+                                value=""
+                                onChange={(e) => setStatus(e.target.value)}
+                                options={opcionesOrdenar}
+                            />
                         </div>
                     </div>
                 </div>

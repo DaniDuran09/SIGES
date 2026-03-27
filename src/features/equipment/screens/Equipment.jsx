@@ -1,4 +1,4 @@
-import { FiPlus, FiSearch, FiEye, FiEdit2 } from "react-icons/fi";
+import {FiPlus, FiSearch, FiEye, FiEdit2, FiRefreshCw} from "react-icons/fi";
 import styles from "../styles/Equipment.module.css";
 import tableStyles from "../styles/EquipmentData.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -23,6 +23,11 @@ function Equipments() {
         { value: "AVAILABLE", text: "Disponible" },
         { value: "MAINTENANCE", text: "Mantenimiento" },
         { value: "DAMAGED", text: "Dañado" },
+    ];
+
+    const opcionesTipo = [
+        { value: "AVAILABLE", text: "Cable" },
+        { value: "MAINTENANCE", text: "Proyector" },
     ];
 
     const {
@@ -91,16 +96,23 @@ function Equipments() {
                         onChange={(e) => setSearchEquipment(e.target.value)}
                     />
 
-                    <div className={styles.componentSearch}>
-                        <div className={styles.optionAndState}>
-                            <Filter
-                                label="Tipo"
-                                value={state}
-                                onChange={(e) => setState(e.target.value)}
-                                options={opcionesEstado}
-                            />
-                        </div>
-                    </div>
+                    <button className={styles.refreshIcon} title="Refrescar">
+                        <FiRefreshCw />
+                    </button>
+
+                    <Filter
+                        label="Estado"
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        options={opcionesEstado}
+                    />
+
+                    <Filter
+                        label="Tipo"
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        options={opcionesTipo}
+                    />
 
                 </div>
             </div>

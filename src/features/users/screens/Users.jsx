@@ -1,6 +1,6 @@
 import styles from "../styles/Users.module.css";
 import tableStyles from "../styles/UsersData.module.css";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import {FiPlus, FiRefreshCw, FiSearch} from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
@@ -20,7 +20,6 @@ function Users() {
     const [page, setPage] = useState(0);
 
     const opcionesEstado = [
-        { value: "All", text: "Todos" },
         { value: "ACTIVE", text: "Activo" },
         { value: "INACTIVE", text: "Inactivo" }
 
@@ -90,25 +89,22 @@ function Users() {
                         onChange={(e) => setSearch(e.target.value)}
                     />
 
+                    <button className={styles.refreshIcon} title="Refrescar">
+                        <FiRefreshCw />
+                    </button>
+
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
-                            <select
-                                className={styles.state}
-                                value={state}
+
+
+                            <Filter
+                                label="Tipo"
+                                value=""
                                 onChange={(e) => setState(e.target.value)}
-                            >
-                                <option value="ALL">Estado: Todos</option>
-                                <option value="ACTIVE">Activo</option>
-                                <option value="INACTIVE">Inactivo</option>
-                            </select>
+                                options={opcionesEstado}
+                            />
                         </div>
                     </div>
-                    <Filter
-                        label="Tipo"
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
-                        options={opcionesEstado}
-                    />
                 </div>
             </div>
 

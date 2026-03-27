@@ -82,15 +82,15 @@ h1 {
 .searchBar {
     display: flex;
     flex-direction: row;
+    align-items: center;
     padding: 10px;
     gap: 15px;
-    flex-wrap: wrap;
     width: 100%;
 }
 
 .searchContainer {
     position: relative;
-    width: 100%;
+    flex: 1;
     min-width: 200px;
 }
 
@@ -111,6 +111,31 @@ h1 {
     padding-left: 45px;
     padding-right: 20px;
     outline: none;
+}
+
+.filterInput {
+    height: 50px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    padding: 0 20px;
+    background-color: white;
+    outline: none;
+    min-width: 180px;
+    color: #666;
+}
+
+.refreshIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    color: #9ca3af;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .componentSearch {
@@ -139,25 +164,24 @@ h1 {
 
 @media (max-width: 1024px) {
     .searchBar {
-        flex-direction: column;
-        width: 100%;
+        flex-wrap: wrap;
     }
 
     .searchContainer {
-        position: relative;
         width: 100%;
-        min-width: 200px;
+        order: 1;
     }
 
-    .optionAndState {
-        width: 100%;
-        justify-content: space-between;
+    .refreshIcon {
+        order: 2;
     }
 
+    .filterInput {
+        order: 3;
+    }
 }
 
 @media (max-width: 768px) {
-
     .state,
     .sort {
         width: 48%;
@@ -166,5 +190,4 @@ h1 {
     .date {
         width: 100%;
     }
-
 }
