@@ -245,57 +245,57 @@ export const NewSpaceModal = ({ onClose }) => {
                         <div className={styles.leftColumn}>
 
                             <div className={styles.formGroup}>
-                        <label>Nombre del espacio <span className={styles.requiredStar}>*</span></label>
-                        <input type="text" placeholder="Ej. Auditorio Principal" value={spaceName} onChange={(e) => setSpaceName(e.target.value)} />
-                        {errors.spaceName && <span className={styles.errorText}>{errors.spaceName}</span>}
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label>Tipo <span className={styles.requiredStar}>*</span></label>
-                        <div className={styles.inputWithButton}>
-                            <div className={styles.selectWrapper} style={{ flex: 1 }}>
-                                <select value={spaceType} onChange={(e) => setSpaceType(e.target.value)}>
-                                    <option value="" disabled>Seleccione...</option>
-                                    {b_types?.map((type) => (
-                                        <option key={type.id} value={type.id}>
-                                            {type.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                <label>Nombre del espacio <span className={styles.requiredStar}>*</span></label>
+                                <input type="text" placeholder="Ej. Auditorio Principal" value={spaceName} onChange={(e) => setSpaceName(e.target.value)} />
+                                {errors.spaceName && <span className={styles.errorText}>{errors.spaceName}</span>}
                             </div>
-                            <button type="button" className={styles.plusButton} onClick={() => setShowAddTypeModal(true)}>
-                                <FiPlus size={20} />
-                            </button>
-                        </div>
-                        {errors.spaceType && <span className={styles.errorText}>{errors.spaceType}</span>}
-                    </div>
 
-                    <div className={styles.formRow}>
-                        <div className={styles.formGroup}>
-                            <label>Ubicación <span className={styles.requiredStar}>*</span></label>
-                            <div className={styles.inputWithButton}>
-                                <div className={styles.selectWrapper} style={{ flex: 1 }}>
-                                    <select value={spaceBuilding} onChange={(e) => setSpaceBuilding(e.target.value)}>
-                                        <option value="" disabled>Seleccione...</option>
-                                        {b_buildings?.map((building) => (
-                                            <option key={building.id} value={building.id}>
-                                                {building.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                            <div className={styles.formGroup}>
+                                <label>Tipo <span className={styles.requiredStar}>*</span></label>
+                                <div className={styles.inputWithButton}>
+                                    <div className={styles.selectWrapper} style={{ flex: 1 }}>
+                                        <select value={spaceType} onChange={(e) => setSpaceType(e.target.value)}>
+                                            <option value="" disabled>Seleccione...</option>
+                                            {b_types?.map((type) => (
+                                                <option key={type.id} value={type.id}>
+                                                    {type.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button type="button" className={styles.plusButton} onClick={() => setShowAddTypeModal(true)}>
+                                        <FiPlus size={20} />
+                                    </button>
                                 </div>
-                                <button type="button" className={styles.plusButton} onClick={() => setShowAddBuildingModal(true)}>
-                                    <FiPlus size={20} />
-                                </button>
+                                {errors.spaceType && <span className={styles.errorText}>{errors.spaceType}</span>}
                             </div>
-                            {errors.spaceBuilding && <span className={styles.errorText}>{errors.spaceBuilding}</span>}
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>Capacidad <span className={styles.requiredStar}>*</span></label>
-                            <input type="text" placeholder="Ej. 200" value={spaceCapacity} onChange={(e) => setSpaceCapacity(e.target.value.replace(/\D/g, ''))} />
-                            {errors.spaceCapacity && <span className={styles.errorText}>{errors.spaceCapacity}</span>}
-                        </div>
-                    </div>
+
+                            <div className={styles.formRow}>
+                                <div className={styles.formGroup}>
+                                    <label>Ubicación <span className={styles.requiredStar}>*</span></label>
+                                    <div className={styles.inputWithButton}>
+                                        <div className={styles.selectWrapper} style={{ flex: 1 }}>
+                                            <select value={spaceBuilding} onChange={(e) => setSpaceBuilding(e.target.value)}>
+                                                <option value="" disabled>Seleccione...</option>
+                                                {b_buildings?.map((building) => (
+                                                    <option key={building.id} value={building.id}>
+                                                        {building.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <button type="button" className={styles.plusButton} onClick={() => setShowAddBuildingModal(true)}>
+                                            <FiPlus size={20} />
+                                        </button>
+                                    </div>
+                                    {errors.spaceBuilding && <span className={styles.errorText}>{errors.spaceBuilding}</span>}
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Capacidad <span className={styles.requiredStar}>*</span></label>
+                                    <input type="text" placeholder="Ej. 200" value={spaceCapacity} onChange={(e) => setSpaceCapacity(e.target.value.replace(/\D/g, ''))} />
+                                    {errors.spaceCapacity && <span className={styles.errorText}>{errors.spaceCapacity}</span>}
+                                </div>
+                            </div>
 
                             <div className={styles.formGroup}>
                                 <label>Tiempo de anticipación <span className={styles.requiredStar}>*</span></label>
@@ -317,28 +317,28 @@ export const NewSpaceModal = ({ onClose }) => {
 
                             <div className={styles.formGroup}>
                                 <label>Descripción</label>
-                        <textarea placeholder="Descripción del espacio..." value={spaceDescription} onChange={(e) => setSpaceDescription(e.target.value)}></textarea>
-                    </div>
+                                <textarea placeholder="Descripción del espacio..." value={spaceDescription} onChange={(e) => setSpaceDescription(e.target.value)}></textarea>
+                            </div>
 
-                    <div className={styles.formGroup}>
-                        <label>Equipos incluidos</label>
-                        <div className={styles.inputWithButton}>
-                            <input style={{ flex: 1 }} type="text" placeholder="Ej. Proyector, Pizarrón interactivo..." value={newEquipment} onChange={(e) => setNewEquipment(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddEquipment(); } }} />
-                            <button type="button" className={styles.plusButton} onClick={handleAddEquipment}>
-                                <FiPlus size={20} />
-                            </button>
-                        </div>
-                        {equipmentList.length > 0 && (
-                            <ul className={styles.tagList}>
-                                {equipmentList.map((eq, index) => (
-                                    <li key={index} className={styles.tagItem}>
-                                        {eq}
-                                        <button type="button" onClick={() => handleRemoveEquipment(index)}><FiX size={14} /></button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
+                            <div className={styles.formGroup}>
+                                <label>Equipos incluidos</label>
+                                <div className={styles.inputWithButton}>
+                                    <input style={{ flex: 1 }} type="text" placeholder="Ej. Proyector, Pizarrón interactivo..." value={newEquipment} onChange={(e) => setNewEquipment(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddEquipment(); } }} />
+                                    <button type="button" className={styles.plusButton} onClick={handleAddEquipment}>
+                                        <FiPlus size={20} />
+                                    </button>
+                                </div>
+                                {equipmentList.length > 0 && (
+                                    <ul className={styles.tagList}>
+                                        {equipmentList.map((eq, index) => (
+                                            <li key={index} className={styles.tagItem}>
+                                                {eq}
+                                                <button type="button" onClick={() => handleRemoveEquipment(index)}><FiX size={14} /></button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
 
                             <div className={styles.formGroup}>
                                 <label>Restricción</label>
