@@ -1,4 +1,4 @@
-import {FiPlus, FiSearch, FiEye, FiEdit2, FiRefreshCw} from "react-icons/fi";
+import { FiPlus, FiSearch, FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
 import styles from "../styles/Equipment.module.css";
 import tableStyles from "../styles/EquipmentData.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -40,7 +40,7 @@ function Equipments() {
             apiFetch("/equipments", {
                 method: "GET",
                 params: {
-                    searchQuery: searchEquipment,
+                    q: searchEquipment,
                     status: state,
                     page: page,
                     size: 20

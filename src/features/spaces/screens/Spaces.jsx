@@ -127,9 +127,10 @@ function Spaces() {
                             <p>No se encontraron registros</p>
                         </div>
                     ) : (
-                        <table className={tableStyles.table}>
-                            <thead>
-                            <tr>
+                        <div className={tableStyles.tableContainer}>
+                            <table className={tableStyles.table}>
+                                <thead>
+                                <tr>
                                 <th>Nombre</th>
                                 <th>Tipo</th>
                                 <th>Ubicación</th>
@@ -196,6 +197,7 @@ function Spaces() {
                             ))}
                             </tbody>
                         </table>
+                        </div>
                     )}
                     <Pagination 
                         currentPage={page} 

@@ -1,6 +1,6 @@
 import styles from "../styles/Users.module.css";
 import tableStyles from "../styles/UsersData.module.css";
-import {FiPlus, FiRefreshCw, FiSearch} from "react-icons/fi";
+import { FiPlus, FiRefreshCw, FiSearch } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
@@ -42,7 +42,7 @@ function Users() {
                     showMode: state,
                     sort: ['firstName,asc', 'lastName,asc'],
                     userTypes: type,
-                    search: search,
+                    q: search,
                     page: page,
                     size: 20
                 },
@@ -113,72 +113,73 @@ function Users() {
             ) : (
                 <>
                     <div className={tableStyles.wrapper}>
-                        <table className={tableStyles.table}>
-                            <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Matrícula</th>
-                                <th>Correo</th>
-                                <th>Teléfono</th>
-                                <th>Estado</th>
-                            </tr>
-                            </thead>
+                        <div className={tableStyles.tableContainer}>
+                            <table className={tableStyles.table}>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Tipo</th>
+                                        <th>Matrícula</th>
+                                        <th>Correo</th>
+                                        <th>Teléfono</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
 
-                            <tbody>
-                            {b_users?.content?.length > 0 ? (
-                                b_users.content.map((user) => (
-                                    <tr key={user.id}>
-                                        <td>{user.firstName + " " + user.lastName}</td>
+                                <tbody>
+                                    {b_users?.content?.length > 0 ? (
+                                        b_users.content.map((user) => (
+                                            <tr key={user.id}>
+                                                <td>{user.firstName + " " + user.lastName}</td>
 
-                                        <td>
-                                                <span
-                                                    className={`${tableStyles.badge} ${
-                                                        user.role === "ADMIN"
+                                                <td>
+                                                    <span
+                                                        className={`${tableStyles.badge} ${user.role === "ADMIN"
                                                             ? tableStyles.ADMIN
                                                             : user.role === "STUDENT"
                                                                 ? tableStyles.STUDENT
                                                                 : tableStyles.INSTITUTIONAL_STAFF
-                                                    }`}
-                                                >
-                                                    {user.role === "ADMIN"
-                                                        ? "Administrador"
-                                                        : user.role === "STUDENT"
-                                                            ? "Estudiante"
-                                                            : "Personal"}
-                                                </span>
-                                        </td>
+                                                            }`}
+                                                    >
+                                                        {user.role === "ADMIN"
+                                                            ? "Administrador"
+                                                            : user.role === "STUDENT"
+                                                                ? "Estudiante"
+                                                                : "Personal"}
+                                                    </span>
+                                                </td>
 
-                                        <td>{user.registrationNumber || user.employeeNumber || '—'}</td>
-                                        <td>{user.email}</td>
-                                        <td>{user.phoneNumber}</td>
+                                                <td>{user.registrationNumber || user.employeeNumber || '—'}</td>
+                                                <td>{user.email}</td>
+                                                <td>{user.phoneNumber}</td>
 
-                                        <td>
-                                            <label className={tableStyles.switch}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={user.enabled ?? user.active}
-                                                    readOnly
-                                                />
-                                                <span className={tableStyles.slider}></span>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-                                        No se encontraron registros
-                                    </td>
-                                </tr>
-                            )}
-                            </tbody>
-                        </table>
+                                                <td>
+                                                    <label className={tableStyles.switch}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={user.enabled ?? user.active}
+                                                            readOnly
+                                                        />
+                                                        <span className={tableStyles.slider}></span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                                                No se encontraron registros
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <Pagination 
-                        currentPage={page} 
-                        totalPages={b_users?.totalPages || 0} 
-                        onPageChange={(newPage) => setPage(newPage)} 
+                    <Pagination
+                        currentPage={page}
+                        totalPages={b_users?.totalPages || 0}
+                        onPageChange={(newPage) => setPage(newPage)}
                     />
                 </>
             )}
