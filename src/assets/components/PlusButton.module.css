@@ -7,13 +7,11 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px; /* Esto separa el icono del texto automáticamente */
-
-    /* La magia de la suavidad */
+    gap: 10px;
     transition: background-color 0.3s ease;
 }
 
-/* Solo cambia el color al pasar el mouse */
+
 .PlusButton:hover {
     background-color: #8474ac;
 }

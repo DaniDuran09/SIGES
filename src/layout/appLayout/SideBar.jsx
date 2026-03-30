@@ -59,7 +59,6 @@ function SideBar() {
                 }
             }}
         >
-            {/* Logo */}
             <div
                 style={{
                     padding: "10px",
@@ -80,7 +79,6 @@ function SideBar() {
                 )}
             </div>
 
-            {/* Menu */}
             <div style={{ flex: 1 }}>
                 <Menu
                     menuItemStyles={{
@@ -163,10 +161,9 @@ function SideBar() {
                 </Menu>
             </div>
 
-            {/* User Info */}
             <div
                 style={{
-                    padding: "15px",
+                    padding: "15px 12px",
                     backgroundColor: "#D6D6E7",
                     margin: "10px",
                     borderRadius: "12px",
@@ -174,7 +171,7 @@ function SideBar() {
                     alignItems: "center",
                     justifyContent: collapsed ? "center" : "flex-start",
                     flexDirection: collapsed ? "column" : "row",
-                    gap: collapsed ? "8px" : "10px",
+                    gap: collapsed ? "8px" : "12px",
                 }}
             >
                 <img
@@ -188,30 +185,33 @@ function SideBar() {
                 />
 
                 {!collapsed && (
-                    <div>
-                        <p style={{ margin: 0, fontWeight: "bold", fontSize: "10px" }}>
+                    <div style={{ flex: 1 }}>
+                        <p style={{ margin: 0, fontWeight: "bold", fontSize: "10px", color: "#333" }}>
                             José Domínguez
                         </p>
-                        <p style={{ margin: 0, fontSize: "12px" }}>
+                        <p style={{ margin: 0, fontSize: "11px", color: "#666" }}>
                             Administrador
                         </p>
                     </div>
                 )}
+
                 <button
                     onClick={handleLogout}
                     style={{
-                        borderWidth: "0px",
+                        border: "none",
                         backgroundColor: "transparent",
-                        width: collapsed ? "auto" : "100%",
+                        cursor: "pointer",
                         display: "flex",
-                        justifyContent: "center",
                         alignItems: "center",
-                        cursor: "pointer"
+                        justifyContent: "center",
+                        padding: "4px",
+                        marginRight: collapsed ? "0px" : "5px",
+                        width: "auto", 
+                        minWidth: "24px"
                     }}
                 >
-                    <FiLogOut style={{ width: "20px", height: "20px" }} />
+                    <FiLogOut style={{ width: "20px", height: "20px", color: "#333" }} />
                 </button>
-
             </div>
 
         </Sidebar>
