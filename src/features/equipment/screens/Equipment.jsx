@@ -1,7 +1,7 @@
 import { FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
 import styles from "../styles/Equipment.module.css";
 import tableStyles from "../styles/EquipmentData.module.css";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -15,6 +15,7 @@ import Filter from "../../../assets/components/Filter.jsx";
 
 function Equipments() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [searchEquipment, setSearchEquipment] = useState('');
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
@@ -41,13 +42,15 @@ function Equipments() {
         })) || []),
     ];
 
+    const queryKey = ["GetEquipments", searchEquipment, status, type, page];
+
     const {
         data: b_equipments,
         isPending,
         error,
         refetch
     } = useQuery({
-        queryKey: ["GetEquipments", searchEquipment, status, type, page],
+        queryKey: queryKey,
         queryFn: () => {
             const params = {
                 searchQuery: searchEquipment,
@@ -64,6 +67,47 @@ function Equipments() {
         },
         retry: (failureCount, error) => error.status !== 404,
     });
+
+    const toggleEquipmentMutation = useMutation({
+        mutationFn: async ({ id, currentlyActive }) => {
+            const endpoint = currentlyActive
+                ? `/equipments/${id}/deactivate`
+                : `/equipments/${id}/activate`;
+            return apiFetch(endpoint, { method: "PATCH" });
+        },
+        onMutate: async ({ id }) => {
+            await queryClient.cancelQueries({ queryKey });
+            const previousData = queryClient.getQueryData(queryKey);
+
+            queryClient.setQueryData(queryKey, (old) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    content: old.content.map((item) =>
+                        item.id === id ? { ...item, active: !item.active } : item
+                    ),
+                };
+            });
+
+            return { previousData };
+        },
+        onError: (err, variables, context) => {
+            if (context?.previousData) {
+                queryClient.setQueryData(queryKey, context.previousData);
+            }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ["GetEquipments"] });
+        }
+    });
+
+    const handleToggleActive = (equipment) => {
+        const isActive = equipment.active ?? true;
+        toggleEquipmentMutation.mutate({
+            id: equipment.id,
+            currentlyActive: isActive
+        });
+    };
 
     if (error && error.status !== 404) {
         return (
@@ -107,7 +151,6 @@ function Equipments() {
                     </button>
 
                     <Filter
-
                         value={type}
                         onChange={(e) => {
                             setType(e.target.value);
@@ -117,7 +160,6 @@ function Equipments() {
                     />
 
                     <Filter
-
                         value={status}
                         onChange={(e) => {
                             setStatus(e.target.value);
@@ -169,11 +211,11 @@ function Equipments() {
                                                 </span>
                                         </td>
                                         <td>
-                                            <label className={tableStyles.switch}>
+                                            <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
                                                 <input
                                                     type="checkbox"
                                                     checked={equipment.active ?? true}
-                                                    readOnly
+                                                    onChange={() => handleToggleActive(equipment)}
                                                 />
                                                 <span className={tableStyles.slider}></span>
                                             </label>

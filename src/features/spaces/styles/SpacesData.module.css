@@ -148,7 +148,7 @@
     position: absolute;
     cursor: pointer;
     inset: 0;
-    background-color: #d1d5db;
+    background-color: #cbd5e1;
     border-radius: 20px;
     transition: 0.3s;
 }
@@ -165,10 +165,10 @@
     transition: 0.3s;
 }
 
-input:checked+.slider {
+.switch input:checked + .slider {
     background-color: #6d5cae;
 }
 
-input:checked+.slider:before {
+.switch input:checked + .slider:before {
     transform: translateX(18px);
 }

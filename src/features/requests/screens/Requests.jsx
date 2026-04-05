@@ -25,7 +25,8 @@ function Requests() {
     const {
         data: b_requests,
         isPending,
-        error
+        error,
+        refetch
     } = useQuery({
         queryKey: ["GetRequests", search, status, page],
         queryFn: () =>
@@ -79,7 +80,11 @@ function Requests() {
                         onChange={(e) => { setSearch(e.target.value); setPage(0); }}
                     />
 
-                    <button className={styles.refreshIcon} title="Refrescar">
+                    <button
+                        className={styles.refreshIcon}
+                        title="Refrescar"
+                        onClick={() => refetch()}
+                    >
                         <FiRefreshCw />
                     </button>
 
@@ -103,52 +108,52 @@ function Requests() {
                     <div className={tableStyles.wrapper}>
                         <table className={tableStyles.table}>
                             <thead>
-                                <tr>
-                                    <th>Usuario</th>
-                                    <th>Recurso</th>
-                                    <th>Fecha</th>
-                                    <th>Horario</th>
-                                    <th>Tipo</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Recurso</th>
+                                <th>Fecha</th>
+                                <th>Horario</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {b_requests?.content?.length > 0 ? (
-                                    b_requests.content.map((item) => (
-                                        <tr key={item.id}>
-                                            <td className={tableStyles.usuario}>{item.user?.firstName} {item.user?.lastName}</td>
-                                            <td>{item.reservable?.name}</td>
-                                            <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                                            <td>{item.startTime} - {item.endTime}</td>
-                                            <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
-                                            <td>
+                            {b_requests?.content?.length > 0 ? (
+                                b_requests.content.map((item) => (
+                                    <tr key={item.id}>
+                                        <td className={tableStyles.usuario}>{item.user?.firstName} {item.user?.lastName}</td>
+                                        <td>{item.reservable?.name}</td>
+                                        <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                                        <td>{item.startTime} - {item.endTime}</td>
+                                        <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
+                                        <td>
                                                 <span className={`${tableStyles.badge} ${item.status === 'PENDING' ? tableStyles.pendiente :
-                                                        item.status === 'APPROVED' ? tableStyles.aprobada :
-                                                            item.status === 'DENIED' ? tableStyles.denegada :
-                                                                item.status === 'COMPLETED' ? tableStyles.completada :
-                                                                    ''
-                                                    }`}>
+                                                    item.status === 'APPROVED' ? tableStyles.aprobada :
+                                                        item.status === 'DENIED' ? tableStyles.denegada :
+                                                            item.status === 'COMPLETED' ? tableStyles.completada :
+                                                                ''
+                                                }`}>
                                                     {item.status === 'PENDING' ? 'Pendiente' :
                                                         item.status === 'APPROVED' ? 'Aprobada' :
                                                             item.status === 'DENIED' ? 'Denegada' :
                                                                 item.status === 'COMPLETED' ? 'Completada' : item.status}
                                                 </span>
-                                            </td>
-                                            <td className={tableStyles.actions}>
-                                                <button className={tableStyles.viewButton}>
-                                                    <FiEye />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
-                                            No se encontraron registros
+                                        </td>
+                                        <td className={tableStyles.actions}>
+                                            <button className={tableStyles.viewButton}>
+                                                <FiEye />
+                                            </button>
                                         </td>
                                     </tr>
-                                )}
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
+                                        No se encontraron registros
+                                    </td>
+                                </tr>
+                            )}
                             </tbody>
                         </table>
                     </div>

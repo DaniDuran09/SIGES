@@ -13,7 +13,7 @@ import Filter from "../../../assets/components/Filter.jsx";
 function History() {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("");
-    const [type, setType] = useState(""); // Agregado para el segundo filtro
+    const [type, setType] = useState("");
     const [date, setDate] = useState("");
     const [page, setPage] = useState(0);
 
@@ -48,7 +48,7 @@ function History() {
 
             if (search) params.petitionerName = search;
             if (status !== "") params.status = status;
-            if (type !== "") params.type = type; // Enviando el parámetro type a la API
+            if (type !== "") params.type = type;
             if (date !== "") params.date = date;
 
             return apiFetch("/reservations", {
@@ -85,7 +85,6 @@ function History() {
                     />
 
                     <div className={styles.componentSearch}>
-
                         <input
                             className={styles.date}
                             type="date"
@@ -98,7 +97,6 @@ function History() {
 
                         <div className={styles.optionAndState}>
                             <Filter
-
                                 value={status}
                                 onChange={(e) => {
                                     setStatus(e.target.value);
@@ -108,7 +106,6 @@ function History() {
                             />
 
                             <Filter
-
                                 value={type}
                                 onChange={(e) => {
                                     setType(e.target.value);
@@ -116,7 +113,6 @@ function History() {
                                 }}
                                 options={typeOptions}
                             />
-
 
                             <button
                                 className={styles.refreshIcon}
@@ -128,64 +124,64 @@ function History() {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {isPending ? (
-                    <LoaderCircle />
-                ) : (
-                    <>
-                        <div className={tableStyles.wrapper}>
-                            <table className={tableStyles.table}>
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Solicitante</th>
-                                    <th>Recurso</th>
-                                    <th>Fecha</th>
-                                    <th>Horario</th>
-                                    <th>Estatus</th>
-                                    <th>Tipo</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {b_history?.content?.length > 0 ? (
-                                    b_history.content.map((item) => (
-                                        <tr key={item.id}>
-                                            <td>{item.id}</td>
-                                            <td className={tableStyles.name}>
-                                                {item.petitioner?.firstName} {item.petitioner?.lastName}
-                                            </td>
-                                            <td>{item.reservable?.name}</td>
-                                            <td>{item.date}</td>
-                                            <td>{item.startTime} - {item.endTime}</td>
-                                            <td>
+            {isPending ? (
+                <LoaderCircle />
+            ) : (
+                <>
+                    <div className={tableStyles.wrapper}>
+                        <table className={tableStyles.table}>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Solicitante</th>
+                                <th>Recurso</th>
+                                <th>Fecha</th>
+                                <th>Horario</th>
+                                <th>Estatus</th>
+                                <th>Tipo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {b_history?.content?.length > 0 ? (
+                                b_history.content.map((item) => (
+                                    <tr key={item.id}>
+                                        <td>{item.id}</td>
+                                        <td className={tableStyles.name}>
+                                            {item.petitioner?.firstName} {item.petitioner?.lastName}
+                                        </td>
+                                        <td>{item.reservable?.name}</td>
+                                        <td>{item.date}</td>
+                                        <td>{item.startTime} - {item.endTime}</td>
+                                        <td>
                                                 <span className={`${tableStyles.badge} ${
                                                     item.status === 'FINISHED' || item.status === 'APPROVED' ? tableStyles.completada :
                                                         item.status === 'CANCELLED' || item.status === 'REJECTED' ? tableStyles.cancelada : ''
                                                 }`}>
                                                     {item.status}
                                                 </span>
-                                            </td>
-                                            <td>{item.type}</td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
-                                            No se encontraron reservaciones
                                         </td>
+                                        <td>{item.type}</td>
                                     </tr>
-                                )}
-                                </tbody>
-                            </table>
-                        </div>
-                        <Pagination
-                            currentPage={page}
-                            totalPages={b_history?.totalPages || 0}
-                            onPageChange={(newPage) => setPage(newPage)}
-                        />
-                    </>
-                )}
-            </div>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
+                                        No se encontraron reservaciones
+                                    </td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
+                    <Pagination
+                        currentPage={page}
+                        totalPages={b_history?.totalPages || 0}
+                        onPageChange={(newPage) => setPage(newPage)}
+                    />
+                </>
+            )}
         </div>
     );
 }
