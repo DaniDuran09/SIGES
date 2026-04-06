@@ -142,31 +142,33 @@ function Equipments() {
                         }}
                     />
 
-                    <button
-                        className={styles.refreshIcon}
-                        title="Refrescar"
-                        onClick={() => refetch()}
-                    >
-                        <FiRefreshCw />
-                    </button>
+                    <div className={styles.filterGroup}>
+                        <button
+                            className={styles.refreshIcon}
+                            title="Refrescar"
+                            onClick={() => refetch()}
+                        >
+                            <FiRefreshCw />
+                        </button>
 
-                    <Filter
-                        value={type}
-                        onChange={(e) => {
-                            setType(e.target.value);
-                            setPage(0);
-                        }}
-                        options={typeOptions}
-                    />
+                        <Filter
+                            value={type}
+                            onChange={(e) => {
+                                setType(e.target.value);
+                                setPage(0);
+                            }}
+                            options={typeOptions}
+                        />
 
-                    <Filter
-                        value={status}
-                        onChange={(e) => {
-                            setStatus(e.target.value);
-                            setPage(0);
-                        }}
-                        options={statusOptions}
-                    />
+                        <Filter
+                            value={status}
+                            onChange={(e) => {
+                                setStatus(e.target.value);
+                                setPage(0);
+                            }}
+                            options={statusOptions}
+                        />
+                    </div>
                 </div>
             </div>
 

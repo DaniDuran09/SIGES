@@ -130,7 +130,6 @@ h1 {
 .search::placeholder {
     color: #9ca3af;
 }
-
 .refreshIcon {
     display: flex;
     align-items: center;
@@ -139,9 +138,23 @@ h1 {
     height: 48px;
     background: white;
     border: 1px solid #eef0f3;
-    border-radius: 25px;
+    border-radius: 50%;
     color: #9ca3af;
     cursor: pointer;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    transition: all 0.2s ease;
+}
+
+.refreshIcon:hover {
+    background-color: #f8fafc;
+    color: #4a3aff;
+    border-color: #e2e8f0;
+    transform: scale(1.05);
+}
+
+.refreshIcon:active {
+    transform: scale(0.95);
 }
 
 .componentSearch {
@@ -174,6 +187,7 @@ h1 {
 .optionAndState {
     display: flex;
     gap: 12px;
+    align-items: center;
 }
 
 .usersTable {
@@ -209,11 +223,6 @@ h1 {
     .searchBar {
         flex-direction: column;
         align-items: stretch;
-
-    }
-
-    Filter{
-        width: 90%;
     }
 
     .title {
@@ -225,7 +234,7 @@ h1 {
     }
     .optionAndState {
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-start;
     }
 }
 
@@ -235,9 +244,14 @@ h1 {
         flex: 1;
     }
 
-
     .headerRow {
         flex-direction: column;
         gap: 15px;
+        align-items: flex-start;
+    }
+
+    .newRequestButton {
+        width: 100%;
+        justify-content: center;
     }
 }

@@ -49,6 +49,7 @@ function Requests() {
             </div>
         );
     }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -64,21 +65,13 @@ function Requests() {
                     </button>
                 </div>
 
-                <div className={styles.tabs}>
-                    <button className={status === "ALL" ? styles.active : ""} onClick={() => { setStatus("ALL"); setPage(0); }}>Todas</button>
-                    <button className={status === "PENDING" ? styles.active : ""} onClick={() => { setStatus("PENDING"); setPage(0); }}>Pendientes</button>
-                    <button className={status === "APPROVED" ? styles.active : ""} onClick={() => { setStatus("APPROVED"); setPage(0); }}>Aprobadas</button>
-                    <button className={status === "DENIED" ? styles.active : ""} onClick={() => { setStatus("DENIED"); setPage(0); }}>Denegadas</button>
-                </div>
-
-                <div className={styles.searchBar}>
-
-                    <SearchBar
-                        type="search"
-                        placeholder="Buscar Solicitudes..."
-                        value={search}
-                        onChange={(e) => { setSearch(e.target.value); setPage(0); }}
-                    />
+                <div className={styles.tabsContainer}>
+                    <div className={styles.tabs}>
+                        <button className={status === "ALL" ? styles.active : ""} onClick={() => { setStatus("ALL"); setPage(0); }}>Todas</button>
+                        <button className={status === "PENDING" ? styles.active : ""} onClick={() => { setStatus("PENDING"); setPage(0); }}>Pendientes</button>
+                        <button className={status === "APPROVED" ? styles.active : ""} onClick={() => { setStatus("APPROVED"); setPage(0); }}>Aprobadas</button>
+                        <button className={status === "DENIED" ? styles.active : ""} onClick={() => { setStatus("DENIED"); setPage(0); }}>Denegadas</button>
+                    </div>
 
                     <button
                         className={styles.refreshIcon}
@@ -87,6 +80,15 @@ function Requests() {
                     >
                         <FiRefreshCw />
                     </button>
+                </div>
+
+                <div className={styles.searchBar}>
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar Solicitudes..."
+                        value={search}
+                        onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+                    />
 
                     <Filter
                         label="Tipo:"
@@ -97,7 +99,6 @@ function Requests() {
                         }}
                         options={opcionesTipo}
                     />
-
                 </div>
             </div>
 

@@ -65,10 +65,16 @@ function Spaces() {
 
     const toggleSpaceMutation = useMutation({
         mutationFn: async ({ id, currentlyActive }) => {
-            const endpoint = currentlyActive
-                ? `/spaces/${id}/deactivate`
-                : `/spaces/${id}/activate`;
-            return apiFetch(endpoint, { method: "PATCH" });
+            const cleanId = String(id).trim();
+            const action = currentlyActive ? "deactivate" : "activate";
+            const endpoint = `/spaces/${cleanId}/${action}`;
+
+            return apiFetch(endpoint, {
+                method: "PATCH",
+                headers: {
+                    'X-API-Version': '1.0.0'
+                }
+            });
         },
         onMutate: async ({ id }) => {
             await queryClient.cancelQueries({ queryKey });
@@ -90,6 +96,9 @@ function Spaces() {
             if (context?.previousData) {
                 queryClient.setQueryData(queryKey, context.previousData);
             }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey });
         }
     });
 

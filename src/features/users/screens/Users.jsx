@@ -1,6 +1,6 @@
 import styles from "../styles/Users.module.css";
 import tableStyles from "../styles/UsersData.module.css";
-import { FiPlus, FiRefreshCw, FiSearch } from "react-icons/fi";
+import { FiPlus, FiRefreshCw, FiSearch, FiEdit2 } from "react-icons/fi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
@@ -136,21 +136,20 @@ function Users() {
                             setPage(0);
                         }}
                     />
-                    <button className={styles.refreshIcon} title="Refrescar" onClick={() => refetch()}>
-                        <FiRefreshCw />
-                    </button>
-                    <div className={styles.componentSearch}>
-                        <div className={styles.optionAndState}>
-                            <Filter
-                                label="Estado"
-                                value={state}
-                                onChange={(e) => {
-                                    setState(e.target.value);
-                                    setPage(0);
-                                }}
-                                options={statusOptions}
-                            />
-                        </div>
+
+                    <div className={styles.filterGroup}>
+                        <button className={styles.refreshIcon} title="Refrescar" onClick={() => refetch()}>
+                            <FiRefreshCw />
+                        </button>
+                        <Filter
+                            label="Estado"
+                            value={state}
+                            onChange={(e) => {
+                                setState(e.target.value);
+                                setPage(0);
+                            }}
+                            options={statusOptions}
+                        />
                     </div>
                 </div>
             </div>

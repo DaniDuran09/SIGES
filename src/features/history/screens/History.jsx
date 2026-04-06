@@ -84,7 +84,33 @@ function History() {
                         }}
                     />
 
-                    <div className={styles.componentSearch}>
+                    <div className={styles.filterGroup}>
+                        <button
+                            className={styles.refreshIcon}
+                            title="Refrescar"
+                            onClick={() => refetch()}
+                        >
+                            <FiRefreshCw />
+                        </button>
+
+                        <Filter
+                            value={type}
+                            onChange={(e) => {
+                                setType(e.target.value);
+                                setPage(0);
+                            }}
+                            options={typeOptions}
+                        />
+
+                        <Filter
+                            value={status}
+                            onChange={(e) => {
+                                setStatus(e.target.value);
+                                setPage(0);
+                            }}
+                            options={statusOptions}
+                        />
+
                         <input
                             className={styles.date}
                             type="date"
@@ -94,34 +120,6 @@ function History() {
                                 setPage(0);
                             }}
                         />
-
-                        <div className={styles.optionAndState}>
-                            <Filter
-                                value={status}
-                                onChange={(e) => {
-                                    setStatus(e.target.value);
-                                    setPage(0);
-                                }}
-                                options={statusOptions}
-                            />
-
-                            <Filter
-                                value={type}
-                                onChange={(e) => {
-                                    setType(e.target.value);
-                                    setPage(0);
-                                }}
-                                options={typeOptions}
-                            />
-
-                            <button
-                                className={styles.refreshIcon}
-                                title="Refrescar"
-                                onClick={() => refetch()}
-                            >
-                                <FiRefreshCw />
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
