@@ -11,6 +11,7 @@ import PlusButton from "../../../assets/components/PlusButton.jsx";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
 import { NewSpaceModal } from "../components/NewSpaceModal";
+import {Alert} from "@mui/material";
 
 function Spaces() {
     const navigate = useNavigate();
@@ -170,7 +171,8 @@ function Spaces() {
 
             {b_spacesIsPending ? (
                 <LoaderCircle />
-            ) : (
+            ) :
+                b_spacesIsError?(<Alert  severity={"error"}>Hubo un error al cargar los espacios</Alert>):(
                 <div className={tableStyles.wrapper}>
                     <table className={tableStyles.table}>
                         <thead>
