@@ -11,7 +11,7 @@ import PlusButton from "../../../assets/components/PlusButton.jsx";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
 import { NewSpaceModal } from "../components/NewSpaceModal";
-import {Alert} from "@mui/material";
+import { Alert } from "@mui/material";
 
 function Spaces() {
     const navigate = useNavigate();
@@ -86,7 +86,9 @@ function Spaces() {
                 return {
                     ...old,
                     content: old.content.map((space) =>
-                        space.id === id ? { ...space, active: !space.active } : space
+                        space.id === id
+                            ? { ...space, deletedAt: space.deletedAt ? null : new Date().toISOString() }
+                            : space
                     ),
                 };
             });
@@ -104,7 +106,7 @@ function Spaces() {
     });
 
     const handleToggleActive = (space) => {
-        const isActive = space.active ?? true;
+        const isActive = space.deletedAt === null;
         toggleSpaceMutation.mutate({
             id: space.id,
             currentlyActive: isActive
@@ -170,88 +172,90 @@ function Spaces() {
             </div>
 
             {b_spacesIsPending ? (
-                <LoaderCircle />
-            ) :
-                b_spacesIsError?(<Alert  severity={"error"}>Hubo un error al cargar los espacios</Alert>):(
-                <div className={tableStyles.wrapper}>
-                    <table className={tableStyles.table}>
-                        <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Edificio</th>
-                            <th>Capacidad</th>
-                            <th>Estudiantes</th>
-                            <th>Estado</th>
-                            <th>Activo</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
+                    <LoaderCircle />
+                ) :
+                b_spacesIsError ? (<Alert severity={"error"}>Hubo un error al cargar los espacios</Alert>) : (
+                    <div className={tableStyles.wrapper}>
+                        <table className={tableStyles.table}>
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Edificio</th>
+                                <th>Capacidad</th>
+                                <th>Estudiantes</th>
+                                <th>Estado</th>
+                                <th>Activo</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
 
-                        <tbody>
-                        {b_spaces?.content?.length > 0 ? (
-                            b_spaces.content.map((space) => (
-                                <tr key={space.id}>
-                                    <td className={tableStyles.projectName}>{space.name}</td>
-                                    <td>{space.spaceType?.name || '—'}</td>
-                                    <td>{space.building?.name || '—'}</td>
-                                    <td>{space.capacity ?? '—'}</td>
-                                    <td>
-                                            <span className={space.availableForStudents ? tableStyles.AbiertoText : tableStyles.RestringidoText}>
-                                                {space.availableForStudents ? "Abierto" : "Restringido"}
-                                            </span>
-                                    </td>
-                                    <td>
-                                            <span className={`${tableStyles.badge} ${tableStyles[space.status] || ''}`}>
-                                                {space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
-                                            </span>
-                                    </td>
-                                    <td>
-                                        <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
-                                            <input
-                                                type="checkbox"
-                                                checked={space.active ?? true}
-                                                onChange={() => handleToggleActive(space)}
-                                                disabled={toggleSpaceMutation.isPending}
-                                            />
-                                            <span className={tableStyles.slider}></span>
-                                        </label>
-                                    </td>
-                                    <td className={tableStyles.actions}>
-                                        <button
-                                            className={tableStyles.iconButton}
-                                            onClick={() => navigate(`/spaces/${space.id}`)}
-                                            title="Ver detalle"
-                                        >
-                                            <FiEye size={18} />
-                                        </button>
-                                        <button
-                                            className={tableStyles.iconButton}
-                                            onClick={() => navigate(`/spaces/edit/${space.id}`)}
-                                            title="Editar espacio"
-                                        >
-                                            <FiEdit2 size={18} />
-                                        </button>
+                            <tbody>
+                            {b_spaces?.content?.length > 0 ? (
+                                b_spaces.content.map((space) => (
+                                    <tr key={space.id}>
+                                        <td className={tableStyles.projectName}>{space.name}</td>
+                                        <td>{space.spaceType?.name || '—'}</td>
+                                        <td>{space.building?.name || '—'}</td>
+                                        <td>{space.capacity ?? '—'}</td>
+                                        <td>
+                                                <span className={space.availableForStudents ? tableStyles.AbiertoText : tableStyles.RestringidoText}>
+                                                    {space.availableForStudents ? "Abierto" : "Restringido"}
+                                                </span>
+                                        </td>
+                                        <td>
+                                                <span className={`${tableStyles.badge} ${space.deletedAt !== null ? tableStyles.INACTIVE : tableStyles[space.status]}`}>
+                                                    {space.deletedAt !== null
+                                                        ? "Inactivo"
+                                                        : space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
+                                                </span>
+                                        </td>
+                                        <td>
+                                            <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={space.deletedAt === null}
+                                                    onChange={() => handleToggleActive(space)}
+                                                    disabled={toggleSpaceMutation.isPending}
+                                                />
+                                                <span className={tableStyles.slider}></span>
+                                            </label>
+                                        </td>
+                                        <td className={tableStyles.actions}>
+                                            <button
+                                                className={tableStyles.iconButton}
+                                                onClick={() => navigate(`/spaces/${space.id}`)}
+                                                title="Ver detalle"
+                                            >
+                                                <FiEye size={18} />
+                                            </button>
+                                            <button
+                                                className={tableStyles.iconButton}
+                                                onClick={() => navigate(`/spaces/edit/${space.id}`)}
+                                                title="Editar espacio"
+                                            >
+                                                <FiEdit2 size={18} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                        No se encontraron registros
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
-                                    No se encontraron registros
-                                </td>
-                            </tr>
-                        )}
-                        </tbody>
-                    </table>
+                            )}
+                            </tbody>
+                        </table>
 
-                    <Pagination
-                        currentPage={page}
-                        totalPages={b_spaces?.totalPages || 0}
-                        onPageChange={(newPage) => setPage(newPage)}
-                    />
-                </div>
-            )}
+                        <Pagination
+                            currentPage={page}
+                            totalPages={b_spaces?.totalPages || 0}
+                            onPageChange={(newPage) => setPage(newPage)}
+                        />
+                    </div>
+                )}
         </div>
     );
 }
