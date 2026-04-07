@@ -2,7 +2,7 @@ import { FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/Spaces.module.css";
 import tableStyles from "../styles/SpacesData.module.css";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client.js";
 import { useState } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle.jsx";
@@ -14,6 +14,7 @@ import { NewSpaceModal } from "../components/NewSpaceModal";
 
 function Spaces() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [searchSpace, setSearchSpace] = useState('');
     const [state, setState] = useState('');
     const [type, setType] = useState('');
@@ -21,7 +22,7 @@ function Spaces() {
     const [modalVisible, setModalVisible] = useState(false);
 
     const statusOptions = [
-        { value: "ALL", text: "Todos" },
+        { value: "ALL", text: "Estado: Todos" },
         { value: "ACTIVE", text: "Activo" },
         { value: "INACTIVE", text: "Inactivo" },
     ];
@@ -32,12 +33,14 @@ function Spaces() {
     });
 
     const typeOptions = [
-        { value: "", text: "Todos" },
+        { value: "", text: "Tipo: Todos" },
         ...(b_types?.map((t) => ({
             value: t.id.toString(),
             text: t.name,
         })) || []),
     ];
+
+    const queryKey = ["GetSpaces", searchSpace, state, type, page];
 
     const {
         data: b_spaces,
@@ -45,7 +48,7 @@ function Spaces() {
         error: b_spacesIsError,
         refetch
     } = useQuery({
-        queryKey: ["GetSpaces", searchSpace, state, type, page],
+        queryKey: queryKey,
         queryFn: () =>
             apiFetch("/spaces", {
                 method: "GET",
@@ -59,6 +62,53 @@ function Spaces() {
             }),
         retry: (failureCount, error) => error.status !== 404,
     });
+
+    const toggleSpaceMutation = useMutation({
+        mutationFn: async ({ id, currentlyActive }) => {
+            const cleanId = String(id).trim();
+            const action = currentlyActive ? "deactivate" : "activate";
+            const endpoint = `/spaces/${cleanId}/${action}`;
+
+            return apiFetch(endpoint, {
+                method: "PATCH",
+                headers: {
+                    'X-API-Version': '1.0.0'
+                }
+            });
+        },
+        onMutate: async ({ id }) => {
+            await queryClient.cancelQueries({ queryKey });
+            const previousData = queryClient.getQueryData(queryKey);
+
+            queryClient.setQueryData(queryKey, (old) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    content: old.content.map((space) =>
+                        space.id === id ? { ...space, active: !space.active } : space
+                    ),
+                };
+            });
+
+            return { previousData };
+        },
+        onError: (err, variables, context) => {
+            if (context?.previousData) {
+                queryClient.setQueryData(queryKey, context.previousData);
+            }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey });
+        }
+    });
+
+    const handleToggleActive = (space) => {
+        const isActive = space.active ?? true;
+        toggleSpaceMutation.mutate({
+            id: space.id,
+            currentlyActive: isActive
+        });
+    };
 
     return (
         <div className={styles.container}>
@@ -122,84 +172,76 @@ function Spaces() {
                 <LoaderCircle />
             ) : (
                 <div className={tableStyles.wrapper}>
-                    <div className={tableStyles.tableContainer}>
-                        <table className={tableStyles.table}>
-                            <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Edificio</th>
-                                <th>Capacidad</th>
-                                <th>Estudiantes</th>
-                                <th>Estado</th>
-                                <th>Activo</th>
-                                <th>Acciones</th>
-                            </tr>
+                    <table className={tableStyles.table}>
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Edificio</th>
+                            <th>Capacidad</th>
+                            <th>Estudiantes</th>
+                            <th>Estado</th>
+                            <th>Activo</th>
+                            <th>Acciones</th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            {b_spaces?.content?.length > 0 ? (
-                                b_spaces.content.map((space) => (
-                                    <tr key={space.id}>
-                                        <td className={tableStyles.projectName}>{space.name}</td>
-
-                                        <td>{space.spaceType?.name || '—'}</td>
-
-                                        <td>{space.building?.name || '—'}</td>
-
-                                        <td>{space.capacity ?? '—'}</td>
-
-                                        <td>
+                        {b_spaces?.content?.length > 0 ? (
+                            b_spaces.content.map((space) => (
+                                <tr key={space.id}>
+                                    <td className={tableStyles.projectName}>{space.name}</td>
+                                    <td>{space.spaceType?.name || '—'}</td>
+                                    <td>{space.building?.name || '—'}</td>
+                                    <td>{space.capacity ?? '—'}</td>
+                                    <td>
                                             <span className={space.availableForStudents ? tableStyles.AbiertoText : tableStyles.RestringidoText}>
                                                 {space.availableForStudents ? "Abierto" : "Restringido"}
                                             </span>
-                                        </td>
-
-                                        <td>
+                                    </td>
+                                    <td>
                                             <span className={`${tableStyles.badge} ${tableStyles[space.status] || ''}`}>
                                                 {space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
                                             </span>
-                                        </td>
-
-                                        <td>
-                                            <label className={tableStyles.switch}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={space.active ?? true}
-                                                    readOnly
-                                                />
-                                                <span className={tableStyles.slider}></span>
-                                            </label>
-                                        </td>
-
-                                        <td className={tableStyles.actions}>
-                                            <button
-                                                className={tableStyles.iconButton}
-                                                onClick={() => navigate(`/spaces/${space.id}`)}
-                                                title="Ver detalle"
-                                            >
-                                                <FiEye size={18} />
-                                            </button>
-                                            <button
-                                                className={tableStyles.iconButton}
-                                                onClick={() => navigate(`/spaces/edit/${space.id}`)}
-                                                title="Editar espacio"
-                                            >
-                                                <FiEdit2 size={18} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
-                                        No se encontraron registros
+                                    </td>
+                                    <td>
+                                        <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
+                                            <input
+                                                type="checkbox"
+                                                checked={space.active ?? true}
+                                                onChange={() => handleToggleActive(space)}
+                                                disabled={toggleSpaceMutation.isPending}
+                                            />
+                                            <span className={tableStyles.slider}></span>
+                                        </label>
+                                    </td>
+                                    <td className={tableStyles.actions}>
+                                        <button
+                                            className={tableStyles.iconButton}
+                                            onClick={() => navigate(`/spaces/${space.id}`)}
+                                            title="Ver detalle"
+                                        >
+                                            <FiEye size={18} />
+                                        </button>
+                                        <button
+                                            className={tableStyles.iconButton}
+                                            onClick={() => navigate(`/spaces/edit/${space.id}`)}
+                                            title="Editar espacio"
+                                        >
+                                            <FiEdit2 size={18} />
+                                        </button>
                                     </td>
                                 </tr>
-                            )}
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                    No se encontraron registros
+                                </td>
+                            </tr>
+                        )}
                         </tbody>
-                        </table>
-                    </div>
+                    </table>
 
                     <Pagination
                         currentPage={page}

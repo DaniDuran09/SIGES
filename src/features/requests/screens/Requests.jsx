@@ -10,16 +10,14 @@ import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
-import { useNavigate } from "react-router-dom";
 
 function Requests() {
-    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
     const [status, setStatus] = useState("ALL");
 
     const opcionesTipo = [
-        { value: "ALL", text: "Todos" },
+        { value: "ALL", text: "Tipo: Todos" },
         { value: "EQUIPMENT", text: "Equipo" },
         { value: "SPACE", text: "Espacio" }
     ];
@@ -27,7 +25,8 @@ function Requests() {
     const {
         data: b_requests,
         isPending,
-        error
+        error,
+        refetch
     } = useQuery({
         queryKey: ["GetRequests", search, status, page],
         queryFn: () =>
@@ -50,6 +49,7 @@ function Requests() {
             </div>
         );
     }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -65,25 +65,30 @@ function Requests() {
                     </button>
                 </div>
 
-                <div className={styles.tabs}>
-                    <button className={status === "ALL" ? styles.active : ""} onClick={() => { setStatus("ALL"); setPage(0); }}>Todas</button>
-                    <button className={status === "PENDING" ? styles.active : ""} onClick={() => { setStatus("PENDING"); setPage(0); }}>Pendientes</button>
-                    <button className={status === "APPROVED" ? styles.active : ""} onClick={() => { setStatus("APPROVED"); setPage(0); }}>Aprobadas</button>
-                    <button className={status === "DENIED" ? styles.active : ""} onClick={() => { setStatus("DENIED"); setPage(0); }}>Denegadas</button>
+                <div className={styles.tabsContainer}>
+                    <div className={styles.tabs}>
+                        <button className={status === "ALL" ? styles.active : ""} onClick={() => { setStatus("ALL"); setPage(0); }}>Todas</button>
+                        <button className={status === "PENDING" ? styles.active : ""} onClick={() => { setStatus("PENDING"); setPage(0); }}>Pendientes</button>
+                        <button className={status === "APPROVED" ? styles.active : ""} onClick={() => { setStatus("APPROVED"); setPage(0); }}>Aprobadas</button>
+                        <button className={status === "DENIED" ? styles.active : ""} onClick={() => { setStatus("DENIED"); setPage(0); }}>Denegadas</button>
+                    </div>
+
+                    <button
+                        className={styles.refreshIcon}
+                        title="Refrescar"
+                        onClick={() => refetch()}
+                    >
+                        <FiRefreshCw />
+                    </button>
                 </div>
 
                 <div className={styles.searchBar}>
-
                     <SearchBar
                         type="search"
                         placeholder="Buscar Solicitudes..."
                         value={search}
                         onChange={(e) => { setSearch(e.target.value); setPage(0); }}
                     />
-
-                    <button className={styles.refreshIcon} title="Refrescar">
-                        <FiRefreshCw />
-                    </button>
 
                     <Filter
                         label="Tipo:"
@@ -94,7 +99,6 @@ function Requests() {
                         }}
                         options={opcionesTipo}
                     />
-
                 </div>
             </div>
 
@@ -105,52 +109,52 @@ function Requests() {
                     <div className={tableStyles.wrapper}>
                         <table className={tableStyles.table}>
                             <thead>
-                                <tr>
-                                    <th>Usuario</th>
-                                    <th>Recurso</th>
-                                    <th>Fecha</th>
-                                    <th>Horario</th>
-                                    <th>Tipo</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Recurso</th>
+                                <th>Fecha</th>
+                                <th>Horario</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {b_requests?.content?.length > 0 ? (
-                                    b_requests.content.map((item) => (
-                                        <tr key={item.id}>
-                                            <td className={tableStyles.usuario}>{item.user?.firstName} {item.user?.lastName}</td>
-                                            <td>{item.reservable?.name}</td>
-                                            <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                                            <td>{item.startTime} - {item.endTime}</td>
-                                            <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
-                                            <td>
+                            {b_requests?.content?.length > 0 ? (
+                                b_requests.content.map((item) => (
+                                    <tr key={item.id}>
+                                        <td className={tableStyles.usuario}>{item.user?.firstName} {item.user?.lastName}</td>
+                                        <td>{item.reservable?.name}</td>
+                                        <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                                        <td>{item.startTime} - {item.endTime}</td>
+                                        <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
+                                        <td>
                                                 <span className={`${tableStyles.badge} ${item.status === 'PENDING' ? tableStyles.pendiente :
-                                                        item.status === 'APPROVED' ? tableStyles.aprobada :
-                                                            item.status === 'DENIED' ? tableStyles.denegada :
-                                                                item.status === 'COMPLETED' ? tableStyles.completada :
-                                                                    ''
-                                                    }`}>
+                                                    item.status === 'APPROVED' ? tableStyles.aprobada :
+                                                        item.status === 'DENIED' ? tableStyles.denegada :
+                                                            item.status === 'COMPLETED' ? tableStyles.completada :
+                                                                ''
+                                                }`}>
                                                     {item.status === 'PENDING' ? 'Pendiente' :
                                                         item.status === 'APPROVED' ? 'Aprobada' :
                                                             item.status === 'DENIED' ? 'Denegada' :
                                                                 item.status === 'COMPLETED' ? 'Completada' : item.status}
                                                 </span>
-                                            </td>
-                                            <td className={tableStyles.actions}>
-                                                <button type="button" className={tableStyles.viewButton} onClick={(e) => { e.preventDefault(); navigate(`/requests/${item.id}`); }}>
-                                                    <FiEye />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
-                                            No se encontraron registros
+                                        </td>
+                                        <td className={tableStyles.actions}>
+                                            <button className={tableStyles.viewButton}>
+                                                <FiEye />
+                                            </button>
                                         </td>
                                     </tr>
-                                )}
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
+                                        No se encontraron registros
+                                    </td>
+                                </tr>
+                            )}
                             </tbody>
                         </table>
                     </div>
