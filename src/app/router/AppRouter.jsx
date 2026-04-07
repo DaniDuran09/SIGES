@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "../../features/auth/screens/Login";
 import Home from "../../features/home/screens/Home";
 import Requests from "../../features/requests/screens/Requests";
+import ReservationDetail from "../../features/requests/screens/ReservationDetail";
 import Spaces from "../../features/spaces/screens/Spaces";
 import SpaceDetail from "../../features/spaces/screens/SpaceDetail";
 import EditSpace from "../../features/spaces/screens/EditSpace";
@@ -40,6 +41,7 @@ function AppRouter() {
                 >
                     <Route index element={<Home />} />
                     <Route path="requests" element={<Requests />} />
+                    <Route path="requests/:id" element={<ReservationDetail />} />
                     <Route path="spaces" element={<Spaces />} />
                     <Route path="spaces/:id" element={<SpaceDetail />} />
                     <Route path="spaces/edit/:id" element={<EditSpace />} />

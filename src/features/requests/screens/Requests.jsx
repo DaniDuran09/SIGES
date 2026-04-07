@@ -10,8 +10,10 @@ import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Requests() {
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
     const [status, setStatus] = useState("ALL");
@@ -136,7 +138,7 @@ function Requests() {
                                                 </span>
                                             </td>
                                             <td className={tableStyles.actions}>
-                                                <button className={tableStyles.viewButton}>
+                                                <button type="button" className={tableStyles.viewButton} onClick={(e) => { e.preventDefault(); navigate(`/requests/${item.id}`); }}>
                                                     <FiEye />
                                                 </button>
                                             </td>

@@ -122,8 +122,9 @@ function Spaces() {
                 <LoaderCircle />
             ) : (
                 <div className={tableStyles.wrapper}>
-                    <table className={tableStyles.table}>
-                        <thead>
+                    <div className={tableStyles.tableContainer}>
+                        <table className={tableStyles.table}>
+                            <thead>
                             <tr>
                                 <th>Nombre</th>
                                 <th>Tipo</th>
@@ -197,7 +198,8 @@ function Spaces() {
                                 </tr>
                             )}
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
 
                     <Pagination
                         currentPage={page}
