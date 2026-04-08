@@ -16,6 +16,7 @@ import Users from "../../features/users/screens/Users";
 import EditUsers from "../../features/users/screens/EditUsers";
 import History from "../../features/history/screens/History";
 import Configuration from "../../features/configuration/screens/Configuration";
+import Catalogue from "../../features/catalogue/screens/Catalogue";
 import Layout from "../../layout/Layout.jsx";
 import EquipmentHistory from "../../features/equipment/history/EquipmentHistory";
 import ProtectedRoute from "../../routes/ProtectedRoute";
@@ -53,6 +54,7 @@ function AppRouter() {
                     <Route path="users/edit/:id" element={<EditUsers />} />
                     <Route path="history" element={<History />} />
                     <Route path="configuration" element={<Configuration />} />
+                    <Route path="catalogue" element={<Catalogue />} />
                     <Route path="EditProfile" element={<EditProfile />} />
                     <Route path="Notificactions" element={<Notifications />} />
                 </Route>

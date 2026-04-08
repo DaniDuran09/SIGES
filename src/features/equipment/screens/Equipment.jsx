@@ -36,7 +36,7 @@ function Equipments() {
 
     const typeOptions = [
         { value: "", text: "Tipo: Todos" },
-        ...(e_types?.map((t) => ({
+        ...(e_types?.filter(t => t.deletedAt === null).map((t) => ({
             value: t.id.toString(),
             text: t.name,
         })) || []),

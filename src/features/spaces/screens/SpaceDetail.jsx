@@ -149,17 +149,6 @@ function SpaceDetail() {
                             </div>
                         </div>
 
-                        <div className={styles.section}>
-                            <h3 className={styles.sectionTitle}>
-                                OBSERVACIONES <span className={styles.plusIcon}><FiPlus size={12} /></span>
-                            </h3>
-                            <div className={styles.observationCard}>
-                                <div className={styles.obsHeader}>Admin (Sistema)</div>
-                                <div className={styles.obsContent}>
-                                    Información del espacio cargada correctamente desde el inventario central.
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

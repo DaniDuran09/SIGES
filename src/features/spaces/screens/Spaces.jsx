@@ -35,7 +35,7 @@ function Spaces() {
 
     const typeOptions = [
         { value: "", text: "Tipo: Todos" },
-        ...(b_types?.map((t) => ({
+        ...(b_types?.filter(t => t.deletedAt === null).map((t) => ({
             value: t.id.toString(),
             text: t.name,
         })) || []),

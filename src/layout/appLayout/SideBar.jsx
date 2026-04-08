@@ -9,7 +9,7 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 import { BsGear } from "react-icons/bs";
 import { FaBuilding } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FiHome, FiLogOut } from "react-icons/fi";
+import { FiHome, FiLogOut, FiGrid } from "react-icons/fi";
 import styles from "./SideBar.module.css";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useQuery } from "@tanstack/react-query";
@@ -137,6 +137,13 @@ function SideBar() {
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <BsGear className={styles.icon} />
                             {!collapsed && <p>Configuración</p>}
+                        </div>
+                    </MenuItem>
+                    
+                    <MenuItem active={location.pathname === "/catalogue"} onClick={() => navigate("/catalogue")}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <FiGrid className={styles.icon} />
+                            {!collapsed && <p>Catálogo</p>}
                         </div>
                     </MenuItem>
                 </Menu>

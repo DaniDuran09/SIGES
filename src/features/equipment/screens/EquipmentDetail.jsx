@@ -125,15 +125,6 @@ function EquipmentDetail() {
                             <p>{equipment.description || "Router industrial de grado empresarial diseñado para entornos de alta demanda. Ofrece conectividad robusta y segura para laboratorios de cómputo y espacios con múltiples dispositivos simultáneos."}</p>
                         </div>
 
-                        <div className={styles.detailBox} style={{ marginTop: '32px' }}>
-                            <h3 style={{ color: '#6B7280' }}>Observaciones</h3>
-                            <div className={styles.observationBox}>
-                                <div className={styles.observationHeader}>
-                                    <span>José Dominguez (Admin)</span>
-                                </div>
-                                <p>El sistema de audio fue actualizado. Nuevo mezclador digital instalado y calibrado. Todo funcionando correctamente.</p>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Bottom: Schedule (Full Width) */}

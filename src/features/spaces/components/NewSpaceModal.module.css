@@ -286,6 +286,14 @@
     border-color: #6B5B95;
 }
 
+.plusButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #F1F5F9;
+    border-color: #E2E8F0;
+    color: #94A3B8;
+}
+
 .requiredStar {
     color: #F87171;
     margin-left: 2px;

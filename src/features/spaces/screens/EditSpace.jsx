@@ -48,7 +48,6 @@ function EditSpace() {
 
     useEffect(() => {
         if (space) {
-            // Parse duration if needed (e.g. "24 HOURS" -> 24)
             const durationPart = space.bookInAdvanceDuration?.split(" ")[0] || "";
             const unitPart = space.bookInAdvanceDuration?.split(" ")[1] || "HOUR";
 
@@ -83,7 +82,6 @@ function EditSpace() {
         if (!newAvailDay || !newAvailStartTime || !newAvailEndTime) return;
         const newItem = {
             dateFrom: new Date().toISOString().split('T')[0],
-            dateTo: new Date().toISOString().split('T')[0],
             startTime: newAvailStartTime,
             endTime: newAvailEndTime,
             daysOfWeek: [newAvailDay]
@@ -115,7 +113,7 @@ function EditSpace() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         let bookInAdvanceDurationFormatted = "";
         if (formData.advanceUnit === "MINUTES" || formData.advanceUnit === "MINUTE") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}M`;
         else if (formData.advanceUnit === "HOUR" || formData.advanceUnit === "HOURS") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}H`;
@@ -144,9 +142,9 @@ function EditSpace() {
 
     return (
         <div className={styles.container}>
-            <Snackbar 
-                open={!!successMessage} 
-                autoHideDuration={6000} 
+            <Snackbar
+                open={!!successMessage}
+                autoHideDuration={6000}
                 onClose={() => setSuccessMessage("")}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
@@ -173,7 +171,7 @@ function EditSpace() {
                     <div className={styles.formGrid}>
                         <div className={styles.formGroup}>
                             <label>Nombre del espacio *</label>
-                            <input 
+                            <input
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
@@ -183,14 +181,14 @@ function EditSpace() {
 
                         <div className={styles.formGroup}>
                             <label>Tipo *</label>
-                            <select 
+                            <select
                                 name="spaceTypeId"
                                 value={formData.spaceTypeId}
                                 onChange={handleChange}
                                 required
                             >
                                 <option value="">Seleccionar tipo</option>
-                                {types?.map(t => (
+                                {types?.filter(t => t.deletedAt === null).map(t => (
                                     <option key={t.id} value={t.id}>{t.name}</option>
                                 ))}
                             </select>
@@ -199,7 +197,7 @@ function EditSpace() {
                         <div className={styles.formGroup}>
                             <label>Tiempo de anticipación *</label>
                             <div style={{ display: 'flex', gap: '8px' }}>
-                                <input 
+                                <input
                                     style={{ flex: 1 }}
                                     name="bookInAdvanceDuration"
                                     type="number"
@@ -207,7 +205,7 @@ function EditSpace() {
                                     onChange={handleChange}
                                     required
                                 />
-                                <select 
+                                <select
                                     style={{ flex: 1 }}
                                     name="advanceUnit"
                                     value={formData.advanceUnit}
@@ -221,14 +219,14 @@ function EditSpace() {
 
                         <div className={styles.formGroup}>
                             <label>Ubicación *</label>
-                            <select 
+                            <select
                                 name="buildingId"
                                 value={formData.buildingId}
                                 onChange={handleChange}
                                 required
                             >
                                 <option value="">Seleccionar edificio</option>
-                                {buildings?.map(b => (
+                                {buildings?.filter(b => b.deletedAt === null).map(b => (
                                     <option key={b.id} value={b.id}>{b.name}</option>
                                 ))}
                             </select>
@@ -236,7 +234,7 @@ function EditSpace() {
 
                         <div className={styles.formGroup}>
                             <label>Capacidad *</label>
-                            <input 
+                            <input
                                 name="capacity"
                                 type="number"
                                 value={formData.capacity}
@@ -247,7 +245,7 @@ function EditSpace() {
 
                         <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                             <label>Descripción</label>
-                            <textarea 
+                            <textarea
                                 name="description"
                                 rows="4"
                                 value={formData.description}
@@ -263,7 +261,7 @@ function EditSpace() {
                                 <FiPlus /> Agregar
                             </button>
                         </div>
-                        
+
                         {formData.availabilitySlots?.length > 0 ? (
                             formData.availabilitySlots.map((slot, index) => (
                                 <div key={index} className={styles.scheduleItem}>
@@ -284,7 +282,7 @@ function EditSpace() {
                     <div className={styles.restrictionSection}>
                         <span className={styles.restrictionLabel}>Restringido para estudiantes</span>
                         <label className={styles.switch}>
-                            <input 
+                            <input
                                 type="checkbox"
                                 name="availableForStudents"
                                 checked={!formData.availableForStudents}
