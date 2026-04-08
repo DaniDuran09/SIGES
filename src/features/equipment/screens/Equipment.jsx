@@ -23,7 +23,7 @@ function Equipments() {
     const [modalVisible, setModalVisible] = useState(false);
 
     const statusOptions = [
-        { value: "", text: "Estado: Todos" },
+        { value: "", text: "Disponibilidad: Todos" },
         { value: "AVAILABLE", text: "Disponible" },
         { value: "MAINTENANCE", text: "Mantenimiento" },
         { value: "LOANED", text: "En préstamo" },
@@ -51,16 +51,18 @@ function Equipments() {
         refetch
     } = useQuery({
         queryKey: queryKey,
-        queryFn: () => {
+        queryFn: async () => {
+            const cleanSearch = searchEquipment.trim();
             const params = {
-                searchQuery: searchEquipment,
+                searchQuery: cleanSearch !== "" ? cleanSearch : undefined,
                 page: page,
-                size: 20
+                size: 20,
+                showMode: "ALL"
             };
             if (status !== "") params.status = status;
             if (type !== "") params.equipmentTypeId = type;
 
-            return apiFetch("/equipments", {
+            return await apiFetch("/equipments", {
                 method: "GET",
                 params: params,
             });
@@ -70,10 +72,8 @@ function Equipments() {
 
     const toggleEquipmentMutation = useMutation({
         mutationFn: async ({ id, currentlyActive }) => {
-            const endpoint = currentlyActive
-                ? `/equipments/${id}/deactivate`
-                : `/equipments/${id}/activate`;
-            return apiFetch(endpoint, { method: "PATCH" });
+            const action = currentlyActive ? "deactivate" : "activate";
+            return apiFetch(`/equipments/${id}/${action}`, { method: "PATCH" });
         },
         onMutate: async ({ id }) => {
             await queryClient.cancelQueries({ queryKey });
@@ -84,7 +84,9 @@ function Equipments() {
                 return {
                     ...old,
                     content: old.content.map((item) =>
-                        item.id === id ? { ...item, active: !item.active } : item
+                        item.id === id
+                            ? { ...item, deletedAt: item.deletedAt ? null : new Date().toISOString() }
+                            : item
                     ),
                 };
             });
@@ -97,12 +99,12 @@ function Equipments() {
             }
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["GetEquipments"] });
+            queryClient.invalidateQueries({ queryKey });
         }
     });
 
     const handleToggleActive = (equipment) => {
-        const isActive = equipment.active ?? true;
+        const isActive = equipment.deletedAt === null;
         toggleEquipmentMutation.mutate({
             id: equipment.id,
             currentlyActive: isActive
@@ -145,7 +147,6 @@ function Equipments() {
                     <div className={styles.filterGroup}>
                         <button
                             className={styles.refreshIcon}
-                            title="Refrescar"
                             onClick={() => refetch()}
                         >
                             <FiRefreshCw />
@@ -199,25 +200,27 @@ function Equipments() {
                                         <td>{equipment.inventoryIdNum || "—"}</td>
                                         <td>{equipment.building?.name || "—"}</td>
                                         <td>
-                                                <span className={`${tableStyles.badge} ${equipment.availableForStudents ? tableStyles.statusAbierto : tableStyles.statusRestringido}`}>
-                                                    {equipment.availableForStudents ? "Abierto" : "Restringido"}
-                                                </span>
+                                            <span className={`${tableStyles.badge} ${equipment.availableForStudents ? tableStyles.statusAbierto : tableStyles.statusRestringido}`}>
+                                                {equipment.availableForStudents ? "Abierto" : "Restringido"}
+                                            </span>
                                         </td>
                                         <td>
-                                                <span className={`${tableStyles.badge} ${
-                                                    equipment.status === "AVAILABLE" ? tableStyles.badgeDisponible :
-                                                        equipment.status === "LOANED" || equipment.status === "IN_USE" ? tableStyles.badgeEnUso :
-                                                            tableStyles.badgeMantenimiento
-                                                }`}>
-                                                    {equipment.status === "AVAILABLE" ? "Disponible" : equipment.status === "LOANED" ? "En préstamo" : "Mantenimiento"}
-                                                </span>
+                                            <span className={`${tableStyles.badge} ${
+                                                equipment.status === "AVAILABLE" ? tableStyles.badgeDisponible :
+                                                    equipment.status === "LOANED" ? tableStyles.badgeEnUso :
+                                                        tableStyles.badgeMantenimiento
+                                            }`}>
+                                                {equipment.status === "AVAILABLE" ? "Disponible" :
+                                                    equipment.status === "LOANED" ? "En préstamo" : "Mantenimiento"}
+                                            </span>
                                         </td>
                                         <td>
                                             <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
                                                 <input
                                                     type="checkbox"
-                                                    checked={equipment.active ?? true}
+                                                    checked={equipment.deletedAt === null}
                                                     onChange={() => handleToggleActive(equipment)}
+                                                    disabled={toggleEquipmentMutation.isPending}
                                                 />
                                                 <span className={tableStyles.slider}></span>
                                             </label>
@@ -226,14 +229,12 @@ function Equipments() {
                                             <div className={tableStyles.actions}>
                                                 <button
                                                     className={tableStyles.iconButton}
-                                                    title="Ver detalles"
                                                     onClick={() => navigate(`/equipment/${equipment.id}`)}
                                                 >
                                                     <FiEye size={18} />
                                                 </button>
                                                 <button
                                                     className={tableStyles.iconButton}
-                                                    title="Editar equipo"
                                                     onClick={() => navigate(`/equipment/edit/${equipment.id}`)}
                                                 >
                                                     <FiEdit2 size={18} />
