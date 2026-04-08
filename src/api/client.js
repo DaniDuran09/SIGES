@@ -38,5 +38,6 @@ export const apiFetch = async (endpoint, options = {}) => {
         throw error;
     }
 
-    return response.json();
+    const text = await response.text();
+    return text ? JSON.parse(text) : {};
 };

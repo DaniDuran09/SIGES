@@ -1,4 +1,3 @@
-import { IoMdNotificationsOutline } from "react-icons/io";
 import styles from '../styles/Home.module.css';
 import { Colors } from "../../../assets/Colors";
 import { PiBuildingsBold } from "react-icons/pi";
@@ -103,24 +102,7 @@ function Home() {
             {spaceModalVisible && <NewSpaceModal onClose={() => setSpaceModalVisible(false)} />}
             {equipmentModalVisible && <NewEquipmentModal onClose={() => setEquipmentModalVisible(false)} />}
             {userModalVisible && <NewUserModal onClose={() => setUserModalVisible(false)} />}
-            <h4 style={{ paddingLeft: '10px', margin: '10px 0' }}>Buenos dias</h4>
-
-            <div className={styles.topBar}>
-                <div className={styles.titleSection}>
-                    <h1 className={styles.title}>Panel de control</h1>
-                </div>
-                <div className={styles.actionsSection}>
-                    <button className={styles.notificationButton}>
-                        {reports.pendingRequests > 0 && (
-                            <div style={{ width: '15px', height: '15px', backgroundColor: '#FF9B85', borderRadius: '50%', position: 'absolute', top: '5px', right: '5px' }} />
-                        )}
-                        <IoMdNotificationsOutline style={{ width: '30px', height: '30px' }} />
-                    </button>
-                    <div>
-                        <PlusButton text="Nueva Solicitud" />
-                    </div>
-                </div>
-            </div>
+            <h4 style={{ paddingLeft: '10px', margin: '10px 0' }}>Buenos días</h4>
 
             <div className={styles.statsGrid}>
                 <StatsComponent props={{

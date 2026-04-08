@@ -109,7 +109,7 @@ function Login() {
                     </div>
 
                     <div className={styles.inputGroup}
-                         onClick={() => navigate("/AccountRecovery")}>
+                        onClick={() => navigate("/AccountRecovery")}>
                         <a className={styles.forgotPassword} >
                             ¿Olvidaste tu contraseña?
                         </a>
