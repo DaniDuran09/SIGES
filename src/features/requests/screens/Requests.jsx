@@ -78,10 +78,7 @@ function Requests() {
 
                 <div className={styles.topBar}>
                     <h1>Solicitudes</h1>
-                    <button className={styles.notificationButton}>
-                        <div style={{ width: '15px', height: '15px', backgroundColor: '#FF9B85', borderRadius: '50%', position: 'absolute', top: '5px', right: '5px' }} />
-                        <IoMdNotificationsOutline style={{ width: '30px', height: '30px' }} />
-                    </button>
+
                 </div>
 
                 <div className={styles.tabsContainer}>
@@ -129,52 +126,52 @@ function Requests() {
                     <div className={tableStyles.wrapper}>
                         <table className={tableStyles.table}>
                             <thead>
-                            <tr>
-                                <th>Usuarios</th>
-                                <th>Recurso</th>
-                                <th>Fecha</th>
-                                <th>Horario</th>
-                                <th>Tipo</th>
-                                <th>Estado</th>
-                                <th style={{ textAlign: "center" }}>Acciones</th>
-                            </tr>
+                                <tr>
+                                    <th>Usuarios</th>
+                                    <th>Recurso</th>
+                                    <th>Fecha</th>
+                                    <th>Horario</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th style={{ textAlign: "center" }}>Acciones</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {b_requests?.content?.length > 0 ? (
-                                b_requests.content.map((item) => {
-                                    const statusInfo = getStatusInfo(item.status);
-                                    return (
-                                        <tr key={item.id}>
-                                            <td className={tableStyles.usuario}>
-                                                {(item.petitioner?.firstName || item.user?.firstName)} {(item.petitioner?.lastName || item.user?.lastName)}
-                                            </td>
-                                            <td>{item.reservable?.name}</td>
-                                            <td>{new Date(item.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                                            <td>{item.startTime} - {item.endTime}</td>
-                                            <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
-                                            <td>
-                                                <span className={`${tableStyles.badge} ${statusInfo.className}`}>
-                                                    {statusInfo.text}
-                                                </span>
-                                            </td>
-                                            <td className={tableStyles.actions}>
-                                                <button 
-                                                    className={tableStyles.viewButton}
-                                                    onClick={() => navigate(`/requests/${item.id}`)}
-                                                >
-                                                    <FiEye />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <tr>
-                                    <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
-                                        No se encontraron reservaciones
-                                    </td>
-                                </tr>
-                            )}
+                                {b_requests?.content?.length > 0 ? (
+                                    b_requests.content.map((item) => {
+                                        const statusInfo = getStatusInfo(item.status);
+                                        return (
+                                            <tr key={item.id}>
+                                                <td className={tableStyles.usuario}>
+                                                    {(item.petitioner?.firstName || item.user?.firstName)} {(item.petitioner?.lastName || item.user?.lastName)}
+                                                </td>
+                                                <td>{item.reservable?.name}</td>
+                                                <td>{new Date(item.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                                                <td>{item.startTime} - {item.endTime}</td>
+                                                <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
+                                                <td>
+                                                    <span className={`${tableStyles.badge} ${statusInfo.className}`}>
+                                                        {statusInfo.text}
+                                                    </span>
+                                                </td>
+                                                <td className={tableStyles.actions}>
+                                                    <button
+                                                        className={tableStyles.viewButton}
+                                                        onClick={() => navigate(`/requests/${item.id}`)}
+                                                    >
+                                                        <FiEye />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
+                                ) : (
+                                    <tr>
+                                        <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
+                                            No se encontraron reservaciones
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

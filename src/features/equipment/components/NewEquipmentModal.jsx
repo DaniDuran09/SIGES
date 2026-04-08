@@ -87,7 +87,6 @@ export const NewEquipmentModal = ({ onClose }) => {
         if (!newAvailDay || !newAvailStartTime || !newAvailEndTime) return;
         const newItem = {
             dateFrom: new Date().toISOString().split('T')[0],
-            dateTo: new Date().toISOString().split('T')[0],
             startTime: newAvailStartTime,
             endTime: newAvailEndTime,
             daysOfWeek: [newAvailDay]

@@ -46,7 +46,7 @@ function History() {
                 size: 20,
             };
 
-            if (search) params.petitionerName = search;
+            if (search) params.searchQuery = search;
             if (status) params.statuses = status;
             if (type) params.type = type;
             if (date) params.date = date;

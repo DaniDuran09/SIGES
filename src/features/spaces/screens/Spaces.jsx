@@ -54,7 +54,7 @@ function Spaces() {
             apiFetch("/spaces", {
                 method: "GET",
                 params: {
-                    q: searchSpace,
+                    searchQuery: searchSpace,
                     showMode: state,
                     spaceTypeId: type,
                     page: page,
@@ -172,80 +172,80 @@ function Spaces() {
             </div>
 
             {b_spacesIsPending ? (
-                    <LoaderCircle />
-                ) :
+                <LoaderCircle />
+            ) :
                 b_spacesIsError ? (<Alert severity={"error"}>Hubo un error al cargar los espacios</Alert>) : (
                     <div className={tableStyles.wrapper}>
                         <table className={tableStyles.table}>
                             <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Edificio</th>
-                                <th>Capacidad</th>
-                                <th>Estudiantes</th>
-                                <th>Estado</th>
-                                <th>Activo</th>
-                                <th>Acciones</th>
-                            </tr>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Edificio</th>
+                                    <th>Capacidad</th>
+                                    <th>Estudiantes</th>
+                                    <th>Estado</th>
+                                    <th>Activo</th>
+                                    <th>Acciones</th>
+                                </tr>
                             </thead>
 
                             <tbody>
-                            {b_spaces?.content?.length > 0 ? (
-                                b_spaces.content.map((space) => (
-                                    <tr key={space.id}>
-                                        <td className={tableStyles.projectName}>{space.name}</td>
-                                        <td>{space.spaceType?.name || '—'}</td>
-                                        <td>{space.building?.name || '—'}</td>
-                                        <td>{space.capacity ?? '—'}</td>
-                                        <td>
+                                {b_spaces?.content?.length > 0 ? (
+                                    b_spaces.content.map((space) => (
+                                        <tr key={space.id}>
+                                            <td className={tableStyles.projectName}>{space.name}</td>
+                                            <td>{space.spaceType?.name || '—'}</td>
+                                            <td>{space.building?.name || '—'}</td>
+                                            <td>{space.capacity ?? '—'}</td>
+                                            <td>
                                                 <span className={space.availableForStudents ? tableStyles.AbiertoText : tableStyles.RestringidoText}>
                                                     {space.availableForStudents ? "Abierto" : "Restringido"}
                                                 </span>
-                                        </td>
-                                        <td>
+                                            </td>
+                                            <td>
                                                 <span className={`${tableStyles.badge} ${space.deletedAt !== null ? tableStyles.INACTIVE : tableStyles[space.status]}`}>
                                                     {space.deletedAt !== null
                                                         ? "Inactivo"
                                                         : space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
                                                 </span>
-                                        </td>
-                                        <td>
-                                            <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={space.deletedAt === null}
-                                                    onChange={() => handleToggleActive(space)}
-                                                    disabled={toggleSpaceMutation.isPending}
-                                                />
-                                                <span className={tableStyles.slider}></span>
-                                            </label>
-                                        </td>
-                                        <td className={tableStyles.actions}>
-                                            <button
-                                                className={tableStyles.iconButton}
-                                                onClick={() => navigate(`/spaces/${space.id}`)}
-                                                title="Ver detalle"
-                                            >
-                                                <FiEye size={18} />
-                                            </button>
-                                            <button
-                                                className={tableStyles.iconButton}
-                                                onClick={() => navigate(`/spaces/edit/${space.id}`)}
-                                                title="Editar espacio"
-                                            >
-                                                <FiEdit2 size={18} />
-                                            </button>
+                                            </td>
+                                            <td>
+                                                <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={space.deletedAt === null}
+                                                        onChange={() => handleToggleActive(space)}
+                                                        disabled={toggleSpaceMutation.isPending}
+                                                    />
+                                                    <span className={tableStyles.slider}></span>
+                                                </label>
+                                            </td>
+                                            <td className={tableStyles.actions}>
+                                                <button
+                                                    className={tableStyles.iconButton}
+                                                    onClick={() => navigate(`/spaces/${space.id}`)}
+                                                    title="Ver detalle"
+                                                >
+                                                    <FiEye size={18} />
+                                                </button>
+                                                <button
+                                                    className={tableStyles.iconButton}
+                                                    onClick={() => navigate(`/spaces/edit/${space.id}`)}
+                                                    title="Editar espacio"
+                                                >
+                                                    <FiEdit2 size={18} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                            No se encontraron registros
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
-                                        No se encontraron registros
-                                    </td>
-                                </tr>
-                            )}
+                                )}
                             </tbody>
                         </table>
 

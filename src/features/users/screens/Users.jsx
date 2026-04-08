@@ -44,7 +44,7 @@ function Users() {
                     showMode: state,
                     sort: ['firstName,asc', 'lastName,asc'],
                     userTypes: type,
-                    search: search,
+                    searchQuery: search,
                     page: page,
                     size: 20
                 },
