@@ -6,23 +6,19 @@
     gap: 20px;
     padding-bottom: 20px;
     overflow-y: auto;
-    /* Para que baje si hay mucho contenido en móvil */
 }
 
-/* --- Top Bar --- */
 .topBar {
     display: flex;
     padding: 10px;
     align-items: center;
     gap: 15px;
     flex-wrap: wrap;
-    /* Importante: permite que bajen los elementos si no caben */
 }
 
 .titleSection {
     flex: 2;
     min-width: 200px;
-    /* Evita que se aplaste demasiado */
 }
 
 .title {
@@ -34,7 +30,6 @@
     flex: 1;
     display: flex;
     justify-content: flex-end;
-    /* Alineado a la derecha en escritorio */
     gap: 15px;
     min-width: 200px;
 }
@@ -69,14 +64,12 @@
     margin: 0;
 }
 
-/* --- Stats Grid --- */
 .statsGrid {
     display: flex;
     padding: 10px;
     justify-content: space-between;
     gap: 15px;
     flex-wrap: wrap;
-    /* CLAVE para responsividad */
 }
 
 .bottomSection {
@@ -91,13 +84,17 @@
     justify-content: space-between;
 }
 
-.quickActionsContainer {
-    flex: 1;
+.requestsContainer {
+    flex: 2;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     background-color: white;
     border-radius: 10px;
     border: 1px solid #ddd;
-    padding: 15px;
+    padding: 20px;
+    gap: 15px;
 }
 
 .quickActionButton {
@@ -116,9 +113,6 @@
     gap: 10px;
 }
 
-/* --- Media Queries (La magica responsiva) --- */
-
-/* Tablet (menos de 1024px) */
 @media (max-width: 1024px) {
     .bottomSection {
         display: flex;
@@ -131,7 +125,6 @@
 
 }
 
-/* Móvil (menos de 768px) */
 @media (max-width: 768px) {
     .topBar {
         flex-direction: column;
@@ -142,12 +135,10 @@
     .actionsSection {
         width: 90%;
         justify-content: space-between;
-        /* Separar notificación de botón nuevo */
     }
 
     .newRequestButton {
         width: 100%;
-        /* Botón grande en móvil para fat fingers */
         justify-content: center;
     }
 

@@ -3,6 +3,7 @@ import { FiEye, FiRefreshCw } from "react-icons/fi";
 import styles from "../styles/Requests.module.css";
 import tableStyles from "../styles/RequestsData.module.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
@@ -12,6 +13,7 @@ import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
 
 function Requests() {
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
     const [status, setStatus] = useState("ALL");
@@ -143,7 +145,9 @@ function Requests() {
                                     const statusInfo = getStatusInfo(item.status);
                                     return (
                                         <tr key={item.id}>
-                                            <td className={tableStyles.usuario}>{item.user?.firstName} {item.user?.lastName}</td>
+                                            <td className={tableStyles.usuario}>
+                                                {(item.petitioner?.firstName || item.user?.firstName)} {(item.petitioner?.lastName || item.user?.lastName)}
+                                            </td>
                                             <td>{item.reservable?.name}</td>
                                             <td>{new Date(item.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                                             <td>{item.startTime} - {item.endTime}</td>
@@ -154,7 +158,10 @@ function Requests() {
                                                 </span>
                                             </td>
                                             <td className={tableStyles.actions}>
-                                                <button className={tableStyles.viewButton}>
+                                                <button 
+                                                    className={tableStyles.viewButton}
+                                                    onClick={() => navigate(`/requests/${item.id}`)}
+                                                >
                                                     <FiEye />
                                                 </button>
                                             </td>

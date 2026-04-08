@@ -5,7 +5,8 @@ import { apiFetch } from '../../../api/client';
 import LoaderCircle from '../../../assets/components/LoaderCircle';
 import { Alert } from '@mui/material';
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { FiArrowLeft, FiX, FiCheck, FiPlus } from "react-icons/fi";
+import { FiArrowLeft, FiX, FiCheck, FiPlus, FiSend, FiEdit3 } from "react-icons/fi";
+import { useAuth } from '../../../context/AuthContext';
 import styles from '../styles/ReservationDetail.module.css';
 
 function ReservationDetail() {
@@ -22,19 +23,80 @@ function ReservationDetail() {
         queryFn: () => apiFetch(`/reservations/${id}`, { method: "GET" })
     });
 
+    const {
+        data: b_user
+    } = useQuery({
+        queryKey: ["GetUser"],
+        queryFn: () => apiFetch(`/users/me`, { method: "GET" }),
+        retry: (failureCount, error) => error.status !== 404,
+    });
+
+    const [modalData, setModalData] = useState({
+        isOpen: false,
+        type: '', // 'APPROVE', 'REJECT', 'CANCEL', 'EDIT_NOTE'
+        title: '',
+        label: '',
+        inputValue: '',
+        noteId: null
+    });
+
+    const [chatInput, setChatInput] = useState('');
+
     const approveMutation = useMutation({
-        mutationFn: () => apiFetch(`/reservations/${id}/approve`, { method: "PATCH" }),
+        mutationFn: (observation) => apiFetch(`/reservations/${id}/approve`, {
+            method: "PATCH",
+            body: JSON.stringify({ observation })
+        }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
             queryClient.invalidateQueries({ queryKey: ["GetRequests"] });
+            setModalData({ ...modalData, isOpen: false, inputValue: '' });
         }
     });
 
     const rejectMutation = useMutation({
-        mutationFn: () => apiFetch(`/reservations/${id}/reject`, { method: "PATCH" }),
+        mutationFn: (reason) => apiFetch(`/reservations/${id}/reject`, {
+            method: "PATCH",
+            body: JSON.stringify({ reason })
+        }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
             queryClient.invalidateQueries({ queryKey: ["GetRequests"] });
+            setModalData({ ...modalData, isOpen: false, inputValue: '' });
+        }
+    });
+
+    const cancelMutation = useMutation({
+        mutationFn: (reason) => apiFetch(`/reservations/${id}/cancel`, {
+            method: "PATCH",
+            body: JSON.stringify({ reason })
+        }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
+            queryClient.invalidateQueries({ queryKey: ["GetRequests"] });
+            setModalData({ ...modalData, isOpen: false, inputValue: '' });
+        }
+    });
+
+    const addNoteMutation = useMutation({
+        mutationFn: (comment) => apiFetch(`/reservations/${id}/notes`, {
+            method: "POST",
+            body: JSON.stringify({ reservationId: parseInt(id), comment })
+        }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
+            setChatInput('');
+        }
+    });
+
+    const updateNoteMutation = useMutation({
+        mutationFn: ({ noteId, comment }) => apiFetch(`/reservations/${id}/notes/${noteId}`, {
+            method: "PATCH",
+            body: JSON.stringify({ comment })
+        }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
+            setModalData({ ...modalData, isOpen: false, inputValue: '' });
         }
     });
 
@@ -82,15 +144,67 @@ function ReservationDetail() {
     };
 
     const handleApprove = () => {
-        if (window.confirm("¿Seguro que deseas aprobar esta solicitud?")) {
-            approveMutation.mutate();
-        }
+        setModalData({
+            isOpen: true,
+            type: 'APPROVE',
+            title: 'Aprobar solicitud',
+            label: 'Observación (opcional)',
+            inputValue: '',
+            noteId: null
+        });
     };
 
     const handleReject = () => {
-        if (window.confirm("¿Seguro que deseas denegar esta solicitud?")) {
-            rejectMutation.mutate();
+        setModalData({
+            isOpen: true,
+            type: 'REJECT',
+            title: 'Rechazar solicitud',
+            label: 'Motivo de rechazo',
+            inputValue: '',
+            noteId: null
+        });
+    };
+
+    const handleCancel = () => {
+        setModalData({
+            isOpen: true,
+            type: 'CANCEL',
+            title: 'Cancelar reservación',
+            label: 'Motivo de cancelación',
+            inputValue: '',
+            noteId: null
+        });
+    };
+
+    const handleEditNote = (note) => {
+        setModalData({
+            isOpen: true,
+            type: 'EDIT_NOTE',
+            title: 'Editar observación',
+            label: 'Observación',
+            inputValue: note.comment,
+            noteId: note.id
+        });
+    };
+
+    const handleModalSubmit = () => {
+        if (modalData.type === 'APPROVE') {
+            approveMutation.mutate(modalData.inputValue);
+        } else if (modalData.type === 'REJECT') {
+            if (!modalData.inputValue.trim()) return alert("Debe ingresar un motivo");
+            rejectMutation.mutate(modalData.inputValue);
+        } else if (modalData.type === 'CANCEL') {
+            if (!modalData.inputValue.trim()) return alert("Debe ingresar un motivo");
+            cancelMutation.mutate(modalData.inputValue);
+        } else if (modalData.type === 'EDIT_NOTE') {
+            if (!modalData.inputValue.trim()) return alert("El comentario no puede estar vacío");
+            updateNoteMutation.mutate({ noteId: modalData.noteId, comment: modalData.inputValue });
         }
+    };
+
+    const handleSendNote = () => {
+        if (!chatInput.trim()) return;
+        addNoteMutation.mutate(chatInput);
     };
 
     return (
@@ -122,7 +236,7 @@ function ReservationDetail() {
                             <div className={styles.infoRow}>
                                 <span className={styles.infoLabel}>Solicitante</span>
                                 <span className={styles.infoValue}>
-                                    {reservation.petitioner?.firstName} {reservation.petitioner?.lastName}
+                                    {(reservation.petitioner?.firstName || reservation.user?.firstName || "Usuario")} {(reservation.petitioner?.lastName || reservation.user?.lastName || "")}
                                 </span>
                             </div>
                             <div className={styles.infoRow}>
@@ -225,29 +339,66 @@ function ReservationDetail() {
                             </div>
                         </div>
 
-                        {/* OBSERVACIONES */}
+                        {/* OBSERVACIONES / CHAT */}
                         <div className={styles.infoBlock}>
                             <h3 className={styles.blockTitle}>
-                                Observaciones
-                                <button className={styles.addNoteBtn} title="Añadir observación">
-                                    <FiPlus size={16} />
-                                </button>
+                                OBSERVACIONES / CHAT
                             </h3>
-                            {reservation.notes && reservation.notes.length > 0 ? (
-                                reservation.notes.map((note) => (
-                                    <div key={note.id} className={styles.noteItem}>
-                                        <div className={styles.noteText}>
-                                            {note.comment}
-                                        </div>
-                                        <div className={styles.noteFooter}>
-                                            {new Date(note.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}, {new Date(note.createdAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit'})} - {note.createdBy?.firstName || 'Admin'}
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p style={{ color: '#94A3B8', fontSize: '13px', margin: 0 }}>No hay observaciones.</p>
-                            )}
+                            <div className={styles.chatContainer}>
+                                {reservation.notes && reservation.notes.length > 0 ? (
+                                    reservation.notes.map((note) => {
+                                        const isMe = note.createdBy?.id === b_user?.id;
+                                        return (
+                                            <div key={note.id} className={`${styles.chatBubbleContainer} ${isMe ? styles.chatMe : styles.chatOthers}`}>
+                                                {!isMe && <p className={styles.chatAuthor}>{note.createdBy?.firstName} {note.createdBy?.lastName}</p>}
+                                                <div className={styles.chatBubble}>
+                                                    <div className={styles.chatText}>{note.comment}</div>
+                                                    <div className={styles.chatFooter}>
+                                                        <span>{new Date(note.createdAt).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                                                        {isMe && (
+                                                            <button className={styles.editNoteInline} onClick={() => handleEditNote(note)}>
+                                                                <FiEdit3 size={12} />
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                                ) : (
+                                    <p style={{ color: '#94A3B8', fontSize: '13px', margin: '20px 0', textAlign: 'center' }}>No hay observaciones.</p>
+                                )}
+                            </div>
+                            
+                            <div className={styles.chatInputArea}>
+                                <div className={styles.chatInputWrapper}>
+                                    <textarea 
+                                        placeholder="Escribir observación..." 
+                                        value={chatInput}
+                                        onChange={(e) => setChatInput(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                                e.preventDefault();
+                                                handleSendNote();
+                                            }
+                                        }}
+                                    />
+                                    <button className={styles.sendButton} onClick={handleSendNote} disabled={addNoteMutation.isPending}>
+                                        <FiSend size={20} />
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+
+                        {/* BIG CANCEL BUTTON (IMAGE 2) */}
+                        {['PENDING', 'APPROVED'].includes(reservation.status) && (
+                            <div className={styles.cancelActionArea}>
+                                <button className={styles.btnCancelLarge} onClick={handleCancel}>
+                                    <FiX size={24} /> Cancelar Reserva
+                                </button>
+                                <p className={styles.cancelHint}>Esta acción cancelará la reservación activa.</p>
+                            </div>
+                        )}
 
                         {/* PROPÓSITO BLOQUE EXTRA (de la imagen) */}
                         <div className={styles.infoBlock}>
@@ -291,6 +442,34 @@ function ReservationDetail() {
                     )}
                 </div>
             </div>
+            {/* ACTION MODAL */}
+            {modalData.isOpen && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <h3>{modalData.title}</h3>
+                        <p className={styles.modalLabel}>{modalData.label}</p>
+                        <textarea 
+                            className={styles.modalInput}
+                            value={modalData.inputValue}
+                            onChange={(e) => setModalData({...modalData, inputValue: e.target.value})}
+                            placeholder="Escribe aquí..."
+                            autoFocus
+                        />
+                        <div className={styles.modalActions}>
+                            <button className={styles.modalBtnCancel} onClick={() => setModalData({...modalData, isOpen: false})}>
+                                Cancelar
+                            </button>
+                            <button 
+                                className={styles.modalBtnConfirm} 
+                                onClick={handleModalSubmit}
+                                disabled={approveMutation.isPending || rejectMutation.isPending || cancelMutation.isPending || updateNoteMutation.isPending}
+                            >
+                                <FiCheck /> Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

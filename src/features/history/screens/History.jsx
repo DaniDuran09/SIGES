@@ -167,7 +167,7 @@ function History() {
                                         <tr key={item.id}>
                                             <td>#{item.id}</td>
                                             <td className={tableStyles.name}>
-                                                {item.petitioner?.firstName} {item.petitioner?.lastName}
+                                                {(item.petitioner?.firstName || item.user?.firstName || "Usuario")} {(item.petitioner?.lastName || item.user?.lastName || "")}
                                             </td>
                                             <td>{item.reservable?.name}</td>
                                             <td>{item.date}</td>

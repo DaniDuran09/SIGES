@@ -6,7 +6,7 @@ import StatsComponent from "../components/StatsComponent.jsx";
 import PendingRequestComponent from "../components/PendingRequestComponent.jsx";
 import { NewSpaceModal } from "../../spaces/components/NewSpaceModal";
 import { NewEquipmentModal } from "../../equipment/components/NewEquipmentModal";
-//import { NewUserModal } from "../../users/components/NewUserModal";
+import NewUserModal from "../../users/components/NewUserModal";
 import QuickActionsGrid from "../../../assets/components/QuickActionsGrid";
 import { FiMonitor, FiUser } from "react-icons/fi";
 import { useState } from "react";
@@ -60,6 +60,22 @@ function Home() {
         retry: (failureCount, error) => error.status !== 404,
     });
 
+    const {
+        data: b_requests,
+        isPending: requestsPending
+    } = useQuery({
+        queryKey: ["GetRecentRequests"],
+        queryFn: () =>
+            apiFetch("/reservations", {
+                method: "GET",
+                params: {
+                    page: 0,
+                    size: 5
+                },
+            }),
+        retry: (failureCount, error) => error.status !== 404,
+    });
+
     const formatDiff = (diff, context = "ayer") => {
         if (diff === 0 || diff === undefined || diff === null) return "Sin cambios";
         const sign = diff > 0 ? "+" : "";
@@ -81,24 +97,6 @@ function Home() {
     }
 
     const reports = b_reports ?? {};
-
-    const pendingRequestsData = [
-        {
-            ApplierName: 'Juan Perez',
-            objectName: 'Aula 101',
-            date: '2022-01-01'
-        },
-        {
-            ApplierName: 'Maria Lopez',
-            objectName: 'Aula 102',
-            date: '2022-01-02'
-        },
-        {
-            ApplierName: 'Pedro Ramirez',
-            objectName: 'Aula 103',
-            date: '2022-01-03'
-        },
-    ];
 
     return (
         <div className={styles.container}>
@@ -155,16 +153,22 @@ function Home() {
             </div>
 
             <div className={styles.bottomSection}>
-                <div style={{ flex: 2, overflow: 'auto', display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: 'white', borderRadius: '10px', border: '1px solid #ddd', padding: '10px' }}>
+                <div className={styles.requestsContainer}>
                     <div className={styles.ResponsiveTitleContainer}>
                         <h3>Solicitudes pendientes</h3>
                         <button onClick={() => { navigate('/requests') }} style={{ backgroundColor: 'transparent', border: '0px', cursor: 'pointer' }}>
                             <h3 style={{ color: '#6B5B95' }}>Ver todas {'>'}</h3>
                         </button>
                     </div>
-                    {pendingRequestsData.map((request, index) => (
-                        <PendingRequestComponent key={index} props={request} />
-                    ))}
+                    {requestsPending ? (
+                        <LoaderCircle />
+                    ) : b_requests?.content?.length > 0 ? (
+                        b_requests.content.map((request) => (
+                            <PendingRequestComponent key={request.id} request={request} />
+                        ))
+                    ) : (
+                        <p style={{ textAlign: 'center', padding: '20px', color: '#666' }}>No hay solicitudes recientes</p>
+                    )}
                 </div>
 
                 <QuickActionsGrid actions={quickActions} />
