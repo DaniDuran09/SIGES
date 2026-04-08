@@ -1,9 +1,15 @@
 import './App.css'
 import AppRouter from "./app/router/AppRouter";
-import { useNotifications } from "./hooks/useNotifications";
+import { useNotifications } from "./context/NotificationContext";
+import { useEffect } from "react";
 
 function App() {
-    const { requestPermission } = useNotifications();
+    const { getFCMToken } = useNotifications();
+
+    useEffect(() => {
+        getFCMToken();
+    }, [getFCMToken]);
+
     return (
         <>
             <AppRouter />

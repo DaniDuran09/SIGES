@@ -1,7 +1,7 @@
 import styles from "../styles/Users.module.css";
 import tableStyles from "../styles/UsersData.module.css";
-import { FiPlus, FiSearch } from "react-icons/fi";
-import { useQuery } from "@tanstack/react-query";
+import { FiPlus, FiRefreshCw, FiSearch, FiEdit2 } from "react-icons/fi";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { useState } from "react";
@@ -11,31 +11,32 @@ import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
 import SearchBar from "../../../assets/components/SearchBar.jsx";
 import Filter from "../../../assets/components/Filter.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Users() {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [state, setState] = useState("ALL");
     const [type, setType] = useState("");
     const [page, setPage] = useState(0);
 
-    const opcionesEstado = [
-        { value: "All", text: "Todos" },
+    const statusOptions = [
+        { value: "ALL", text: "Todos" },
         { value: "ACTIVE", text: "Activo" },
         { value: "INACTIVE", text: "Inactivo" }
-
     ];
 
-    const handleSetType = (type) => {
-        setType(type);
-    };
+    const queryKey = ["GetUsers", type, state, search, page];
 
     const {
         data: b_users,
         isLoading: b_usersIsLoading,
         isError: b_usersIsError,
+        refetch
     } = useQuery({
-        queryKey: ["GetUsers", type, state, search, page],
+        queryKey: queryKey,
         queryFn: () =>
             apiFetch("/users", {
                 method: "GET",
@@ -51,6 +52,54 @@ function Users() {
         retry: (failureCount, error) => error.status !== 404,
     });
 
+    const toggleUserMutation = useMutation({
+        mutationFn: async ({ id, currentlyActive }) => {
+            const endpoint = currentlyActive ? `/users/${id}` : `/users/${id}/restore`;
+            const method = currentlyActive ? "DELETE" : "PATCH";
+            return apiFetch(endpoint, { method });
+        },
+        onMutate: async ({ id }) => {
+            await queryClient.cancelQueries({ queryKey });
+            const previousUsers = queryClient.getQueryData(queryKey);
+
+            queryClient.setQueryData(queryKey, (old) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    content: old.content.map((user) =>
+                        user.id === id
+                            ? { ...user, enabled: !user.enabled, active: !user.active }
+                            : user
+                    ),
+                };
+            });
+
+            return { previousUsers };
+        },
+        onError: (err, variables, context) => {
+            if (context?.previousUsers) {
+                queryClient.setQueryData(queryKey, context.previousUsers);
+            }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ["GetUsers"] });
+        },
+    });
+
+    const handleSetType = (type) => {
+        setType(type);
+        setPage(0);
+    };
+
+    const handleToggleActive = (e, user) => {
+        e.stopPropagation();
+        const isActive = user.enabled ?? user.active ?? true;
+        toggleUserMutation.mutate({
+            id: user.id,
+            currentlyActive: isActive
+        });
+    };
+
     if (b_usersIsError && b_usersIsError.status !== 404) {
         return (
             <div className={styles.container}>
@@ -65,14 +114,9 @@ function Users() {
 
             <div className={styles.header}>
                 <h4>Gestión</h4>
-
                 <div className={styles.headerRow}>
                     <h1>Usuarios</h1>
-
-                    <PlusButton
-                        text="Nuevo Usuario"
-                        onClick={() => setOpen(true)}
-                    />
+                    <PlusButton text="Nuevo Usuario" onClick={() => setOpen(true)} />
                 </div>
 
                 <div className={styles.tabs}>
@@ -87,28 +131,26 @@ function Users() {
                         type="search"
                         placeholder="Buscar Usuario..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            setPage(0);
+                        }}
                     />
 
-                    <div className={styles.componentSearch}>
-                        <div className={styles.optionAndState}>
-                            <select
-                                className={styles.state}
-                                value={state}
-                                onChange={(e) => setState(e.target.value)}
-                            >
-                                <option value="ALL">Estado: Todos</option>
-                                <option value="ACTIVE">Activo</option>
-                                <option value="INACTIVE">Inactivo</option>
-                            </select>
-                        </div>
+                    <div className={styles.filterGroup}>
+                        <button className={styles.refreshIcon} title="Refrescar" onClick={() => refetch()}>
+                            <FiRefreshCw />
+                        </button>
+                        <Filter
+                            label="Estado"
+                            value={state}
+                            onChange={(e) => {
+                                setState(e.target.value);
+                                setPage(0);
+                            }}
+                            options={statusOptions}
+                        />
                     </div>
-                    <Filter
-                        label="Tipo"
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
-                        options={opcionesEstado}
-                    />
                 </div>
             </div>
 
@@ -128,41 +170,25 @@ function Users() {
                                 <th>Estado</th>
                             </tr>
                             </thead>
-
                             <tbody>
                             {b_users?.content?.length > 0 ? (
                                 b_users.content.map((user) => (
-                                    <tr key={user.id}>
+                                    <tr key={user.id} onClick={() => navigate(`/users/edit/${user.id}`)} style={{ cursor: "pointer" }}>
                                         <td>{user.firstName + " " + user.lastName}</td>
-
                                         <td>
-                                                <span
-                                                    className={`${tableStyles.badge} ${
-                                                        user.role === "ADMIN"
-                                                            ? tableStyles.ADMIN
-                                                            : user.role === "STUDENT"
-                                                                ? tableStyles.STUDENT
-                                                                : tableStyles.INSTITUTIONAL_STAFF
-                                                    }`}
-                                                >
-                                                    {user.role === "ADMIN"
-                                                        ? "Administrador"
-                                                        : user.role === "STUDENT"
-                                                            ? "Estudiante"
-                                                            : "Personal"}
+                                                <span className={`${tableStyles.badge} ${tableStyles[user.role]}`}>
+                                                    {user.role === "ADMIN" ? "Administrador" : user.role === "STUDENT" ? "Estudiante" : "Personal"}
                                                 </span>
                                         </td>
-
                                         <td>{user.registrationNumber || user.employeeNumber || '—'}</td>
                                         <td>{user.email}</td>
                                         <td>{user.phoneNumber}</td>
-
                                         <td>
-                                            <label className={tableStyles.switch}>
+                                            <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
                                                 <input
                                                     type="checkbox"
-                                                    checked={user.enabled ?? user.active}
-                                                    readOnly
+                                                    checked={user.enabled ?? user.active ?? true}
+                                                    onChange={(e) => handleToggleActive(e, user)}
                                                 />
                                                 <span className={tableStyles.slider}></span>
                                             </label>
@@ -171,18 +197,16 @@ function Users() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-                                        No se encontraron registros
-                                    </td>
+                                    <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>No se encontraron registros</td>
                                 </tr>
                             )}
                             </tbody>
                         </table>
                     </div>
-                    <Pagination 
-                        currentPage={page} 
-                        totalPages={b_users?.totalPages || 0} 
-                        onPageChange={(newPage) => setPage(newPage)} 
+                    <Pagination
+                        currentPage={page}
+                        totalPages={b_users?.totalPages || 0}
+                        onPageChange={(newPage) => setPage(newPage)}
                     />
                 </>
             )}

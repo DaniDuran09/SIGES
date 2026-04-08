@@ -279,7 +279,6 @@ export const NewEquipmentModal = ({ onClose }) => {
                             </div>
                         </div>
 
-                        {/* Right Column: Availability */}
                         <div className={styles.rightColumn}>
                             <div className={styles.rightHeader}>
                                 <h3>Disponibilidad de horarios</h3>
@@ -328,7 +327,7 @@ export const NewEquipmentModal = ({ onClose }) => {
                 </div>
             </div>
 
-            {/* Modal for adding Type */}
+
             {showAddTypeModal && (
                 <div className={styles.overlay} style={{ zIndex: 10000 }}>
                     <div className={styles.modal} style={{ maxWidth: '400px' }}>
@@ -358,7 +357,6 @@ export const NewEquipmentModal = ({ onClose }) => {
                 </div>
             )}
 
-            {/* Modal for adding Availability */}
             {showAddAvailModal && (
                 <div className={styles.overlay} style={{ zIndex: 10000 }}>
                     <div className={styles.modal} style={{ maxWidth: '420px', paddingBottom: '12px' }}>
