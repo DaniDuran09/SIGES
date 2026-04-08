@@ -47,9 +47,9 @@ function History() {
             };
 
             if (search) params.petitionerName = search;
-            if (status !== "") params.status = status;
-            if (type !== "") params.type = type;
-            if (date !== "") params.date = date;
+            if (status) params.statuses = status;
+            if (type) params.type = type;
+            if (date) params.date = date;
 
             return apiFetch("/reservations", {
                 method: "GET",
@@ -65,11 +65,13 @@ function History() {
             case 'APPROVED':
                 return { className: tableStyles.completada, text: 'COMPLETADA' };
             case 'REJECTED':
-                return { className: tableStyles.denegada, text: 'DENEGADA' };
+                return { className: tableStyles.denegada, text: 'RECHAZADA' };
             case 'CANCELLED':
                 return { className: tableStyles.cancelada, text: 'CANCELADA' };
             case 'PENDING':
                 return { className: tableStyles.pendiente, text: 'PENDIENTE' };
+            case 'IN_PROGRESS':
+                return { className: tableStyles.pendiente, text: 'EN CURSO' };
             default:
                 return { className: tableStyles.cancelada, text: status };
         }
@@ -175,7 +177,7 @@ function History() {
                                                     {statusInfo.text}
                                                 </span>
                                             </td>
-                                            <td>{item.type}</td>
+                                            <td>{item.type === 'GROUP' ? 'Grupal' : 'Individual'}</td>
                                         </tr>
                                     );
                                 })
