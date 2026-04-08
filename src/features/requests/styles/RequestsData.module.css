@@ -24,94 +24,87 @@
     padding: 18px 16px;
     font-size: 14px;
     font-weight: 600;
-    color: #6b7280;
+    color: #a0a0a0;
 }
 
 .table td {
     padding: 20px 16px;
     font-size: 14px;
     border-bottom: 1px solid #f0f0f0;
-    color: #374151;
-}
-
-.table tr:last-child td {
-    border-bottom: none;
-}
-
-.table tr:hover {
-    background-color: #fafbff;
+    color: #6b7280;
 }
 
 .usuario {
-    font-weight: 600;
+    font-weight: 700;
+    color: #1a1a1a;
 }
 
 .badge {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 13px;
     font-weight: 500;
     display: inline-block;
+    text-align: center;
     text-transform: capitalize;
+    min-width: 100px;
 }
 
-.pendiente {
-    background-color: #FEF3C7;
-    color: #92400E;
-}
+.pendiente { background-color: #FEF3C7; color: #D97706; }
+.aprobada { background-color: #D1FAE5; color: #10B981; }
+.denegada { background-color: #FEE2E2; color: #EF4444; }
+.completada { background-color: #E5E7EB; color: #6B7280; }
 
-.aprobada {
-    background-color: #D1FAE5;
-    color: #065F46;
-}
-
-.denegada {
-    background-color: #FEE2E2;
-    color: #991B1B;
-}
-
-.completada {
-    background-color: #E5E7EB;
-    color: #4B5563;
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-    white-space: nowrap;
-    justify-content: center;
-    align-items: center;
-}
-
-.approve {
-    background-color: #D1FAE5;
-    border: none;
-    border-radius: 20px;
-    padding: 6px 12px;
-    cursor: pointer;
-}
-
-.reject {
-    background-color: #FECACA;
-    border: none;
-    border-radius: 20px;
-    padding: 6px 12px;
-    cursor: pointer;
-}
+.actions { text-align: center; }
 
 .viewButton {
-    background-color: #E5E7EB;
+    background-color: #f1f3f5;
     border: none;
-    border-radius: 20px;
-    padding: 6px 12px;
+    border-radius: 12px;
+    padding: 8px 16px;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.2s;
 }
 
-.viewButton svg {
-    width: 16px;
-    height: 16px;
-    color: #374151;
+.searchBar {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 0;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+}
+
+.searchBar > :first-child {
+    flex: 1;
+    min-width: 300px;
+    max-width: 700px;
+}
+
+.filterComponent {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+@media (max-width: 1024px) {
+    .searchBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .searchBar > :first-child {
+        max-width: none;
+        width: 100%;
+    }
+
+    .filterComponent {
+        width: 100%;
+        justify-content: flex-start;
+    }
 }

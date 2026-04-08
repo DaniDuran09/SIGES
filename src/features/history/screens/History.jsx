@@ -59,6 +59,22 @@ function History() {
         retry: (failureCount, error) => error.status !== 404,
     });
 
+    const getStatusStyles = (status) => {
+        switch (status) {
+            case 'FINISHED':
+            case 'APPROVED':
+                return { className: tableStyles.completada, text: 'COMPLETADA' };
+            case 'REJECTED':
+                return { className: tableStyles.denegada, text: 'DENEGADA' };
+            case 'CANCELLED':
+                return { className: tableStyles.cancelada, text: 'CANCELADA' };
+            case 'PENDING':
+                return { className: tableStyles.pendiente, text: 'PENDIENTE' };
+            default:
+                return { className: tableStyles.cancelada, text: status };
+        }
+    };
+
     if (error && error.status !== 404) {
         return (
             <div className={styles.container}>
@@ -137,32 +153,32 @@ function History() {
                                 <th>Recurso</th>
                                 <th>Fecha</th>
                                 <th>Horario</th>
-                                <th>Estatus</th>
+                                <th>Estado</th>
                                 <th>Tipo</th>
                             </tr>
                             </thead>
                             <tbody>
                             {b_history?.content?.length > 0 ? (
-                                b_history.content.map((item) => (
-                                    <tr key={item.id}>
-                                        <td>{item.id}</td>
-                                        <td className={tableStyles.name}>
-                                            {item.petitioner?.firstName} {item.petitioner?.lastName}
-                                        </td>
-                                        <td>{item.reservable?.name}</td>
-                                        <td>{item.date}</td>
-                                        <td>{item.startTime} - {item.endTime}</td>
-                                        <td>
-                                                <span className={`${tableStyles.badge} ${
-                                                    item.status === 'FINISHED' || item.status === 'APPROVED' ? tableStyles.completada :
-                                                        item.status === 'CANCELLED' || item.status === 'REJECTED' ? tableStyles.cancelada : ''
-                                                }`}>
-                                                    {item.status}
+                                b_history.content.map((item) => {
+                                    const statusInfo = getStatusStyles(item.status);
+                                    return (
+                                        <tr key={item.id}>
+                                            <td>#{item.id}</td>
+                                            <td className={tableStyles.name}>
+                                                {item.petitioner?.firstName} {item.petitioner?.lastName}
+                                            </td>
+                                            <td>{item.reservable?.name}</td>
+                                            <td>{item.date}</td>
+                                            <td>{item.startTime} - {item.endTime}</td>
+                                            <td>
+                                                <span className={`${tableStyles.badge} ${statusInfo.className}`}>
+                                                    {statusInfo.text}
                                                 </span>
-                                        </td>
-                                        <td>{item.type}</td>
-                                    </tr>
-                                ))
+                                            </td>
+                                            <td>{item.type}</td>
+                                        </tr>
+                                    );
+                                })
                             ) : (
                                 <tr>
                                     <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>

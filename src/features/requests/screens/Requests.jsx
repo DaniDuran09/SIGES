@@ -1,5 +1,5 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { FiSearch, FiEye, FiRefreshCw } from "react-icons/fi";
+import { FiEye, FiRefreshCw } from "react-icons/fi";
 import styles from "../styles/Requests.module.css";
 import tableStyles from "../styles/RequestsData.module.css";
 import { useState } from "react";
@@ -42,6 +42,25 @@ function Requests() {
         retry: (failureCount, error) => error.status !== 404,
     });
 
+    const getStatusInfo = (status) => {
+        switch (status) {
+            case 'PENDING':
+                return { className: tableStyles.pendiente, text: 'Pendiente' };
+            case 'APPROVED':
+                return { className: tableStyles.aprobada, text: 'Aprobada' };
+            case 'DENIED':
+            case 'REJECTED':
+                return { className: tableStyles.denegada, text: 'Denegada' };
+            case 'COMPLETED':
+            case 'FINISHED':
+                return { className: tableStyles.completada, text: 'Completada' };
+            case 'CANCELLED':
+                return { className: tableStyles.completada, text: 'Cancelada' };
+            default:
+                return { className: tableStyles.completada, text: status };
+        }
+    };
+
     if (error && error.status !== 404) {
         return (
             <div className={styles.container}>
@@ -58,9 +77,7 @@ function Requests() {
                 <div className={styles.topBar}>
                     <h1>Solicitudes</h1>
                     <button className={styles.notificationButton}>
-                        {true && (
-                            <div style={{ width: '15px', height: '15px', backgroundColor: '#FF9B85', borderRadius: '50%', position: 'absolute', top: '5px', right: '5px' }} />
-                        )}
+                        <div style={{ width: '15px', height: '15px', backgroundColor: '#FF9B85', borderRadius: '50%', position: 'absolute', top: '5px', right: '5px' }} />
                         <IoMdNotificationsOutline style={{ width: '30px', height: '30px' }} />
                     </button>
                 </div>
@@ -72,6 +89,15 @@ function Requests() {
                         <button className={status === "APPROVED" ? styles.active : ""} onClick={() => { setStatus("APPROVED"); setPage(0); }}>Aprobadas</button>
                         <button className={status === "DENIED" ? styles.active : ""} onClick={() => { setStatus("DENIED"); setPage(0); }}>Denegadas</button>
                     </div>
+                </div>
+
+                <div className={tableStyles.searchBar}>
+                    <SearchBar
+                        type="search"
+                        placeholder="Buscar Solicitudes..."
+                        value={search}
+                        onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+                    />
 
                     <button
                         className={styles.refreshIcon}
@@ -80,25 +106,17 @@ function Requests() {
                     >
                         <FiRefreshCw />
                     </button>
-                </div>
 
-                <div className={styles.searchBar}>
-                    <SearchBar
-                        type="search"
-                        placeholder="Buscar Solicitudes..."
-                        value={search}
-                        onChange={(e) => { setSearch(e.target.value); setPage(0); }}
-                    />
-
-                    <Filter
-                        label="Tipo:"
-                        value={status}
-                        onChange={(e) => {
-                            setStatus(e.target.value);
-                            setPage(0);
-                        }}
-                        options={opcionesTipo}
-                    />
+                    <div className={tableStyles.filterComponent}>
+                        <Filter
+                            value={status}
+                            onChange={(e) => {
+                                setStatus(e.target.value);
+                                setPage(0);
+                            }}
+                            options={opcionesTipo}
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -110,48 +128,43 @@ function Requests() {
                         <table className={tableStyles.table}>
                             <thead>
                             <tr>
-                                <th>Usuario</th>
+                                <th>Usuarios</th>
                                 <th>Recurso</th>
                                 <th>Fecha</th>
                                 <th>Horario</th>
                                 <th>Tipo</th>
                                 <th>Estado</th>
-                                <th>Acciones</th>
+                                <th style={{ textAlign: "center" }}>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
                             {b_requests?.content?.length > 0 ? (
-                                b_requests.content.map((item) => (
-                                    <tr key={item.id}>
-                                        <td className={tableStyles.usuario}>{item.user?.firstName} {item.user?.lastName}</td>
-                                        <td>{item.reservable?.name}</td>
-                                        <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                                        <td>{item.startTime} - {item.endTime}</td>
-                                        <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
-                                        <td>
-                                                <span className={`${tableStyles.badge} ${item.status === 'PENDING' ? tableStyles.pendiente :
-                                                    item.status === 'APPROVED' ? tableStyles.aprobada :
-                                                        item.status === 'DENIED' ? tableStyles.denegada :
-                                                            item.status === 'COMPLETED' ? tableStyles.completada :
-                                                                ''
-                                                }`}>
-                                                    {item.status === 'PENDING' ? 'Pendiente' :
-                                                        item.status === 'APPROVED' ? 'Aprobada' :
-                                                            item.status === 'DENIED' ? 'Denegada' :
-                                                                item.status === 'COMPLETED' ? 'Completada' : item.status}
+                                b_requests.content.map((item) => {
+                                    const statusInfo = getStatusInfo(item.status);
+                                    return (
+                                        <tr key={item.id}>
+                                            <td className={tableStyles.usuario}>{item.user?.firstName} {item.user?.lastName}</td>
+                                            <td>{item.reservable?.name}</td>
+                                            <td>{new Date(item.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                                            <td>{item.startTime} - {item.endTime}</td>
+                                            <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
+                                            <td>
+                                                <span className={`${tableStyles.badge} ${statusInfo.className}`}>
+                                                    {statusInfo.text}
                                                 </span>
-                                        </td>
-                                        <td className={tableStyles.actions}>
-                                            <button className={tableStyles.viewButton}>
-                                                <FiEye />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
+                                            </td>
+                                            <td className={tableStyles.actions}>
+                                                <button className={tableStyles.viewButton}>
+                                                    <FiEye />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
                             ) : (
                                 <tr>
-                                    <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
-                                        No se encontraron registros
+                                    <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
+                                        No se encontraron reservaciones
                                     </td>
                                 </tr>
                             )}
