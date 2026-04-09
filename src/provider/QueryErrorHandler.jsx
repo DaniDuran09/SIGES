@@ -8,7 +8,7 @@ export function QueryErrorHandler() {
 
     useEffect(() => {
         const unsubscribe = queryClient.getQueryCache().subscribe(event => {
-            if (event?.query?.state?.error?.message === "ERROR") {
+            if (event?.query?.state?.error?.message === "Error, no tienes permiso para realizar esta acción") {
                 logout();
             }
         });

@@ -38,7 +38,7 @@ function Requests() {
                 size: 20
             };
             if (search) params.q = search;
-            if (status) params.statuses = status; // Correción a 'statuses' acorde a /reservations
+            if (status) params.statuses = status;
             if (tipo) params.reservableType = tipo;
             if (fechaDesde) params.dateFrom = fechaDesde;
 

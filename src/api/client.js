@@ -26,8 +26,12 @@ export const apiFetch = async (endpoint, options = {}) => {
         },
     });
 
-    if (response.status === 401 || response.status === 403) {
-        throw new Error("ERROR");
+    if (response.status === 401) {
+        throw new Error("Error, correo o contraseña incorrectos");
+    }
+
+    if (response.status === 403) {
+        throw new Error("Error, no tienes permiso para realizar esta acción");
     }
 
     if (!response.ok) {
