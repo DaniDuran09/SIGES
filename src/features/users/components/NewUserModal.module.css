@@ -17,6 +17,7 @@
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -56,10 +57,12 @@
 }
 
 .content {
-    padding: 0 28px;
+    padding: 10px 28px;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .formGroup {
