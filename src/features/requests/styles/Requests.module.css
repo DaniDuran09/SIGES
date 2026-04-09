@@ -50,7 +50,6 @@ h1 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* LA BARRA DE BÚSQUEDA */
 .searchBar {
     display: flex;
     flex-direction: row;
@@ -59,7 +58,6 @@ h1 {
     flex-wrap: wrap;
     align-items: center;
 }
-
 
 .searchBar > div:first-child {
     flex: 1;
@@ -70,6 +68,29 @@ h1 {
 .optionAndState {
     display: flex;
     gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filterInput {
+    height: 48px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid #eef0f3;
+    background: white;
+    color: #6b6b7a;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.filterInput:focus {
+    border-color: #4a3aff;
+}
+
+.rangeContainer {
+    display: flex;
+    gap: 5px;
     align-items: center;
 }
 

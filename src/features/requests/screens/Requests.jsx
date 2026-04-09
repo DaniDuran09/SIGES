@@ -16,6 +16,10 @@ function Requests() {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
     const [status, setStatus] = useState("ALL");
+    const [tipo, setTipo] = useState("ALL");
+    const [fecha, setFecha] = useState("");
+    const [fechaDesde, setFechaDesde] = useState("");
+    const [fechaHasta, setFechaHasta] = useState("");
 
     const opcionesTipo = [
         { value: "ALL", text: "Tipo: Todos" },
@@ -29,17 +33,24 @@ function Requests() {
         error,
         refetch
     } = useQuery({
-        queryKey: ["GetRequests", search, status, page],
-        queryFn: () =>
-            apiFetch("/reservations", {
+        queryKey: ["GetRequests", search, status, page, tipo, fecha, fechaDesde, fechaHasta],
+        queryFn: () => {
+            const params = {
+                searchQuery: search || "",
+                status: status === "ALL" ? "" : status,
+                reservableType: tipo === "ALL" ? "" : tipo,
+                page: page,
+                size: 20
+            };
+            if (fecha) params.date = fecha;
+            if (fechaDesde) params.dateFrom = fechaDesde;
+            if (fechaHasta) params.dateTo = fechaHasta;
+
+            return apiFetch("/reservations", {
                 method: "GET",
-                params: {
-                    searchQuery: search,
-                    status: status === "ALL" ? "" : status,
-                    page: page,
-                    size: 20
-                },
-            }),
+                params: params,
+            });
+        },
         retry: (failureCount, error) => error.status !== 404,
     });
 
@@ -90,6 +101,37 @@ function Requests() {
                     />
 
                     <div className={styles.optionAndState}>
+                        <input
+                            type="date"
+                            className={styles.filterInput}
+                            title="Fecha de reservación"
+                            value={fecha}
+                            onChange={(e) => { setFecha(e.target.value); setPage(0); }}
+                        />
+
+                        <div className={styles.rangeContainer}>
+                            <input
+                                type="date"
+                                className={styles.filterInput}
+                                title="Desde"
+                                value={fechaDesde}
+                                onChange={(e) => { setFechaDesde(e.target.value); setPage(0); }}
+                            />
+                            <input
+                                type="date"
+                                className={styles.filterInput}
+                                title="Hasta"
+                                value={fechaHasta}
+                                onChange={(e) => { setFechaHasta(e.target.value); setPage(0); }}
+                            />
+                        </div>
+
+                        <Filter
+                            value={tipo}
+                            onChange={(e) => { setTipo(e.target.value); setPage(0); }}
+                            options={opcionesTipo}
+                        />
+
                         <button
                             className={styles.refreshIcon}
                             title="Refrescar"
@@ -97,12 +139,6 @@ function Requests() {
                         >
                             <FiRefreshCw />
                         </button>
-
-                        <Filter
-                            value={status}
-                            onChange={(e) => { setStatus(e.target.value); setPage(0); }}
-                            options={opcionesTipo}
-                        />
                     </div>
                 </div>
             </div>
@@ -117,7 +153,7 @@ function Requests() {
                             <tr>
                                 <th>Usuarios</th>
                                 <th>Recurso</th>
-                                <th>Fecha</th>
+                                <th>Fecha Reservación</th>
                                 <th>Horario</th>
                                 <th>Tipo</th>
                                 <th>Estado</th>
@@ -128,13 +164,19 @@ function Requests() {
                             {b_requests?.content?.length > 0 ? (
                                 b_requests.content.map((item) => {
                                     const statusInfo = getStatusInfo(item.status);
+                                    const reservationDate = item.date ? new Date(item.date + 'T00:00:00') : null;
+
                                     return (
                                         <tr key={item.id}>
                                             <td className={tableStyles.usuario}>
                                                 {(item.petitioner?.firstName || item.user?.firstName)} {(item.petitioner?.lastName || item.user?.lastName)}
                                             </td>
                                             <td>{item.reservable?.name}</td>
-                                            <td>{new Date(item.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                                            <td>
+                                                {reservationDate
+                                                    ? reservationDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+                                                    : 'No definida'}
+                                            </td>
                                             <td>{item.startTime} - {item.endTime}</td>
                                             <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
                                             <td>
