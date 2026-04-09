@@ -98,6 +98,14 @@ function Requests() {
                     />
 
                     <div className={styles.optionAndState}>
+                        <button
+                            className={styles.refreshIcon}
+                            title="Refrescar"
+                            onClick={() => refetch()}
+                        >
+                            <FiRefreshCw />
+                        </button>
+
                         <input
                             type="date"
                             className={styles.filterInput}
@@ -113,14 +121,6 @@ function Requests() {
                             options={opcionesTipo}
                         />
                         */}
-
-                        <button
-                            className={styles.refreshIcon}
-                            title="Refrescar"
-                            onClick={() => refetch()}
-                        >
-                            <FiRefreshCw />
-                        </button>
                     </div>
                 </div>
             </div>

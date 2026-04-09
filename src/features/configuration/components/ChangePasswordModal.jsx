@@ -32,9 +32,16 @@ export const ChangePasswordModal = ({ onClose }) => {
             }, 2000);
         },
         onError: (error) => {
-            console.log("Error cambiando contraseña", error.message);
-            // Default to the provided error message, otherwise a generic one
-            setAlertInfo({ type: 'error', text: error.message || 'Error al cambiar la contraseña. Verifica tu contraseña actual.' });
+            console.log("Error cambiando contraseña", error);
+            
+            let errorMessage = 'Ocurrió un error inesperado al intentar cambiar la contraseña.';
+            if (error.status === 401 || error.status === 403) {
+                errorMessage = "La contraseña actual ingresada es incorrecta.";
+            } else if (error.message && error.message.length < 100) {
+                errorMessage = error.message;
+            }
+            
+            setAlertInfo({ type: 'error', text: errorMessage });
         }
     });
 
@@ -45,11 +52,19 @@ export const ChangePasswordModal = ({ onClose }) => {
         if (!newPassword.trim()) newErrors.newPassword = "La nueva contraseña es obligatoria";
         if (!confirmPassword.trim()) newErrors.confirmPassword = "Debe confirmar la contraseña";
         
-        // Simple validation checks
-        if (newPassword && newPassword.length < 6) {
-            newErrors.newPassword = "La contraseña debe tener al menos 6 caracteres";
+        // Validación de longitud y formato seguro
+        if (newPassword && newPassword.length < 8) {
+            newErrors.newPassword = "La contraseña debe tener al menos 8 caracteres";
+        } else if (newPassword && !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
+            newErrors.newPassword = "Debe incluir al menos una mayúscula, minúscula y un número";
+        }
+
+        // Validación de que no sea igual a la antigua
+        if (newPassword && oldPassword && newPassword === oldPassword) {
+            newErrors.newPassword = "La nueva contraseña no puede ser idéntica a la actual";
         }
         
+        // Validar que la confirmación coincida
         if (newPassword && confirmPassword && newPassword !== confirmPassword) {
             newErrors.confirmPassword = "Las contraseñas no coinciden";
         }

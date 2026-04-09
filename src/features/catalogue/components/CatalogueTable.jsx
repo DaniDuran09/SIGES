@@ -17,7 +17,7 @@ const CatalogueTable = ({ data, onEdit, onDelete, isLoading }) => {
                     <tr>
                         <th>Nombre</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        {/* <th>Acciones</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -29,6 +29,7 @@ const CatalogueTable = ({ data, onEdit, onDelete, isLoading }) => {
                                     {item.deletedAt === null ? "Activo" : "Inactivo"}
                                 </span>
                             </td>
+                            {/* 
                             <td>
                                 <div className={styles.actions}>
                                     <label className={styles.switch} title={item.deletedAt === null ? "Desactivar" : "Activar"}>
@@ -48,6 +49,7 @@ const CatalogueTable = ({ data, onEdit, onDelete, isLoading }) => {
                                     </button>
                                 </div>
                             </td>
+                            */}
                         </tr>
                     ))}
                 </tbody>
