@@ -87,7 +87,6 @@ export const NewEquipmentModal = ({ onClose }) => {
         if (!newAvailDay || !newAvailStartTime || !newAvailEndTime) return;
         const newItem = {
             dateFrom: new Date().toISOString().split('T')[0],
-            dateTo: new Date().toISOString().split('T')[0],
             startTime: newAvailStartTime,
             endTime: newAvailEndTime,
             daysOfWeek: [newAvailDay]
@@ -193,7 +192,7 @@ export const NewEquipmentModal = ({ onClose }) => {
                                         <div className={styles.selectWrapper} style={{ flex: 1 }}>
                                             <select value={equipmentTypeId} onChange={(e) => setEquipmentTypeId(e.target.value)}>
                                                 <option value="" disabled>Seleccione...</option>
-                                                {b_equipmentTypes?.map((eqType) => (
+                                                {b_equipmentTypes?.filter(t => t.deletedAt === null).map((eqType) => (
                                                     <option key={eqType.id} value={eqType.id}>
                                                         {eqType.name}
                                                     </option>
@@ -220,7 +219,7 @@ export const NewEquipmentModal = ({ onClose }) => {
                                     <div className={styles.selectWrapper}>
                                         <select value={buildingId} onChange={(e) => setBuildingId(e.target.value)}>
                                             <option value="" disabled>Seleccione...</option>
-                                            {b_buildings?.map((b) => (
+                                            {b_buildings?.filter(b => b.deletedAt === null).map((b) => (
                                                 <option key={b.id} value={b.id}>
                                                     {b.name}
                                                 </option>

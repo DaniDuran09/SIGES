@@ -135,7 +135,6 @@ export const NewSpaceModal = ({ onClose }) => {
         if (!newAvailDay || !newAvailStartTime || !newAvailEndTime) return;
         const newItem = {
             dateFrom: new Date().toISOString().split('T')[0],
-            dateTo: new Date().toISOString().split('T')[0],
             startTime: newAvailStartTime,
             endTime: newAvailEndTime,
             daysOfWeek: [newAvailDay]
@@ -256,7 +255,7 @@ export const NewSpaceModal = ({ onClose }) => {
                                     <div className={styles.selectWrapper} style={{ flex: 1 }}>
                                         <select value={spaceType} onChange={(e) => setSpaceType(e.target.value)}>
                                             <option value="" disabled>Seleccione...</option>
-                                            {b_types?.map((type) => (
+                                            {b_types?.filter(t => t.deletedAt === null).map((type) => (
                                                 <option key={type.id} value={type.id}>
                                                     {type.name}
                                                 </option>
@@ -277,7 +276,7 @@ export const NewSpaceModal = ({ onClose }) => {
                                         <div className={styles.selectWrapper} style={{ flex: 1 }}>
                                             <select value={spaceBuilding} onChange={(e) => setSpaceBuilding(e.target.value)}>
                                                 <option value="" disabled>Seleccione...</option>
-                                                {b_buildings?.map((building) => (
+                                                {b_buildings?.filter(b => b.deletedAt === null).map((building) => (
                                                     <option key={building.id} value={building.id}>
                                                         {building.name}
                                                     </option>
@@ -324,7 +323,12 @@ export const NewSpaceModal = ({ onClose }) => {
                                 <label>Equipos incluidos</label>
                                 <div className={styles.inputWithButton}>
                                     <input style={{ flex: 1 }} type="text" placeholder="Ej. Proyector, Pizarrón interactivo..." value={newEquipment} onChange={(e) => setNewEquipment(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddEquipment(); } }} />
-                                    <button type="button" className={styles.plusButton} onClick={handleAddEquipment}>
+                                    <button
+                                        type="button"
+                                        className={styles.plusButton}
+                                        onClick={handleAddEquipment}
+                                        disabled={!newEquipment.trim()}
+                                    >
                                         <FiPlus size={20} />
                                     </button>
                                 </div>

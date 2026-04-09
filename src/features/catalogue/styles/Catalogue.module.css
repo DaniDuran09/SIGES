@@ -1,0 +1,258 @@
+.container {
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.header {
+    margin-bottom: 30px;
+}
+
+.header h4 {
+    color: #6B5B95;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.header h1 {
+    font-size: 28px;
+    margin: 5px 0 0 0;
+    color: #333;
+}
+
+.tabs {
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid #E2E8F0;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 5px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #64748B;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.tab:hover {
+    color: #6B5B95;
+}
+
+.activeTab {
+    color: #6B5B95;
+}
+
+.activeTab::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #6B5B95;
+}
+
+.tableContainer {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: left;
+    padding: 15px 20px;
+    background-color: #F8FAFC;
+    color: #64748B;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #F1F5F9;
+    color: #334155;
+    font-size: 14px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.iconButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editBtn {
+    color: #6B5B95;
+}
+
+.editBtn:hover {
+    background-color: #F3E8FF;
+}
+
+.deleteBtn {
+    color: #EF4444;
+}
+
+.deleteBtn:hover {
+    background-color: #FEE2E2;
+}
+
+/* Modals */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modalContent h2 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.inputGroup label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #64748B;
+}
+
+.inputGroup input {
+    padding: 10px 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.cancelBtn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #E2E8F0;
+    background: white;
+    cursor: pointer;
+}
+
+.saveBtn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #6B5B95;
+    color: white;
+    cursor: pointer;
+}
+
+.saveBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Toggle Switch Styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #CBD5E1;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+    background-color: #10B981;
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.statusBadge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.activeBadge {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.inactiveBadge {
+    background-color: #FEE2E2;
+    color: #991B1B;
+}

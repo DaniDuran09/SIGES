@@ -3,14 +3,18 @@ import { FiBell, FiLogOut, FiUser } from "react-icons/fi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext.jsx";
+import { useState } from "react";
+import { ChangePasswordModal } from "../components/ChangePasswordModal.jsx";
 
 function Configuration() {
 
     const navigate = useNavigate();
     const { logout } = useAuth();
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    
     const handleLogout = () => {
         logout();
-        navigate("/login");
+        // navigate("/login");
     }
 
     return (
@@ -54,7 +58,10 @@ function Configuration() {
                     </div>
                 </div>
 
-                <div className={styles.card}>
+                <div 
+                    className={styles.card}
+                    onClick={() => setShowPasswordModal(true)}
+                >
                     <div className={`${styles.icon} ${styles.purpleLight}`}>
                         <RiLockPasswordLine />
                     </div>
@@ -80,6 +87,10 @@ function Configuration() {
                 </div>
 
             </div>
+
+            {showPasswordModal && (
+                <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
+            )}
 
         </div>
     );

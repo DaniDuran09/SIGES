@@ -46,7 +46,7 @@ function History() {
                 size: 20,
             };
 
-            if (search) params.petitionerName = search;
+            if (search) params.q = search;
             if (status) params.statuses = status;
             if (type) params.type = type;
             if (date) params.date = date;
@@ -62,16 +62,17 @@ function History() {
     const getStatusStyles = (status) => {
         switch (status) {
             case 'FINISHED':
+                return { className: tableStyles.completada, text: 'Completada' };
             case 'APPROVED':
-                return { className: tableStyles.completada, text: 'COMPLETADA' };
+                return { className: tableStyles.aprobada, text: 'Aprobada' };
             case 'REJECTED':
-                return { className: tableStyles.denegada, text: 'RECHAZADA' };
+                return { className: tableStyles.denegada, text: 'Rechazada' };
             case 'CANCELLED':
-                return { className: tableStyles.cancelada, text: 'CANCELADA' };
+                return { className: tableStyles.cancelada, text: 'Cancelada' };
             case 'PENDING':
-                return { className: tableStyles.pendiente, text: 'PENDIENTE' };
+                return { className: tableStyles.pendiente, text: 'Pendiente' };
             case 'IN_PROGRESS':
-                return { className: tableStyles.pendiente, text: 'EN CURSO' };
+                return { className: tableStyles.pendiente, text: 'En curso' };
             default:
                 return { className: tableStyles.cancelada, text: status };
         }
@@ -149,45 +150,45 @@ function History() {
                     <div className={tableStyles.wrapper}>
                         <table className={tableStyles.table}>
                             <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Solicitante</th>
-                                <th>Recurso</th>
-                                <th>Fecha</th>
-                                <th>Horario</th>
-                                <th>Estado</th>
-                                <th>Tipo</th>
-                            </tr>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Solicitante</th>
+                                    <th>Recurso</th>
+                                    <th>Fecha</th>
+                                    <th>Horario</th>
+                                    <th>Estado</th>
+                                    <th>Tipo</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {b_history?.content?.length > 0 ? (
-                                b_history.content.map((item) => {
-                                    const statusInfo = getStatusStyles(item.status);
-                                    return (
-                                        <tr key={item.id}>
-                                            <td>#{item.id}</td>
-                                            <td className={tableStyles.name}>
-                                                {(item.petitioner?.firstName || item.user?.firstName || "Usuario")} {(item.petitioner?.lastName || item.user?.lastName || "")}
-                                            </td>
-                                            <td>{item.reservable?.name}</td>
-                                            <td>{item.date}</td>
-                                            <td>{item.startTime} - {item.endTime}</td>
-                                            <td>
-                                                <span className={`${tableStyles.badge} ${statusInfo.className}`}>
-                                                    {statusInfo.text}
-                                                </span>
-                                            </td>
-                                            <td>{item.type === 'GROUP' ? 'Grupal' : 'Individual'}</td>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <tr>
-                                    <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
-                                        No se encontraron reservaciones
-                                    </td>
-                                </tr>
-                            )}
+                                {b_history?.content?.length > 0 ? (
+                                    b_history.content.map((item) => {
+                                        const statusInfo = getStatusStyles(item.status);
+                                        return (
+                                            <tr key={item.id}>
+                                                <td>#{item.id}</td>
+                                                <td className={tableStyles.name}>
+                                                    {(item.petitioner?.firstName || item.user?.firstName || "Usuario")} {(item.petitioner?.lastName || item.user?.lastName || "")}
+                                                </td>
+                                                <td>{item.reservable?.name}</td>
+                                                <td>{item.date}</td>
+                                                <td>{item.startTime} - {item.endTime}</td>
+                                                <td>
+                                                    <span className={`${tableStyles.badge} ${statusInfo.className}`}>
+                                                        {statusInfo.text}
+                                                    </span>
+                                                </td>
+                                                <td>{item.type === 'GROUP' ? 'Grupal' : 'Individual'}</td>
+                                            </tr>
+                                        );
+                                    })
+                                ) : (
+                                    <tr>
+                                        <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
+                                            No se encontraron reservaciones
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

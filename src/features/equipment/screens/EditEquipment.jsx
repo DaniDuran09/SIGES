@@ -76,7 +76,6 @@ function EditEquipment() {
         if (!newAvailDay || !newAvailStartTime || !newAvailEndTime) return;
         const newItem = {
             dateFrom: new Date().toISOString().split('T')[0],
-            dateTo: new Date().toISOString().split('T')[0],
             startTime: newAvailStartTime,
             endTime: newAvailEndTime,
             daysOfWeek: [newAvailDay]
@@ -85,6 +84,7 @@ function EditEquipment() {
             ...prev,
             availabilitySlots: [...(prev.availabilitySlots || []), newItem]
         }));
+        console.log("newItem", newItem);
         setShowAddAvailModal(false);
         setNewAvailDay("");
         setNewAvailStartTime("");
@@ -108,7 +108,7 @@ function EditEquipment() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         let bookInAdvanceDurationFormatted = "";
         if (formData.advanceUnit === "MINUTES" || formData.advanceUnit === "MINUTE") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}M`;
         else if (formData.advanceUnit === "HOUR" || formData.advanceUnit === "HOURS") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}H`;
@@ -126,8 +126,6 @@ function EditEquipment() {
             bookInAdvanceDuration: bookInAdvanceDurationFormatted,
             equipmentTypeId: parseInt(formData.typeId),
         };
-        
-        // Include buildingId if it exists to prevent null constraint errors
         if (equipment?.building?.id) {
             payload.buildingId = equipment.building.id;
         }
@@ -171,7 +169,7 @@ function EditEquipment() {
                             <label>Tipo <span className={styles.requiredStar}>*</span></label>
                             <select name="typeId" value={formData.typeId} onChange={handleChange} required>
                                 <option value="">Seleccionar tipo</option>
-                                {types?.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                                {types?.filter(t => t.deletedAt === null).map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                             </select>
                         </div>
 
@@ -234,10 +232,10 @@ function EditEquipment() {
                         <div className={styles.restrictionBox}>
                             <span className={styles.restrictionLabel}>Restringido para estudiantes</span>
                             <label className={styles.switch}>
-                                <input 
-                                    type="checkbox" 
-                                    checked={!formData.availableForStudents} 
-                                    onChange={(e) => setFormData(prev => ({ ...prev, availableForStudents: !e.target.checked }))} 
+                                <input
+                                    type="checkbox"
+                                    checked={!formData.availableForStudents}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, availableForStudents: !e.target.checked }))}
                                 />
                                 <span className={styles.slider}></span>
                             </label>

@@ -137,8 +137,15 @@ function EditUsers() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Matrícula / Nº empleado <span className={styles.requiredStar}>*</span></label>
-                            <input name="employeeId" value={formData.employeeId} onChange={handleChange} required />
+                            <label>Matrícula / Nº empleado {formData.type !== "Administrador" && <span className={styles.requiredStar}>*</span>}</label>
+                            <input 
+                                name="employeeId" 
+                                value={formData.employeeId} 
+                                onChange={handleChange} 
+                                required={formData.type !== "Administrador"} 
+                                disabled={formData.type === "Administrador"}
+                                placeholder={formData.type === "Administrador" ? "No aplica para administradores" : ""}
+                            />
                         </div>
 
                         <div className={styles.formGroup}>

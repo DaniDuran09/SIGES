@@ -270,7 +270,7 @@ function ReservationDetail() {
                             <h3 className={styles.blockTitle}>Detalles</h3>
                             {/* In standard reservation JSON, purpose might be in notes or inferred from type, adding placeholder if null */}
                             <div className={styles.infoRow}>
-                                <span className={styles.infoLabel}>Propósito</span>
+                                <span className={styles.infoLabel}>Tipo de reserva</span>
                                 <span className={styles.infoValue}>
                                     {reservation.type === 'GROUP' ? 'Reunión de grupo' : 'Individual'}
                                 </span>
@@ -404,9 +404,27 @@ function ReservationDetail() {
                         <div className={styles.infoBlock}>
                             <h3 className={styles.blockTitle}>Propósito</h3>
                             <div className={styles.purposeBlock}>
-                                {reservation.purpose || 'Propósito general de la reservación o detalle especificado por el usuario al solicitar.'}
+                                {reservation.requestReason || 'No se especificó un propósito para esta reservación.'}
                             </div>
                         </div>
+
+                        {reservation.rejectionReason && (
+                            <div className={styles.infoBlock} style={{ borderLeft: '4px solid #EF4444' }}>
+                                <h3 className={styles.blockTitle} style={{ color: '#EF4444' }}>Motivo de rechazo</h3>
+                                <div className={styles.purposeBlock} style={{ backgroundColor: '#FEF2F2', borderLeft: 'none' }}>
+                                    {reservation.rejectionReason}
+                                </div>
+                            </div>
+                        )}
+
+                        {reservation.approvalObservation && (
+                            <div className={styles.infoBlock} style={{ borderLeft: '4px solid #10B981' }}>
+                                <h3 className={styles.blockTitle} style={{ color: '#10B981' }}>Observación de aprobación</h3>
+                                <div className={styles.purposeBlock} style={{ backgroundColor: '#ECFDF5', borderLeft: 'none' }}>
+                                    {reservation.approvalObservation}
+                                </div>
+                            </div>
+                        )}
 
                     </div>
                 </div>

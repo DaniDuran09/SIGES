@@ -44,33 +44,18 @@
 }
 
 .badge {
-    padding: 8px 16px;
+    padding: 8px 18px;
     border-radius: 50px;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 500;
     display: inline-block;
     text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    text-transform: capitalize;
     min-width: 100px;
 }
 
-.completada {
-    background-color: #ededed;
-    color: #8a8a8a;
-}
-
-.denegada {
-    background-color: #ffe0e0;
-    color: #ff9999;
-}
-
-.cancelada {
-    background-color: #f1f3f5;
-    color: #adb5bd;
-}
-
-.pendiente {
-    background-color: #fff4e6;
-    color: #ffa94d;
-}
+.pendiente { background-color: #FEF3C7; color: #D97706; }
+.aprobada { background-color: #D1FAE5; color: #10B981; }
+.denegada { background-color: #FEE2E2; color: #EF4444; }
+.cancelada { background-color: #f1f3f5; color: #adb5bd; }
+.completada { background-color: #E5E7EB; color: #6B7280; }
