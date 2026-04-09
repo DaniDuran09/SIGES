@@ -28,7 +28,7 @@ export const NewSpaceModal = ({ onClose }) => {
 
     const [availability, setAvailability] = useState([]);
     const [showAddAvailModal, setShowAddAvailModal] = useState(false);
-    const [newAvailDay, setNewAvailDay] = useState("");
+    const [selectedDays, setSelectedDays] = useState([]);
     const [newAvailStartTime, setNewAvailStartTime] = useState("");
     const [newAvailEndTime, setNewAvailEndTime] = useState("");
 
@@ -57,7 +57,7 @@ export const NewSpaceModal = ({ onClose }) => {
     });
 
     const mutationType = useMutation({
-        mutationFn: (data) => apiFetch("/spacetypes", {
+        mutationFn: (data) => apiFetch("/space-types", {
             method: "POST",
             body: JSON.stringify(data),
         }),
@@ -132,18 +132,24 @@ export const NewSpaceModal = ({ onClose }) => {
     };
 
     const handleAddAvailability = () => {
-        if (!newAvailDay || !newAvailStartTime || !newAvailEndTime) return;
+        if (selectedDays.length === 0 || !newAvailStartTime || !newAvailEndTime) return;
         const newItem = {
             dateFrom: new Date().toISOString().split('T')[0],
             startTime: newAvailStartTime,
             endTime: newAvailEndTime,
-            daysOfWeek: [newAvailDay]
+            daysOfWeek: selectedDays
         };
         setAvailability([...availability, newItem]);
         setShowAddAvailModal(false);
-        setNewAvailDay("");
+        setSelectedDays([]);
         setNewAvailStartTime("");
         setNewAvailEndTime("");
+    };
+
+    const toggleDay = (day) => {
+        setSelectedDays(prev =>
+            prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+        );
     };
 
     const removeAvailability = (index) => {
@@ -156,6 +162,8 @@ export const NewSpaceModal = ({ onClose }) => {
         WEDNESDAY: "Miércoles",
         THURSDAY: "Jueves",
         FRIDAY: "Viernes",
+        SATURDAY: "Sábado",
+        SUNDAY: "Domingo"
     };
 
     const formatTime = (timeStr) => {
@@ -376,7 +384,7 @@ export const NewSpaceModal = ({ onClose }) => {
                                     {availability.map((item, index) => (
                                         <div key={index} className={styles.scheduleItem}>
                                             <div className={styles.scheduleItemInfo}>
-                                                <h4>{dayMapping[item.daysOfWeek[0]] || item.daysOfWeek[0]}</h4>
+                                                <h4>{item.daysOfWeek.map(d => dayMapping[d]).join(", ")}</h4>
                                                 <p>{formatTime(item.startTime)} - {formatTime(item.endTime)}</p>
                                             </div>
                                             <button type="button" className={styles.trashBtn} onClick={() => removeAvailability(index)}>
@@ -471,16 +479,40 @@ export const NewSpaceModal = ({ onClose }) => {
                         </div>
                         <div className={styles.content}>
                             <div className={styles.formGroup}>
-                                <label>Día de la semana <span className={styles.requiredStar}>*</span></label>
-                                <div className={styles.selectWrapper}>
-                                    <select value={newAvailDay} onChange={(e) => setNewAvailDay(e.target.value)}>
-                                        <option value="" disabled>Seleccione un día</option>
-                                        <option value="MONDAY">Lunes</option>
-                                        <option value="TUESDAY">Martes</option>
-                                        <option value="WEDNESDAY">Miércoles</option>
-                                        <option value="THURSDAY">Jueves</option>
-                                        <option value="FRIDAY">Viernes</option>
-                                    </select>
+                                <label>Días de la semana <span className={styles.requiredStar}>*</span></label>
+                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+                                    {[
+                                        { id: 'MONDAY', label: 'L' },
+                                        { id: 'TUESDAY', label: 'M' },
+                                        { id: 'WEDNESDAY', label: 'M' },
+                                        { id: 'THURSDAY', label: 'J' },
+                                        { id: 'FRIDAY', label: 'V' },
+                                        { id: 'SATURDAY', label: 'S' },
+                                        { id: 'SUNDAY', label: 'D' }
+                                    ].map(day => (
+                                        <button
+                                            key={day.id}
+                                            type="button"
+                                            onClick={() => toggleDay(day.id)}
+                                            style={{
+                                                width: '36px',
+                                                height: '36px',
+                                                borderRadius: '50%',
+                                                border: '1px solid #e5e7eb',
+                                                backgroundColor: selectedDays.includes(day.id) ? '#6B5B95' : 'white',
+                                                color: selectedDays.includes(day.id) ? 'white' : '#6b7280',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontWeight: 'bold',
+                                                fontSize: '14px',
+                                                transition: 'all 0.2s'
+                                            }}
+                                        >
+                                            {day.label}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                             <div className={styles.formGroup}>
@@ -494,7 +526,7 @@ export const NewSpaceModal = ({ onClose }) => {
                         </div>
                         <div className={styles.footer} style={{ justifyContent: 'center' }}>
                             <button type="button" className={styles.cancelButton} onClick={() => setShowAddAvailModal(false)}>Cancelar</button>
-                            <button type="button" className={styles.submitAvailButton} onClick={handleAddAvailability} disabled={!newAvailDay || !newAvailStartTime || !newAvailEndTime}>
+                            <button type="button" className={styles.submitAvailButton} onClick={handleAddAvailability} disabled={selectedDays.length === 0 || !newAvailStartTime || !newAvailEndTime}>
                                 ✓ Agregar
                             </button>
                         </div>

@@ -146,7 +146,7 @@ function NewUserModal({ onClose }) {
                 <div className={styles.content} style={{ marginTop: alertInfo ? '16px' : '0' }}>
 
                     <div className={styles.formGroup}>
-                        <label>Nombre completo <span className={styles.requiredStar}>*</span></label>
+                        <label>Nombre y apellido <span className={styles.requiredStar}>*</span></label>
                         <input type="text" placeholder="Nombre Apellido" value={fullName} onChange={(e) => setFullName(e.target.value)} />
                         {errors.fullName && <span className={styles.errorText}>{errors.fullName}</span>}
                     </div>
@@ -166,7 +166,12 @@ function NewUserModal({ onClose }) {
                         </div>
                         <div className={styles.formGroup}>
                             <label>Fecha nacimiento <span className={styles.requiredStar}>*</span></label>
-                            <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+                            <input
+                                type="date"
+                                value={birthDate}
+                                max={new Date().toISOString().split("T")[0]}
+                                onChange={(e) => setBirthDate(e.target.value)}
+                            />
                             {errors.birthDate && <span className={styles.errorText}>{errors.birthDate}</span>}
                         </div>
                     </div>
