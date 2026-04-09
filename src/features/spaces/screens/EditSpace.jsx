@@ -170,7 +170,7 @@ function EditSpace() {
                 <form className={styles.cardContent} onSubmit={handleSubmit}>
                     <div className={styles.formGrid}>
                         <div className={styles.formGroup}>
-                            <label>Nombre del espacio *</label>
+                            <label>Nombre del espacio <span className={styles.requiredStar}>*</span></label>
                             <input
                                 name="name"
                                 value={formData.name}
@@ -180,7 +180,7 @@ function EditSpace() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Tipo *</label>
+                            <label>Tipo <span className={styles.requiredStar}>*</span></label>
                             <select
                                 name="spaceTypeId"
                                 value={formData.spaceTypeId}
@@ -195,7 +195,7 @@ function EditSpace() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Tiempo de anticipación *</label>
+                            <label>Tiempo de anticipación <span className={styles.requiredStar}>*</span></label>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <input
                                     style={{ flex: 1 }}
@@ -218,7 +218,7 @@ function EditSpace() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Ubicación *</label>
+                            <label>Ubicación <span className={styles.requiredStar}>*</span></label>
                             <select
                                 name="buildingId"
                                 value={formData.buildingId}
@@ -233,7 +233,7 @@ function EditSpace() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Capacidad *</label>
+                            <label>Capacidad <span className={styles.requiredStar}>*</span></label>
                             <input
                                 name="capacity"
                                 type="number"

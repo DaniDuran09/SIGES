@@ -102,26 +102,40 @@
 .formGroup label {
     font-size: 14px;
     font-weight: 600;
-    color: #ee6c4d; /* Coral from mockup markers */
+    color: #64748B;
+}
+
+.requiredStar {
+    color: #F87171;
+    margin-left: 2px;
 }
 
 .formGroup input, 
 .formGroup select, 
 .formGroup textarea {
-    padding: 10px 12px;
-    border: 1px solid #e5e7eb;
+    padding: 11px 14px;
+    border: 1px solid #E2E8F0;
     border-radius: 8px;
     font-size: 14px;
-    color: #374151;
+    color: #1E293B;
     background-color: white;
+    font-family: inherit;
+    box-sizing: border-box;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+    color: #94A3B8;
 }
 
 .formGroup input:focus, 
 .formGroup select:focus, 
 .formGroup textarea:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: #6B5B95;
+    box-shadow: 0 0 0 1px #6B5B95;
 }
 
 .fullWidth {
@@ -188,15 +202,20 @@
 }
 
 .deleteBtn {
-    color: #fecaca;
+    color: #EF4444;
     cursor: pointer;
-    background: white;
+    background: #FEE2E2;
     border: none;
     border-radius: 6px;
-    padding: 4px;
+    padding: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.deleteBtn:hover {
+    background: #FECACA;
 }
 
 /* Restriction Toggle */

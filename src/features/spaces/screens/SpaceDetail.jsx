@@ -2,13 +2,17 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import { FiArrowLeft, FiPlus, FiTrash2 } from "react-icons/fi";
+import { useState } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
+import HistoryList from "../../common/components/HistoryList";
+import AddAssetModal from "../components/AddAssetModal";
 import styles from "./SpaceDetail.module.css";
 
 function SpaceDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [showAddAsset, setShowAddAsset] = useState(false);
 
     const { data: space, isPending, error } = useQuery({
         queryKey: ["GetSpaceDetail", id],
@@ -94,7 +98,15 @@ function SpaceDetail() {
 
                         <div className={styles.section}>
                             <h3 className={styles.sectionTitle}>
-                                EQUIPAMIENTO INTEGRADO <span className={styles.plusIcon}><FiPlus size={12} /></span>
+                                EQUIPAMIENTO INTEGRADO{" "}
+                                <span
+                                    className={styles.plusIcon}
+                                    onClick={() => setShowAddAsset(true)}
+                                    style={{ cursor: "pointer" }}
+                                    title="Agregar equipamiento"
+                                >
+                                    <FiPlus size={12} />
+                                </span>
                             </h3>
                             <div className={styles.tags}>
                                 {space.assets?.length > 0 ? (
@@ -128,6 +140,7 @@ function SpaceDetail() {
 
                     {/* Right Column */}
                     <div>
+                        {/* 
                         <div className={styles.section}>
                             <h3 className={styles.sectionTitle}>ESTADÍSTICAS DE USO</h3>
                             <div className={styles.statsGrid}>
@@ -141,6 +154,13 @@ function SpaceDetail() {
                                 </div>
                             </div>
                         </div>
+                        */}
+
+                        <HistoryList 
+                            resourceId={id} 
+                            resourceName={space.name} 
+                            reservableType="SPACE" 
+                        />
 
                         <div className={styles.section}>
                             <h3 className={styles.sectionTitle}>DESCRIPCIÓN</h3>
@@ -152,6 +172,13 @@ function SpaceDetail() {
                     </div>
                 </div>
             </div>
+
+            {showAddAsset && (
+                <AddAssetModal
+                    spaceId={id}
+                    onClose={() => setShowAddAsset(false)}
+                />
+            )}
         </div>
     );
 }

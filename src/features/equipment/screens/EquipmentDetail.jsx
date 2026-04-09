@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import { FiArrowLeft, FiTrash2, FiEdit2 } from "react-icons/fi";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
+import HistoryList from "../../common/components/HistoryList";
 import styles from "../styles/EquipmentDetail.module.css";
 
 function EquipmentDetail() {
@@ -50,7 +51,7 @@ function EquipmentDetail() {
                 <div className={styles.cardHeader}>
                     <h2>{equipment.name}</h2>
                     <span className={`${styles.statusBadge} ${isAvailable ? styles.available : styles.unavailable}`}>
-                        {isAvailable ? "Disponible" : equipment.status === "IN_USE" ? "En Uso" : "Mantenimiento"}
+                        {isAvailable ? "Disponible" : equipment.status === "LOANED" ? "En préstamo" : "Mantenimiento"}
                     </span>
                 </div>
 
@@ -103,7 +104,8 @@ function EquipmentDetail() {
 
                     {/* Right Column: Stats & Description */}
                     <div>
-                        <h3 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#6B7280' }}>
+                        {/* 
+                         <h3 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#6B7280' }}>
                             ESTADÍSTICAS DE USO
                             <button onClick={() => { navigate(`/equipment/${id}/history`) }} style={{ backgroundColor: 'transparent', border: '0px', cursor: 'pointer' }}>
                                 <h3 style={{ color: '#9CA3AF' }}>ver historial {'>'}</h3>
@@ -119,6 +121,13 @@ function EquipmentDetail() {
                                 <span className={styles.statLabel}>Días Promedio</span>
                             </div>
                         </div>
+                        */}
+
+                        <HistoryList 
+                            resourceId={id} 
+                            resourceName={equipment.name} 
+                            reservableType="EQUIPMENT" 
+                        />
 
                         <div className={styles.detailBox} style={{ marginTop: '48px' }}>
                             <h3 style={{ color: '#6B7280' }}>Descripción</h3>
