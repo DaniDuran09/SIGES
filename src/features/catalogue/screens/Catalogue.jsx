@@ -92,7 +92,7 @@ const Catalogue = () => {
                 </Alert>
             ) : (
                 <CatalogueTable
-                    data={b_data}
+                    data={b_data?.content ? b_data.content : b_data}
                     isLoading={isLoading}
                     onEdit={(item) => setEditModal({ isOpen: true, item })}
                     onDelete={handleToggleStatus}
