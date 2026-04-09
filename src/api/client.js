@@ -1,3 +1,5 @@
+import { getGenericErrorMessage, translateError } from "./errorCodes";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const apiFetch = async (endpoint, options = {}) => {
@@ -26,17 +28,27 @@ export const apiFetch = async (endpoint, options = {}) => {
         },
     });
 
-    if (response.status === 401) {
-        throw new Error("Error, correo o contraseña incorrectos");
-    }
-
-    if (response.status === 403) {
-        throw new Error("Error, no tienes permiso para realizar esta acción");
-    }
-
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        const error = new Error(errorData.message || response.statusText || "Error en la petición");
+        let rawMessage = "";
+
+        // 1. Prioridad: Errores de validación explícitos del backend
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+            rawMessage = errorData.errors.join(". ");
+        } 
+        // 2. Segunda prioridad: Mensajes específicos del backend
+        else if (errorData.detail || errorData.message) {
+            rawMessage = errorData.detail || errorData.message;
+        } 
+        // 3. Tercera prioridad: Mensaje semántico basado en el código HTTP
+        else {
+            rawMessage = getGenericErrorMessage(response.status);
+        }
+
+        // Traducir el mensaje antes de lanzarlo
+        const message = translateError(rawMessage);
+
+        const error = new Error(message);
         error.status = response.status;
         error.data = errorData;
         throw error;
@@ -45,3 +57,4 @@ export const apiFetch = async (endpoint, options = {}) => {
     const text = await response.text();
     return text ? JSON.parse(text) : {};
 };
+
