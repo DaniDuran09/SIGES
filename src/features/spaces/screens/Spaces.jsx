@@ -35,7 +35,7 @@ function Spaces() {
 
     const typeOptions = [
         { value: "", text: "Tipo: Todos" },
-        ...(b_types?.filter(t => t.deletedAt === null).map((t) => ({
+        ...(b_types?.map((t) => ({
             value: t.id.toString(),
             text: t.name,
         })) || []),
@@ -54,8 +54,8 @@ function Spaces() {
             apiFetch("/spaces", {
                 method: "GET",
                 params: {
-                    searchQuery: searchSpace,
-                    showMode: state,
+                    q: searchSpace,
+                    showMode: state === "ALL" ? "" : state,
                     spaceTypeId: type,
                     page: page,
                     size: 20
@@ -72,15 +72,12 @@ function Spaces() {
 
             return apiFetch(endpoint, {
                 method: "PATCH",
-                headers: {
-                    'X-API-Version': '1.0.0'
-                }
+                headers: { 'X-API-Version': '1.0.0' }
             });
         },
         onMutate: async ({ id }) => {
             await queryClient.cancelQueries({ queryKey });
             const previousData = queryClient.getQueryData(queryKey);
-
             queryClient.setQueryData(queryKey, (old) => {
                 if (!old) return old;
                 return {
@@ -92,7 +89,6 @@ function Spaces() {
                     ),
                 };
             });
-
             return { previousData };
         },
         onError: (err, variables, context) => {
@@ -120,10 +116,7 @@ function Spaces() {
                 {modalVisible && <NewSpaceModal onClose={() => setModalVisible(false)} />}
                 <div className={styles.headerRow}>
                     <h1>Espacios</h1>
-                    <PlusButton
-                        text="Nuevo Espacio"
-                        onClick={() => setModalVisible(true)}
-                    />
+                    <PlusButton text="Nuevo Espacio" onClick={() => setModalVisible(true)} />
                 </div>
 
                 <div className={styles.searchBar}>
@@ -139,11 +132,7 @@ function Spaces() {
 
                     <div className={styles.componentSearch}>
                         <div className={styles.optionAndState}>
-                            <button
-                                className={styles.refreshIcon}
-                                title="Refrescar"
-                                onClick={() => refetch()}
-                            >
+                            <button className={styles.refreshIcon} title="Refrescar" onClick={() => refetch()}>
                                 <FiRefreshCw />
                             </button>
 
@@ -173,11 +162,14 @@ function Spaces() {
 
             {b_spacesIsPending ? (
                 <LoaderCircle />
-            ) :
-                b_spacesIsError ? (<Alert severity={"error"}>Hubo un error al cargar los espacios</Alert>) : (
+            ) : b_spacesIsError ? (
+                <Alert severity="error">Hubo un error al cargar los espacios</Alert>
+            ) : (
+                <>
                     <div className={tableStyles.wrapper}>
-                        <table className={tableStyles.table}>
-                            <thead>
+                        <div className={tableStyles.tableContainer}>
+                            <table className={tableStyles.table}>
+                                <thead>
                                 <tr>
                                     <th>Nombre</th>
                                     <th>Tipo</th>
@@ -188,9 +180,8 @@ function Spaces() {
                                     <th>Activo</th>
                                     <th>Acciones</th>
                                 </tr>
-                            </thead>
-
-                            <tbody>
+                                </thead>
+                                <tbody>
                                 {b_spaces?.content?.length > 0 ? (
                                     b_spaces.content.map((space) => (
                                         <tr key={space.id}>
@@ -199,16 +190,16 @@ function Spaces() {
                                             <td>{space.building?.name || '—'}</td>
                                             <td>{space.capacity ?? '—'}</td>
                                             <td>
-                                                <span className={space.availableForStudents ? tableStyles.AbiertoText : tableStyles.RestringidoText}>
-                                                    {space.availableForStudents ? "Abierto" : "Restringido"}
-                                                </span>
+                                                    <span className={`${tableStyles.badge} ${space.availableForStudents ? tableStyles.statusAbierto : tableStyles.statusRestringido}`}>
+                                                        {space.availableForStudents ? "Abierto" : "Restringido"}
+                                                    </span>
                                             </td>
                                             <td>
-                                                <span className={`${tableStyles.badge} ${space.deletedAt !== null ? tableStyles.INACTIVE : tableStyles[space.status]}`}>
-                                                    {space.deletedAt !== null
-                                                        ? "Inactivo"
-                                                        : space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
-                                                </span>
+                                                    <span className={`${tableStyles.badge} ${space.deletedAt !== null ? tableStyles.badgeMantenimiento : tableStyles[space.status]}`}>
+                                                        {space.deletedAt !== null
+                                                            ? "Inactivo"
+                                                            : space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
+                                                    </span>
                                             </td>
                                             <td>
                                                 <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
@@ -221,21 +212,15 @@ function Spaces() {
                                                     <span className={tableStyles.slider}></span>
                                                 </label>
                                             </td>
-                                            <td className={tableStyles.actions}>
-                                                <button
-                                                    className={tableStyles.iconButton}
-                                                    onClick={() => navigate(`/spaces/${space.id}`)}
-                                                    title="Ver detalle"
-                                                >
-                                                    <FiEye size={18} />
-                                                </button>
-                                                <button
-                                                    className={tableStyles.iconButton}
-                                                    onClick={() => navigate(`/spaces/edit/${space.id}`)}
-                                                    title="Editar espacio"
-                                                >
-                                                    <FiEdit2 size={18} />
-                                                </button>
+                                            <td>
+                                                <div className={tableStyles.actions}>
+                                                    <button className={tableStyles.iconButton} onClick={() => navigate(`/spaces/${space.id}`)}>
+                                                        <FiEye size={18} />
+                                                    </button>
+                                                    <button className={tableStyles.iconButton} onClick={() => navigate(`/spaces/edit/${space.id}`)}>
+                                                        <FiEdit2 size={18} />
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))
@@ -246,16 +231,17 @@ function Spaces() {
                                         </td>
                                     </tr>
                                 )}
-                            </tbody>
-                        </table>
-
-                        <Pagination
-                            currentPage={page}
-                            totalPages={b_spaces?.totalPages || 0}
-                            onPageChange={(newPage) => setPage(newPage)}
-                        />
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                )}
+                    <Pagination
+                        currentPage={page}
+                        totalPages={b_spaces?.totalPages || 0}
+                        onPageChange={(newPage) => setPage(newPage)}
+                    />
+                </>
+            )}
         </div>
     );
 }

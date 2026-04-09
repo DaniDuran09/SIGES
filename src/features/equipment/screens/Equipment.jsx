@@ -175,10 +175,11 @@ function Equipments() {
             {isPending ? (
                 <LoaderCircle />
             ) : (
-                <div className={tableStyles.wrapper}>
-                    <div className={tableStyles.tableContainer}>
-                        <table className={tableStyles.table}>
-                            <thead>
+                <>
+                    <div className={tableStyles.wrapper}>
+                        <div className={tableStyles.tableContainer}>
+                            <table className={tableStyles.table}>
+                                <thead>
                                 <tr>
                                     <th>Nombre</th>
                                     <th>Tipo</th>
@@ -189,8 +190,8 @@ function Equipments() {
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                                </thead>
+                                <tbody>
                                 {b_equipments?.content?.length > 0 ? (
                                     b_equipments.content.map((equipment) => (
                                         <tr key={equipment.id}>
@@ -199,18 +200,18 @@ function Equipments() {
                                             <td>{equipment.inventoryIdNum || "—"}</td>
                                             <td>{equipment.building?.name || "—"}</td>
                                             <td>
-                                                <span className={`${tableStyles.badge} ${equipment.availableForStudents ? tableStyles.statusAbierto : tableStyles.statusRestringido}`}>
-                                                    {equipment.availableForStudents ? "Abierto" : "Restringido"}
-                                                </span>
+                                                    <span className={`${tableStyles.badge} ${equipment.availableForStudents ? tableStyles.statusAbierto : tableStyles.statusRestringido}`}>
+                                                        {equipment.availableForStudents ? "Abierto" : "Restringido"}
+                                                    </span>
                                             </td>
                                             <td>
-                                                <span className={`${tableStyles.badge} ${equipment.status === "AVAILABLE" ? tableStyles.badgeDisponible :
-                                                    equipment.status === "LOANED" ? tableStyles.badgeEnUso :
-                                                        tableStyles.badgeMantenimiento
+                                                    <span className={`${tableStyles.badge} ${equipment.status === "AVAILABLE" ? tableStyles.badgeDisponible :
+                                                        equipment.status === "LOANED" ? tableStyles.badgeEnUso :
+                                                            tableStyles.badgeMantenimiento
                                                     }`}>
-                                                    {equipment.status === "AVAILABLE" ? "Disponible" :
-                                                        equipment.status === "LOANED" ? "En préstamo" : "Mantenimiento"}
-                                                </span>
+                                                        {equipment.status === "AVAILABLE" ? "Disponible" :
+                                                            equipment.status === "LOANED" ? "En préstamo" : "Mantenimiento"}
+                                                    </span>
                                             </td>
                                             <td>
                                                 <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
@@ -248,15 +249,16 @@ function Equipments() {
                                         </td>
                                     </tr>
                                 )}
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <Pagination
                         currentPage={page}
                         totalPages={b_equipments?.totalPages || 0}
                         onPageChange={(newPage) => setPage(newPage)}
                     />
-                </div>
+                </>
             )}
         </div>
     );

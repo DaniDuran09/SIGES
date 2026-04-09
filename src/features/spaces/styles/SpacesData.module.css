@@ -8,6 +8,7 @@
     flex-direction: column;
     min-height: 500px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    margin-bottom: 20px;
 }
 
 .tableContainer {
@@ -17,21 +18,14 @@
     border: 1px solid #F1F5F9;
     overflow-x: auto;
     flex: none;
+    background-color: white;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-}
-
-.empty {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    font-size: 24px;
-    color: #161616;
+    min-width: 1000px;
 }
 
 .table thead {
@@ -56,21 +50,6 @@
     vertical-align: middle;
 }
 
-.projectName {
-    font-weight: 700;
-    color: #111827;
-}
-
-.AbiertoText {
-    color: #10b981;
-    font-weight: 500;
-}
-
-.RestringidoText {
-    color: #f87171;
-    font-weight: 500;
-}
-
 .table tr:last-child td {
     border-bottom: none;
 }
@@ -79,64 +58,68 @@
     background-color: #f8fafc;
 }
 
-.badge {
-    padding: 6px 16px;
-    border-radius: 24px;
-    font-size: 12px;
+.projectName {
     font-weight: 600;
+    color: #1E293B;
+}
+
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
     display: inline-block;
 }
 
-.abierto {
-    color: #0f766e;
+.statusAbierto {
+    color: #10B981;
 }
 
-.restringido {
-    color: #dc2626;
+.statusRestringido {
+    color: #F87171;
 }
 
 .AVAILABLE {
-    background-color: #dcfce7;
-    color: #10b981;
+    background-color: #D1FAE5;
+    color: #059669;
 }
 
 .IN_USE {
-    background-color: #fee2e2;
+    background-color: #FEE2E2;
     color: #ef4444;
 }
 
-.MAINTENANCE {
-    background-color: #f3f4f6;
-    color: #4b5563;
+.badgeMantenimiento {
+    background-color: #F1F5F9;
+    color: #64748B;
 }
 
 .actions {
     display: flex;
-    gap: 10px;
-    white-space: nowrap;
+    gap: 12px;
     justify-content: center;
     align-items: center;
+    white-space: nowrap;
 }
 
 .iconButton {
-    background-color: #f3f4f6;
-    border: none;
-    border-radius: 20px;
-    padding: 6px 10px;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.iconButton svg {
-    width: 16px;
-    height: 16px;
-    color: #374151;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid #F1F5F9;
+    background-color: #F8FAF7;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .iconButton:hover {
-    background-color: #e5e7eb;
+    background-color: #f1f5f9;
+    color: #334155;
+    border-color: #E2E8F0;
 }
 
 .switch {
@@ -179,4 +162,22 @@
 
 .switch input:checked + .slider:before {
     transform: translateX(18px);
+}
+
+.tableContainer::-webkit-scrollbar {
+    height: 8px;
+}
+
+.tableContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+    background: #6d5cae;
 }
