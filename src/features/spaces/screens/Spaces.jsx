@@ -17,15 +17,23 @@ function Spaces() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [searchSpace, setSearchSpace] = useState('');
-    const [state, setState] = useState('');
+    const [showMode, setShowMode] = useState('ALL');
+    const [status, setStatus] = useState('');
     const [type, setType] = useState('');
     const [page, setPage] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
 
-    const statusOptions = [
+    const showModeOptions = [
         { value: "ALL", text: "Estado: Todos" },
         { value: "ACTIVE", text: "Activo" },
         { value: "INACTIVE", text: "Inactivo" },
+    ];
+
+    const statusOptions = [
+        { value: "", text: "Disponibilidad: Todos" },
+        { value: "AVAILABLE", text: "Disponible" },
+        { value: "MAINTENANCE", text: "Mantenimiento" },
+        { value: "LOANED", text: "En uso" }, // El backend usa LOANED tanto para equipos como espacios
     ];
 
     const { data: b_types } = useQuery({
@@ -35,13 +43,13 @@ function Spaces() {
 
     const typeOptions = [
         { value: "", text: "Tipo: Todos" },
-        ...(b_types?.map((t) => ({
+        ...(b_types?.filter(t => t.deletedAt === null).map((t) => ({
             value: t.id.toString(),
             text: t.name,
         })) || []),
     ];
 
-    const queryKey = ["GetSpaces", searchSpace, state, type, page];
+    const queryKey = ["GetSpaces", searchSpace, showMode, status, type, page];
 
     const {
         data: b_spaces,
@@ -50,17 +58,21 @@ function Spaces() {
         refetch
     } = useQuery({
         queryKey: queryKey,
-        queryFn: () =>
-            apiFetch("/spaces", {
+        queryFn: async () => {
+            const params = {
+                page: page,
+                size: 20
+            };
+            if (searchSpace) params.q = searchSpace;
+            if (showMode) params.showMode = showMode;
+            if (status !== "") params.status = status;
+            if (type !== "") params.spaceTypeId = type;
+
+            return await apiFetch("/spaces", {
                 method: "GET",
-                params: {
-                    q: searchSpace,
-                    showMode: state === "ALL" ? "" : state,
-                    spaceTypeId: type,
-                    page: page,
-                    size: 20
-                },
-            }),
+                params: params,
+            });
+        },
         retry: (failureCount, error) => error.status !== 404,
     });
 
@@ -137,6 +149,16 @@ function Spaces() {
                             </button>
 
                             <Filter
+                                label="Disponibilidad:"
+                                value={status}
+                                onChange={(e) => {
+                                    setStatus(e.target.value);
+                                    setPage(0);
+                                }}
+                                options={statusOptions}
+                            />
+
+                            <Filter
                                 label="Tipo:"
                                 value={type}
                                 onChange={(e) => {
@@ -148,12 +170,12 @@ function Spaces() {
 
                             <Filter
                                 label="Estado:"
-                                value={state}
+                                value={showMode}
                                 onChange={(e) => {
-                                    setState(e.target.value);
+                                    setShowMode(e.target.value);
                                     setPage(0);
                                 }}
-                                options={statusOptions}
+                                options={showModeOptions}
                             />
                         </div>
                     </div>
@@ -176,14 +198,28 @@ function Spaces() {
                                     <th>Edificio</th>
                                     <th>Capacidad</th>
                                     <th>Estudiantes</th>
+                                    <th>Disponibilidad</th>
                                     <th>Estado</th>
-                                    <th>Activo</th>
                                     <th>Acciones</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {b_spaces?.content?.length > 0 ? (
-                                    b_spaces.content.map((space) => (
+                                {b_spaces?.content?.filter(space => {
+                                    if (status === "") return true;
+                                    if (status === "LOANED" && space.status === "IN_USE") return true;
+                                    if (status === "IN_USE" && space.status === "LOANED") return true;
+                                    return space.status === status;
+                                }).length > 0 ? (
+                                    b_spaces.content.filter(space => {
+                                        if (status === "") return true;
+                                        if (status === "LOANED" && space.status === "IN_USE") return true;
+                                        if (status === "IN_USE" && space.status === "LOANED") return true;
+                                        return space.status === status;
+                                    }).map((space) => {
+                                        // console.log para depurar los estados reales
+                                        console.log(`Espacio: ${space.name} | Estado exacto backend: "${space.status}"`);
+                                        
+                                        return (
                                         <tr key={space.id}>
                                             <td className={tableStyles.projectName}>{space.name}</td>
                                             <td>{space.spaceType?.name || '—'}</td>
@@ -195,10 +231,10 @@ function Spaces() {
                                                     </span>
                                             </td>
                                             <td>
-                                                    <span className={`${tableStyles.badge} ${space.deletedAt !== null ? tableStyles.badgeMantenimiento : tableStyles[space.status]}`}>
-                                                        {space.deletedAt !== null
-                                                            ? "Inactivo"
-                                                            : space.status === "AVAILABLE" ? "Disponible" : space.status === "IN_USE" ? "En uso" : "Mantenimiento"}
+                                                    <span className={`${tableStyles.badge} ${space.status === "AVAILABLE" ? tableStyles.AVAILABLE : 
+                                                        (space.status === "LOANED" || space.status === "IN_USE") ? tableStyles.IN_USE : 
+                                                        tableStyles.badgeMantenimiento}`}>
+                                                        {space.status === "AVAILABLE" ? "Disponible" : (space.status === "LOANED" || space.status === "IN_USE") ? "En uso" : "Mantenimiento"}
                                                     </span>
                                             </td>
                                             <td>
@@ -223,7 +259,8 @@ function Spaces() {
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))
+                                        );
+                                    })
                                 ) : (
                                     <tr>
                                         <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>

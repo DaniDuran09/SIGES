@@ -15,14 +15,12 @@ function Requests() {
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
-    const [status, setStatus] = useState("ALL");
-    const [tipo, setTipo] = useState("ALL");
-    const [fecha, setFecha] = useState("");
+    const [status, setStatus] = useState("");
+    const [tipo, setTipo] = useState("");
     const [fechaDesde, setFechaDesde] = useState("");
-    const [fechaHasta, setFechaHasta] = useState("");
 
     const opcionesTipo = [
-        { value: "ALL", text: "Tipo: Todos" },
+        { value: "", text: "Tipo: Todos" },
         { value: "EQUIPMENT", text: "Equipo" },
         { value: "SPACE", text: "Espacio" }
     ];
@@ -33,18 +31,16 @@ function Requests() {
         error,
         refetch
     } = useQuery({
-        queryKey: ["GetRequests", search, status, page, tipo, fecha, fechaDesde, fechaHasta],
+        queryKey: ["GetRequests", search, status, page, tipo, fechaDesde],
         queryFn: () => {
             const params = {
-                searchQuery: search || "",
-                status: status === "ALL" ? "" : status,
-                reservableType: tipo === "ALL" ? "" : tipo,
                 page: page,
                 size: 20
             };
-            if (fecha) params.date = fecha;
+            if (search) params.searchQuery = search;
+            if (status) params.statuses = status; // Correción a 'statuses' acorde a /reservations
+            if (tipo) params.reservableType = tipo;
             if (fechaDesde) params.dateFrom = fechaDesde;
-            if (fechaHasta) params.dateTo = fechaHasta;
 
             return apiFetch("/reservations", {
                 method: "GET",
@@ -85,10 +81,11 @@ function Requests() {
 
                 <div className={styles.tabsContainer}>
                     <div className={styles.tabs}>
-                        <button className={status === "ALL" ? styles.active : ""} onClick={() => { setStatus("ALL"); setPage(0); }}>Todas</button>
+                        <button className={status === "" ? styles.active : ""} onClick={() => { setStatus(""); setPage(0); }}>Todas</button>
                         <button className={status === "PENDING" ? styles.active : ""} onClick={() => { setStatus("PENDING"); setPage(0); }}>Pendientes</button>
                         <button className={status === "APPROVED" ? styles.active : ""} onClick={() => { setStatus("APPROVED"); setPage(0); }}>Aprobadas</button>
-                        <button className={status === "DENIED" ? styles.active : ""} onClick={() => { setStatus("DENIED"); setPage(0); }}>Denegadas</button>
+                        <button className={status === "REJECTED" || status === "DENIED" ? styles.active : ""} onClick={() => { setStatus("REJECTED"); setPage(0); }}>Denegadas</button>
+                        <button className={status === "CANCELLED" ? styles.active : ""} onClick={() => { setStatus("CANCELLED"); setPage(0); }}>Canceladas</button>
                     </div>
                 </div>
 
@@ -104,33 +101,18 @@ function Requests() {
                         <input
                             type="date"
                             className={styles.filterInput}
-                            title="Fecha de reservación"
-                            value={fecha}
-                            onChange={(e) => { setFecha(e.target.value); setPage(0); }}
+                            title="Desde"
+                            value={fechaDesde}
+                            onChange={(e) => { setFechaDesde(e.target.value); setPage(0); }}
                         />
 
-                        <div className={styles.rangeContainer}>
-                            <input
-                                type="date"
-                                className={styles.filterInput}
-                                title="Desde"
-                                value={fechaDesde}
-                                onChange={(e) => { setFechaDesde(e.target.value); setPage(0); }}
-                            />
-                            <input
-                                type="date"
-                                className={styles.filterInput}
-                                title="Hasta"
-                                value={fechaHasta}
-                                onChange={(e) => { setFechaHasta(e.target.value); setPage(0); }}
-                            />
-                        </div>
-
+                        {/*
                         <Filter
                             value={tipo}
                             onChange={(e) => { setTipo(e.target.value); setPage(0); }}
                             options={opcionesTipo}
                         />
+                        */}
 
                         <button
                             className={styles.refreshIcon}
@@ -150,55 +132,55 @@ function Requests() {
                     <div className={tableStyles.wrapper}>
                         <table className={tableStyles.table}>
                             <thead>
-                            <tr>
-                                <th>Usuarios</th>
-                                <th>Recurso</th>
-                                <th>Fecha Reservación</th>
-                                <th>Horario</th>
-                                <th>Tipo</th>
-                                <th>Estado</th>
-                                <th style={{ textAlign: "center" }}>Acciones</th>
-                            </tr>
+                                <tr>
+                                    <th>Usuarios</th>
+                                    <th>Recurso</th>
+                                    <th>Fecha Reservación</th>
+                                    <th>Horario</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th style={{ textAlign: "center" }}>Acciones</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {b_requests?.content?.length > 0 ? (
-                                b_requests.content.map((item) => {
-                                    const statusInfo = getStatusInfo(item.status);
-                                    const reservationDate = item.date ? new Date(item.date + 'T00:00:00') : null;
+                                {b_requests?.content?.length > 0 ? (
+                                    b_requests.content.map((item) => {
+                                        const statusInfo = getStatusInfo(item.status);
+                                        const reservationDate = item.date ? new Date(item.date + 'T00:00:00') : null;
 
-                                    return (
-                                        <tr key={item.id}>
-                                            <td className={tableStyles.usuario}>
-                                                {(item.petitioner?.firstName || item.user?.firstName)} {(item.petitioner?.lastName || item.user?.lastName)}
-                                            </td>
-                                            <td>{item.reservable?.name}</td>
-                                            <td>
-                                                {reservationDate
-                                                    ? reservationDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
-                                                    : 'No definida'}
-                                            </td>
-                                            <td>{item.startTime} - {item.endTime}</td>
-                                            <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
-                                            <td>
+                                        return (
+                                            <tr key={item.id}>
+                                                <td className={tableStyles.usuario}>
+                                                    {(item.petitioner?.firstName || item.user?.firstName)} {(item.petitioner?.lastName || item.user?.lastName)}
+                                                </td>
+                                                <td>{item.reservable?.name}</td>
+                                                <td>
+                                                    {reservationDate
+                                                        ? reservationDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+                                                        : 'No definida'}
+                                                </td>
+                                                <td>{item.startTime} - {item.endTime}</td>
+                                                <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
+                                                <td>
                                                     <span className={`${tableStyles.badge} ${statusInfo.className}`}>
                                                         {statusInfo.text}
                                                     </span>
-                                            </td>
-                                            <td className={tableStyles.actions}>
-                                                <button className={tableStyles.viewButton} onClick={() => navigate(`/requests/${item.id}`)}>
-                                                    <FiEye />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <tr>
-                                    <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
-                                        No se encontraron reservaciones
-                                    </td>
-                                </tr>
-                            )}
+                                                </td>
+                                                <td className={tableStyles.actions}>
+                                                    <button className={tableStyles.viewButton} onClick={() => navigate(`/requests/${item.id}`)}>
+                                                        <FiEye />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
+                                ) : (
+                                    <tr>
+                                        <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
+                                            No se encontraron reservaciones
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

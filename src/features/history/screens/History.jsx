@@ -62,16 +62,17 @@ function History() {
     const getStatusStyles = (status) => {
         switch (status) {
             case 'FINISHED':
+                return { className: tableStyles.completada, text: 'Completada' };
             case 'APPROVED':
-                return { className: tableStyles.completada, text: 'COMPLETADA' };
+                return { className: tableStyles.aprobada, text: 'Aprobada' };
             case 'REJECTED':
-                return { className: tableStyles.denegada, text: 'RECHAZADA' };
+                return { className: tableStyles.denegada, text: 'Rechazada' };
             case 'CANCELLED':
-                return { className: tableStyles.cancelada, text: 'CANCELADA' };
+                return { className: tableStyles.cancelada, text: 'Cancelada' };
             case 'PENDING':
-                return { className: tableStyles.pendiente, text: 'PENDIENTE' };
+                return { className: tableStyles.pendiente, text: 'Pendiente' };
             case 'IN_PROGRESS':
-                return { className: tableStyles.pendiente, text: 'EN CURSO' };
+                return { className: tableStyles.pendiente, text: 'En curso' };
             default:
                 return { className: tableStyles.cancelada, text: status };
         }
