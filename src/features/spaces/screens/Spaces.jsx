@@ -63,7 +63,7 @@ function Spaces() {
                 page: page,
                 size: 20
             };
-            if (searchSpace) params.q = searchSpace;
+            if (searchSpace) params.searchQuery = searchSpace;
             if (showMode) params.showMode = showMode;
             if (status !== "") params.status = status;
             if (type !== "") params.spaceTypeId = type;
@@ -192,82 +192,82 @@ function Spaces() {
                         <div className={tableStyles.tableContainer}>
                             <table className={tableStyles.table}>
                                 <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Tipo</th>
-                                    <th>Edificio</th>
-                                    <th>Capacidad</th>
-                                    <th>Estudiantes</th>
-                                    <th>Disponibilidad</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Tipo</th>
+                                        <th>Edificio</th>
+                                        <th>Capacidad</th>
+                                        <th>Estudiantes</th>
+                                        <th>Disponibilidad</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {b_spaces?.content?.filter(space => {
-                                    if (status === "") return true;
-                                    if (status === "LOANED" && space.status === "IN_USE") return true;
-                                    if (status === "IN_USE" && space.status === "LOANED") return true;
-                                    return space.status === status;
-                                }).length > 0 ? (
-                                    b_spaces.content.filter(space => {
+                                    {b_spaces?.content?.filter(space => {
                                         if (status === "") return true;
                                         if (status === "LOANED" && space.status === "IN_USE") return true;
                                         if (status === "IN_USE" && space.status === "LOANED") return true;
                                         return space.status === status;
-                                    }).map((space) => {
-                                        // console.log para depurar los estados reales
-                                        console.log(`Espacio: ${space.name} | Estado exacto backend: "${space.status}"`);
-                                        
-                                        return (
-                                        <tr key={space.id}>
-                                            <td className={tableStyles.projectName}>{space.name}</td>
-                                            <td>{space.spaceType?.name || '—'}</td>
-                                            <td>{space.building?.name || '—'}</td>
-                                            <td>{space.capacity ?? '—'}</td>
-                                            <td>
-                                                    <span className={`${tableStyles.badge} ${space.availableForStudents ? tableStyles.statusAbierto : tableStyles.statusRestringido}`}>
-                                                        {space.availableForStudents ? "Abierto" : "Restringido"}
-                                                    </span>
-                                            </td>
-                                            <td>
-                                                    <span className={`${tableStyles.badge} ${space.status === "AVAILABLE" ? tableStyles.AVAILABLE : 
-                                                        (space.status === "LOANED" || space.status === "IN_USE") ? tableStyles.IN_USE : 
-                                                        tableStyles.badgeMantenimiento}`}>
-                                                        {space.status === "AVAILABLE" ? "Disponible" : (space.status === "LOANED" || space.status === "IN_USE") ? "En uso" : "Mantenimiento"}
-                                                    </span>
-                                            </td>
-                                            <td>
-                                                <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={space.deletedAt === null}
-                                                        onChange={() => handleToggleActive(space)}
-                                                        disabled={toggleSpaceMutation.isPending}
-                                                    />
-                                                    <span className={tableStyles.slider}></span>
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <div className={tableStyles.actions}>
-                                                    <button className={tableStyles.iconButton} onClick={() => navigate(`/spaces/${space.id}`)}>
-                                                        <FiEye size={18} />
-                                                    </button>
-                                                    <button className={tableStyles.iconButton} onClick={() => navigate(`/spaces/edit/${space.id}`)}>
-                                                        <FiEdit2 size={18} />
-                                                    </button>
-                                                </div>
+                                    }).length > 0 ? (
+                                        b_spaces.content.filter(space => {
+                                            if (status === "") return true;
+                                            if (status === "LOANED" && space.status === "IN_USE") return true;
+                                            if (status === "IN_USE" && space.status === "LOANED") return true;
+                                            return space.status === status;
+                                        }).map((space) => {
+                                            // console.log para depurar los estados reales
+                                            console.log(`Espacio: ${space.name} | Estado exacto backend: "${space.status}"`);
+
+                                            return (
+                                                <tr key={space.id}>
+                                                    <td className={tableStyles.projectName}>{space.name}</td>
+                                                    <td>{space.spaceType?.name || '—'}</td>
+                                                    <td>{space.building?.name || '—'}</td>
+                                                    <td>{space.capacity ?? '—'}</td>
+                                                    <td>
+                                                        <span className={`${tableStyles.badge} ${space.availableForStudents ? tableStyles.statusAbierto : tableStyles.statusRestringido}`}>
+                                                            {space.availableForStudents ? "Abierto" : "Restringido"}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`${tableStyles.badge} ${space.status === "AVAILABLE" ? tableStyles.AVAILABLE :
+                                                            (space.status === "LOANED" || space.status === "IN_USE") ? tableStyles.IN_USE :
+                                                                tableStyles.badgeMantenimiento}`}>
+                                                            {space.status === "AVAILABLE" ? "Disponible" : (space.status === "LOANED" || space.status === "IN_USE") ? "En uso" : "Mantenimiento"}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={space.deletedAt === null}
+                                                                onChange={() => handleToggleActive(space)}
+                                                                disabled={toggleSpaceMutation.isPending}
+                                                            />
+                                                            <span className={tableStyles.slider}></span>
+                                                        </label>
+                                                    </td>
+                                                    <td>
+                                                        <div className={tableStyles.actions}>
+                                                            <button className={tableStyles.iconButton} onClick={() => navigate(`/spaces/${space.id}`)}>
+                                                                <FiEye size={18} />
+                                                            </button>
+                                                            <button className={tableStyles.iconButton} onClick={() => navigate(`/spaces/edit/${space.id}`)}>
+                                                                <FiEdit2 size={18} />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                                No se encontraron registros
                                             </td>
                                         </tr>
-                                        );
-                                    })
-                                ) : (
-                                    <tr>
-                                        <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
-                                            No se encontraron registros
-                                        </td>
-                                    </tr>
-                                )}
+                                    )}
                                 </tbody>
                             </table>
                         </div>

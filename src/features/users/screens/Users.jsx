@@ -44,7 +44,7 @@ function Users() {
                     showMode: state,
                     sort: ['firstName,asc', 'lastName,asc'],
                     userTypes: type,
-                    searchQuery: search,
+                    q: search,
                     page: page,
                     size: 20
                 },
@@ -161,47 +161,47 @@ function Users() {
                         <div className={tableStyles.tableContainer}>
                             <table className={tableStyles.table}>
                                 <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Tipo</th>
-                                    <th>Matrícula</th>
-                                    <th>Correo</th>
-                                    <th>Teléfono</th>
-                                    <th>Estado</th>
-                                </tr>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Tipo</th>
+                                        <th>Matrícula</th>
+                                        <th>Correo</th>
+                                        <th>Teléfono</th>
+                                        <th>Estado</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {b_users?.content?.length > 0 ? (
-                                    b_users.content.map((user) => (
-                                        <tr key={user.id} onClick={() => navigate(`/users/edit/${user.id}`)} style={{ cursor: "pointer" }}>
-                                            <td className={tableStyles.projectName}>{user.firstName + " " + user.lastName}</td>
-                                            <td>
+                                    {b_users?.content?.length > 0 ? (
+                                        b_users.content.map((user) => (
+                                            <tr key={user.id} onClick={() => navigate(`/users/edit/${user.id}`)} style={{ cursor: "pointer" }}>
+                                                <td className={tableStyles.projectName}>{user.firstName + " " + user.lastName}</td>
+                                                <td>
                                                     <span className={`${tableStyles.badge} ${tableStyles[user.role]}`}>
                                                         {user.role === "ADMIN" ? "Administrador" : user.role === "STUDENT" ? "Estudiante" : "Personal"}
                                                     </span>
-                                            </td>
-                                            <td>{user.registrationNumber || user.employeeNumber || '—'}</td>
-                                            <td>{user.email}</td>
-                                            <td>{user.phoneNumber || '—'}</td>
-                                            <td>
-                                                <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={user.enabled ?? user.active ?? true}
-                                                        onChange={(e) => handleToggleActive(e, user)}
-                                                    />
-                                                    <span className={tableStyles.slider}></span>
-                                                </label>
+                                                </td>
+                                                <td>{user.registrationNumber || user.employeeNumber || '—'}</td>
+                                                <td>{user.email}</td>
+                                                <td>{user.phoneNumber || '—'}</td>
+                                                <td>
+                                                    <label className={tableStyles.switch} onClick={(e) => e.stopPropagation()}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={user.enabled ?? user.active ?? true}
+                                                            onChange={(e) => handleToggleActive(e, user)}
+                                                        />
+                                                        <span className={tableStyles.slider}></span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="6" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                                No se encontraron registros
                                             </td>
                                         </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="6" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
-                                            No se encontraron registros
-                                        </td>
-                                    </tr>
-                                )}
+                                    )}
                                 </tbody>
                             </table>
                         </div>
