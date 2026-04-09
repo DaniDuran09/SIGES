@@ -53,12 +53,36 @@ function NewUserModal({ onClose }) {
     const handleRegister = () => {
         let newErrors = {};
 
-        if (!fullName.trim()) newErrors.fullName = "Este campo es obligatorio";
+        if (!fullName.trim()) {
+            newErrors.fullName = "Este campo es obligatorio";
+        } else if (fullName.trim().split(/\s+/).length < 2) {
+            newErrors.fullName = "Debe ingresar al menos un nombre y un apellido";
+        }
+
         if (!userType) newErrors.userType = "Este campo es obligatorio";
-        if (!birthDate.trim()) newErrors.birthDate = "Este campo es obligatorio";
+
+        if (!birthDate.trim()) {
+            newErrors.birthDate = "Este campo es obligatorio";
+        } else {
+            const dateObj = new Date(birthDate);
+            if (dateObj >= new Date()) {
+                newErrors.birthDate = "La fecha debe ser en el pasado";
+            }
+        }
+
         if (userType !== 'admins' && !employeeId.trim()) newErrors.employeeId = "Este campo es obligatorio";
-        if (!phone.trim()) newErrors.phone = "Este campo es obligatorio";
-        if (!email.trim()) newErrors.email = "Este campo es obligatorio";
+
+        if (!phone.trim()) {
+            newErrors.phone = "Este campo es obligatorio";
+        } else if (!/^\+?[\d\s-]{10,20}$/.test(phone.trim())) {
+            newErrors.phone = "Formato inválido (Ej: +525512345678)";
+        }
+
+        if (!email.trim()) {
+            newErrors.email = "Este campo es obligatorio";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            newErrors.email = "Formato de correo inválido";
+        }
 
         if (!password) {
             newErrors.password = "Este campo es obligatorio";
@@ -142,7 +166,7 @@ function NewUserModal({ onClose }) {
                         </div>
                         <div className={styles.formGroup}>
                             <label>Fecha nacimiento <span className={styles.requiredStar}>*</span></label>
-                            <input type="text" placeholder="Ej. AAAA-MM-DD" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+                            <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
                             {errors.birthDate && <span className={styles.errorText}>{errors.birthDate}</span>}
                         </div>
                     </div>
