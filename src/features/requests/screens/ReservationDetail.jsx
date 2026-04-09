@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '../../../api/client';
 import LoaderCircle from '../../../assets/components/LoaderCircle';
 import { Alert } from '@mui/material';
-import { IoMdNotificationsOutline } from "react-icons/io";
 import { FiArrowLeft, FiX, FiCheck, FiPlus, FiSend, FiEdit3 } from "react-icons/fi";
 import { useAuth } from '../../../context/AuthContext';
 import styles from '../styles/ReservationDetail.module.css';
@@ -96,7 +95,20 @@ function ReservationDetail() {
         }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
+            queryClient.invalidateQueries({ queryKey: ["GetRequests"] });
             setModalData({ ...modalData, isOpen: false, inputValue: '' });
+        }
+    });
+
+    const finishMutation = useMutation({
+        mutationFn: (returnedLate) => apiFetch(`/reservations/${id}/finish`, {
+            method: "PATCH",
+            body: JSON.stringify({ returnedLate })
+        }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
+            queryClient.invalidateQueries({ queryKey: ["GetRequests"] });
+            alert("Reservación marcada con entrega tardía");
         }
     });
 
@@ -122,7 +134,11 @@ function ReservationDetail() {
             PENDING: 'Pendiente',
             APPROVED: 'Aprobada',
             DENIED: 'Denegada',
-            COMPLETED: 'Completada'
+            REJECTED: 'Denegada',
+            COMPLETED: 'Completada',
+            FINISHED: 'Completada',
+            CANCELLED: 'Cancelada',
+            IN_PROGRESS: 'En curso'
         };
         return mapping[status] || status;
     };
@@ -216,10 +232,13 @@ function ReservationDetail() {
                         <FiArrowLeft /> Volver
                     </button>
                 </div>
-                <button className={styles.notificationButton}>
-                    <IoMdNotificationsOutline size={24} color="#64748B" />
-                </button>
             </div>
+
+            {reservation.petitioner?.lateReturnsCount > 0 && (
+                <Alert severity="warning" style={{ marginBottom: '20px', borderRadius: '12px' }}>
+                    <strong>Atención:</strong> El solicitante tiene <strong>{reservation.petitioner.lateReturnsCount}</strong> {reservation.petitioner.lateReturnsCount === 1 ? 'entrega tardía registrada' : 'entregas tardías registradas'}.
+                </Alert>
+            )}
 
             <div className={styles.mainCard}>
                 <div className={styles.cardHeader}>
@@ -229,7 +248,7 @@ function ReservationDetail() {
                 <div className={styles.contentRow}>
                     {/* LEFT COLUMN */}
                     <div className={styles.column}>
-                        
+
                         {/* INFORMACIÓN */}
                         <div className={styles.infoBlock}>
                             <h3 className={styles.blockTitle}>Información</h3>
@@ -287,6 +306,11 @@ function ReservationDetail() {
                                     <span className={`${styles.badge} ${styles['badge' + reservation.status]}`}>
                                         {translateStatus(reservation.status)}
                                     </span>
+                                    {reservation.returnedLate && (
+                                        <span className={styles.badge} style={{ backgroundColor: '#FEE2E2', color: '#EF4444', marginLeft: '8px', border: '1px solid #FCA5A5' }}>
+                                            Entrega tardía
+                                        </span>
+                                    )}
                                 </span>
                             </div>
                             <div className={styles.infoRow}>
@@ -369,11 +393,11 @@ function ReservationDetail() {
                                     <p style={{ color: '#94A3B8', fontSize: '13px', margin: '20px 0', textAlign: 'center' }}>No hay observaciones.</p>
                                 )}
                             </div>
-                            
+
                             <div className={styles.chatInputArea}>
                                 <div className={styles.chatInputWrapper}>
-                                    <textarea 
-                                        placeholder="Escribir observación..." 
+                                    <textarea
+                                        placeholder="Escribir observación..."
                                         value={chatInput}
                                         onChange={(e) => setChatInput(e.target.value)}
                                         onKeyDown={(e) => {
@@ -432,15 +456,15 @@ function ReservationDetail() {
                 <div className={styles.footer}>
                     {reservation.status === 'PENDING' && (
                         <>
-                            <button 
-                                className={styles.btnDeny} 
+                            <button
+                                className={styles.btnDeny}
                                 onClick={handleReject}
                                 disabled={rejectMutation.isPending}
                             >
                                 <FiX /> Denegar
                             </button>
-                            <button 
-                                className={styles.btnApprove} 
+                            <button
+                                className={styles.btnApprove}
                                 onClick={handleApprove}
                                 disabled={approveMutation.isPending}
                             >
@@ -448,15 +472,19 @@ function ReservationDetail() {
                             </button>
                         </>
                     )}
-                    {reservation.status === 'APPROVED' && (
-                        <>
-                            <button className={styles.btnOutline} onClick={() => navigate('/requests')}>
-                                <FiX /> Cancelar
-                            </button>
-                            <button className={styles.btnSave}>
-                                <FiCheck /> Guardar
-                            </button>
-                        </>
+                    {reservation.status === 'FINISHED' && !reservation.returnedLate && (
+                        <button
+                            className={styles.btnDeny}
+                            onClick={() => {
+                                if (window.confirm("¿Seguro que desea marcar esta reservación con entrega tardía?")) {
+                                    finishMutation.mutate(true);
+                                }
+                            }}
+                            disabled={finishMutation.isPending}
+                            style={{ width: 'auto', padding: '0 20px' }}
+                        >
+                            <FiX /> Marcar entrega tardía
+                        </button>
                     )}
                 </div>
             </div>
@@ -466,19 +494,19 @@ function ReservationDetail() {
                     <div className={styles.modalContent}>
                         <h3>{modalData.title}</h3>
                         <p className={styles.modalLabel}>{modalData.label}</p>
-                        <textarea 
+                        <textarea
                             className={styles.modalInput}
                             value={modalData.inputValue}
-                            onChange={(e) => setModalData({...modalData, inputValue: e.target.value})}
+                            onChange={(e) => setModalData({ ...modalData, inputValue: e.target.value })}
                             placeholder="Escribe aquí..."
                             autoFocus
                         />
                         <div className={styles.modalActions}>
-                            <button className={styles.modalBtnCancel} onClick={() => setModalData({...modalData, isOpen: false})}>
+                            <button className={styles.modalBtnCancel} onClick={() => setModalData({ ...modalData, isOpen: false })}>
                                 Cancelar
                             </button>
-                            <button 
-                                className={styles.modalBtnConfirm} 
+                            <button
+                                className={styles.modalBtnConfirm}
                                 onClick={handleModalSubmit}
                                 disabled={approveMutation.isPending || rejectMutation.isPending || cancelMutation.isPending || updateNoteMutation.isPending}
                             >
