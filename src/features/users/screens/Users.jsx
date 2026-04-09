@@ -162,7 +162,7 @@ function Users() {
                             <table className={tableStyles.table}>
                                 <thead>
                                     <tr>
-                                        <th>Nombre</th>
+                                        <th>Nombre y apellido</th>
                                         <th>Tipo</th>
                                         <th>Matrícula</th>
                                         <th>Correo</th>

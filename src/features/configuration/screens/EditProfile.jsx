@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert } from "@mui/material";
-import {useEffect} from "react";
+import { useEffect } from "react";
 
 function EditProfile() {
     const navigate = useNavigate();
@@ -69,8 +69,18 @@ function EditProfile() {
                 <div className={styles.cardBody}>
 
                     <div className={styles.avatar}>
-                        {b_user?.firstName?.charAt(0)}
-                        {b_user?.lastName?.charAt(0)}
+                        {b_user?.profilePictureUrl ? (
+                            <img
+                                src={b_user.profilePictureUrl}
+                                alt="Profile"
+                                style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                            />
+                        ) : (
+                            <>
+                                {b_user?.firstName?.charAt(0)}
+                                {b_user?.lastName?.charAt(0)}
+                            </>
+                        )}
                     </div>
 
                     <div className={styles.form}>
@@ -97,7 +107,7 @@ function EditProfile() {
                             <label>Fecha de nacimiento</label>
                             <input
                                 type="date"
-                                value={b_user?.birthDate || ""}
+                                value={b_user?.birthDate ? b_user.birthDate.split("T")[0] : ""}
                                 readOnly
                             />
                         </div>

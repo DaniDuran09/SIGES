@@ -1,6 +1,7 @@
 import { getGenericErrorMessage, translateError } from "./errorCodes";
 
 const API_URL = import.meta.env.VITE_API_URL;
+let isRefreshing = false;
 
 export const apiFetch = async (endpoint, options = {}) => {
     const accessToken = localStorage.getItem("accessToken");
@@ -19,35 +20,71 @@ export const apiFetch = async (endpoint, options = {}) => {
         url += `?${query.toString()}`;
     }
 
-    const response = await fetch(url, {
-        ...fetchOptions,
-        headers: {
-            "Content-Type": "application/json",
-            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-            ...options.headers,
-        },
-    });
+    const performRequest = async (token) => {
+        return await fetch(url, {
+            ...fetchOptions,
+            headers: {
+                "Content-Type": "application/json",
+                ...(token && { Authorization: `Bearer ${token}` }),
+                ...options.headers,
+            },
+        });
+    };
+
+    let response = await performRequest(accessToken);
+
+    // Si recibimos 403, intentamos refrescar el token
+    if (response.status === 403 && !isRefreshing && !endpoint.includes("/auth/refresh")) {
+        isRefreshing = true;
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        if (refreshToken) {
+            try {
+                const refreshResponse = await fetch(`${API_URL}/auth/refresh`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ refreshToken }),
+                });
+
+                if (refreshResponse.ok) {
+                    const data = await refreshResponse.json();
+                    localStorage.setItem("accessToken", data.accessToken);
+                    isRefreshing = false;
+                    // Reintentamos la petición original con el nuevo token
+                    response = await performRequest(data.accessToken);
+                } else {
+                    throw new Error("Refresh failed");
+                }
+            } catch (error) {
+                isRefreshing = false;
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("role");
+                window.location.href = "/login";
+                return;
+            }
+        } else {
+            isRefreshing = false;
+            window.location.href = "/login";
+            return;
+        }
+    }
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         let rawMessage = "";
 
-        // 1. Prioridad: Errores de validación explícitos del backend
         if (errorData.errors && Array.isArray(errorData.errors)) {
             rawMessage = errorData.errors.join(". ");
         } 
-        // 2. Segunda prioridad: Mensajes específicos del backend
         else if (errorData.detail || errorData.message) {
             rawMessage = errorData.detail || errorData.message;
         } 
-        // 3. Tercera prioridad: Mensaje semántico basado en el código HTTP
         else {
             rawMessage = getGenericErrorMessage(response.status);
         }
 
-        // Traducir el mensaje antes de lanzarlo
         const message = translateError(rawMessage);
-
         const error = new Error(message);
         error.status = response.status;
         error.data = errorData;
@@ -57,4 +94,4 @@ export const apiFetch = async (endpoint, options = {}) => {
     const text = await response.text();
     return text ? JSON.parse(text) : {};
 };
-
+

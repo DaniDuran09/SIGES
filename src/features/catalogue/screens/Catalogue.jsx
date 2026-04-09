@@ -13,7 +13,7 @@ const Catalogue = () => {
 
     const tabs = [
         { id: "buildings", label: "Edificios", endpoint: "/buildings", mutationEndpoint: "/buildings", queryKey: "getBuildings" },
-        { id: "spaceTypes", label: "Tipos de Espacios", endpoint: "/space-types", mutationEndpoint: "/spacetypes", queryKey: "getSpaceTypes" },
+        { id: "spaceTypes", label: "Tipos de Espacios", endpoint: "/space-types", mutationEndpoint: "/space-types", queryKey: "getSpaceTypes" },
         { id: "equipmentTypes", label: "Tipos de Equipos", endpoint: "/equipment-types", mutationEndpoint: "/equipment-types", queryKey: "getEquipmentTypes" },
     ];
 
@@ -27,7 +27,7 @@ const Catalogue = () => {
 
     // UPDATE Mutation
     const updateMutation = useMutation({
-        mutationFn: ({ id, name }) => 
+        mutationFn: ({ id, name }) =>
             apiFetch(`${currentTab.mutationEndpoint}/${id}`, {
                 method: "PATCH",
                 body: JSON.stringify({ name })

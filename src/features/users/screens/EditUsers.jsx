@@ -62,7 +62,7 @@ function EditUsers() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         const parts = formData.name.trim().split(" ");
         const firstName = parts[0] || "";
         const lastName = parts.slice(1).join(" ") || "";
@@ -73,7 +73,7 @@ function EditUsers() {
             email: formData.email,
             phoneNumber: formData.phone,
         };
-        
+
         if (formData.type === "Estudiante") {
             payload.registrationNumber = formData.employeeId;
         } else {
@@ -123,7 +123,7 @@ function EditUsers() {
                 <form className={styles.cardContent} onSubmit={handleSubmit}>
                     <div className={styles.formGrid}>
                         <div className={styles.formGroup}>
-                            <label>Nombre <span className={styles.requiredStar}>*</span></label>
+                            <label>Nombre y apellido <span className={styles.requiredStar}>*</span></label>
                             <input name="name" value={formData.name} onChange={handleChange} required />
                         </div>
 
@@ -138,11 +138,11 @@ function EditUsers() {
 
                         <div className={styles.formGroup}>
                             <label>Matrícula / Nº empleado {formData.type !== "Administrador" && <span className={styles.requiredStar}>*</span>}</label>
-                            <input 
-                                name="employeeId" 
-                                value={formData.employeeId} 
-                                onChange={handleChange} 
-                                required={formData.type !== "Administrador"} 
+                            <input
+                                name="employeeId"
+                                value={formData.employeeId}
+                                onChange={handleChange}
+                                required={formData.type !== "Administrador"}
                                 disabled={formData.type === "Administrador"}
                                 placeholder={formData.type === "Administrador" ? "No aplica para administradores" : ""}
                             />

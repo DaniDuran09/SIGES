@@ -14,9 +14,16 @@ function EditSpace() {
     const [successMessage, setSuccessMessage] = useState("");
 
     const [showAddAvailModal, setShowAddAvailModal] = useState(false);
-    const [newAvailDay, setNewAvailDay] = useState("");
-    const [newAvailStartTime, setNewAvailStartTime] = useState("");
-    const [newAvailEndTime, setNewAvailEndTime] = useState("");
+
+    const dayMapping = {
+        MONDAY: "Lunes",
+        TUESDAY: "Martes",
+        WEDNESDAY: "Miércoles",
+        THURSDAY: "Jueves",
+        FRIDAY: "Viernes",
+        SATURDAY: "Sábado",
+        SUNDAY: "Domingo"
+    };
 
     // Form states
     const [formData, setFormData] = useState({
@@ -25,8 +32,9 @@ function EditSpace() {
         buildingId: "",
         capacity: "",
         bookInAdvanceDuration: "",
-        advanceUnit: "HOUR",
+        advanceUnit: "HOURS",
         description: "",
+        status: "AVAILABLE",
         availableForStudents: true,
         availabilitySlots: []
     });
@@ -48,8 +56,22 @@ function EditSpace() {
 
     useEffect(() => {
         if (space) {
-            const durationPart = space.bookInAdvanceDuration?.split(" ")[0] || "";
-            const unitPart = space.bookInAdvanceDuration?.split(" ")[1] || "HOUR";
+            let durationPart = "";
+            let unitPart = "HOURS";
+
+            if (space.bookInAdvanceDuration) {
+                const dur = space.bookInAdvanceDuration;
+                if (dur.includes("M")) {
+                    durationPart = dur.replace(/\D/g, "");
+                    unitPart = "MINUTES";
+                } else if (dur.includes("H")) {
+                    durationPart = dur.replace(/\D/g, "");
+                    unitPart = "HOURS";
+                } else if (dur.includes("D")) {
+                    durationPart = dur.replace(/\D/g, "");
+                    unitPart = "DAYS";
+                }
+            }
 
             setFormData({
                 name: space.name,
@@ -59,6 +81,7 @@ function EditSpace() {
                 bookInAdvanceDuration: durationPart,
                 advanceUnit: unitPart,
                 description: space.description,
+                status: space.status || "AVAILABLE",
                 availableForStudents: space.availableForStudents,
                 availabilitySlots: space.availabilitySlots || []
             });
@@ -78,22 +101,32 @@ function EditSpace() {
         }
     });
 
+    const [selectedDays, setSelectedDays] = useState([]);
+    const [newAvailStartTime, setNewAvailStartTime] = useState("");
+    const [newAvailEndTime, setNewAvailEndTime] = useState("");
+
     const handleAddAvailability = () => {
-        if (!newAvailDay || !newAvailStartTime || !newAvailEndTime) return;
+        if (selectedDays.length === 0 || !newAvailStartTime || !newAvailEndTime) return;
         const newItem = {
             dateFrom: new Date().toISOString().split('T')[0],
             startTime: newAvailStartTime,
             endTime: newAvailEndTime,
-            daysOfWeek: [newAvailDay]
+            daysOfWeek: selectedDays
         };
         setFormData(prev => ({
             ...prev,
             availabilitySlots: [...(prev.availabilitySlots || []), newItem]
         }));
         setShowAddAvailModal(false);
-        setNewAvailDay("");
+        setSelectedDays([]);
         setNewAvailStartTime("");
         setNewAvailEndTime("");
+    };
+
+    const toggleDay = (day) => {
+        setSelectedDays(prev =>
+            prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+        );
     };
 
     const removeAvailability = (index) => {
@@ -115,10 +148,9 @@ function EditSpace() {
         e.preventDefault();
 
         let bookInAdvanceDurationFormatted = "";
-        if (formData.advanceUnit === "MINUTES" || formData.advanceUnit === "MINUTE") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}M`;
-        else if (formData.advanceUnit === "HOUR" || formData.advanceUnit === "HOURS") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}H`;
-        else if (formData.advanceUnit === "DAY" || formData.advanceUnit === "DAYS") bookInAdvanceDurationFormatted = `P${formData.bookInAdvanceDuration}D`;
-        else bookInAdvanceDurationFormatted = `${formData.bookInAdvanceDuration} ${formData.advanceUnit}`;
+        if (formData.advanceUnit === "MINUTES") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}M`;
+        else if (formData.advanceUnit === "HOURS") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}H`;
+        else if (formData.advanceUnit === "DAYS") bookInAdvanceDurationFormatted = `P${formData.bookInAdvanceDuration}D`;
 
         const payload = {
             name: formData.name.trim(),
@@ -132,7 +164,7 @@ function EditSpace() {
             bookInAdvanceDuration: bookInAdvanceDurationFormatted,
             capacity: parseInt(formData.capacity) || 0,
             equipment: space?.equipment || [],
-            status: space?.status || "AVAILABLE"
+            status: formData.status
         };
 
         mutation.mutate(payload);
@@ -211,8 +243,9 @@ function EditSpace() {
                                     value={formData.advanceUnit}
                                     onChange={handleChange}
                                 >
-                                    <option value="HOUR">Hora</option>
-                                    <option value="DAY">Día</option>
+                                    <option value="MINUTES">Minutos</option>
+                                    <option value="HOURS">Horas</option>
+                                    <option value="DAYS">Días</option>
                                 </select>
                             </div>
                         </div>
@@ -241,6 +274,15 @@ function EditSpace() {
                                 onChange={handleChange}
                                 required
                             />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label>Estado inicial <span className={styles.requiredStar}>*</span></label>
+                            <select name="status" value={formData.status} onChange={handleChange} required>
+                                <option value="AVAILABLE">Disponible</option>
+                                <option value="MAINTENANCE">Mantenimiento</option>
+                                <option value="LOANED">En Uso</option>
+                            </select>
                         </div>
 
                         <div className={`${styles.formGroup} ${styles.fullWidth}`}>
@@ -321,15 +363,41 @@ function EditSpace() {
                         </div>
                         <div className={styles.modalContent}>
                             <div className={styles.formGroup}>
-                                <label>Día de la semana <span className={styles.requiredStar}>*</span></label>
-                                <select value={newAvailDay} onChange={(e) => setNewAvailDay(e.target.value)}>
-                                    <option value="" disabled>Seleccione un día</option>
-                                    <option value="MONDAY">Lunes</option>
-                                    <option value="TUESDAY">Martes</option>
-                                    <option value="WEDNESDAY">Miércoles</option>
-                                    <option value="THURSDAY">Jueves</option>
-                                    <option value="FRIDAY">Viernes</option>
-                                </select>
+                                <label>Días de la semana <span className={styles.requiredStar}>*</span></label>
+                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+                                    {[
+                                        { id: 'MONDAY', label: 'L' },
+                                        { id: 'TUESDAY', label: 'M' },
+                                        { id: 'WEDNESDAY', label: 'M' },
+                                        { id: 'THURSDAY', label: 'J' },
+                                        { id: 'FRIDAY', label: 'V' },
+                                        { id: 'SATURDAY', label: 'S' },
+                                        { id: 'SUNDAY', label: 'D' }
+                                    ].map(day => (
+                                        <button
+                                            key={day.id}
+                                            type="button"
+                                            onClick={() => toggleDay(day.id)}
+                                            style={{
+                                                width: '36px',
+                                                height: '36px',
+                                                borderRadius: '50%',
+                                                border: '1px solid #e5e7eb',
+                                                backgroundColor: selectedDays.includes(day.id) ? '#6B5B95' : 'white',
+                                                color: selectedDays.includes(day.id) ? 'white' : '#6b7280',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontWeight: 'bold',
+                                                fontSize: '14px',
+                                                transition: 'all 0.2s'
+                                            }}
+                                        >
+                                            {day.label}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                             <div className={styles.formGroup}>
                                 <label style={{ marginBottom: '-6px' }}>Horario <span className={styles.requiredStar}>*</span></label>
@@ -342,7 +410,7 @@ function EditSpace() {
                         </div>
                         <div className={styles.modalFooter}>
                             <button type="button" className={styles.cancelBtn} onClick={() => setShowAddAvailModal(false)}>Cancelar</button>
-                            <button type="button" className={styles.submitAvailButton} onClick={handleAddAvailability} disabled={!newAvailDay || !newAvailStartTime || !newAvailEndTime}>
+                            <button type="button" className={styles.submitAvailButton} onClick={handleAddAvailability} disabled={selectedDays.length === 0 || !newAvailStartTime || !newAvailEndTime}>
                                 ✓ Agregar
                             </button>
                         </div>
