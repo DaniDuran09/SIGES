@@ -137,7 +137,7 @@ function EditUsers() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Matrícula / Nº empleado {formData.type !== "Administrador" && <span className={styles.requiredStar}>*</span>}</label>
+                            <label>Matrícula/N.°Empleado {formData.type !== "Administrador" && <span className={styles.requiredStar}>*</span>}</label>
                             <input
                                 name="employeeId"
                                 value={formData.employeeId}

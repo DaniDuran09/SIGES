@@ -358,6 +358,7 @@
     height: 48px;
     display: flex;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .chatInputWrapper textarea::placeholder {
@@ -465,6 +466,7 @@
     font-size: 14px;
     font-family: inherit;
     resize: vertical;
+    box-sizing: border-box;
 }
 
 .modalActions {

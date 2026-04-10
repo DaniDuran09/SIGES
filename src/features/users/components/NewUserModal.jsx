@@ -179,7 +179,7 @@ function NewUserModal({ onClose }) {
                     <div className={styles.formRow}>
                         {userType !== 'admins' ? (
                             <div className={styles.formGroup}>
-                                <label>{userType === 'students' ? 'Matrícula' : userType === 'institutional-staff' ? 'N° Empleado' : 'Matrícula / N° Empleado'} <span className={styles.requiredStar}>*</span></label>
+                                <label>{userType === 'students' ? 'Matrícula' : userType === 'institutional-staff' ? 'N.° Empleado' : 'Matrícula/N.°Empleado'} <span className={styles.requiredStar}>*</span></label>
                                 <input type="text" placeholder={userType === 'institutional-staff' ? "Ej. IN-002" : "Ej. MAT-202601XXX"} value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} />
                                 {errors.employeeId && <span className={styles.errorText}>{errors.employeeId}</span>}
                             </div>
