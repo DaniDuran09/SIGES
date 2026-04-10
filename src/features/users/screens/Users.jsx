@@ -164,7 +164,7 @@ function Users() {
                                     <tr>
                                         <th>Nombre y apellido</th>
                                         <th>Tipo</th>
-                                        <th>Matrícula</th>
+                                        <th>Matrícula/N.°Empleado</th>
                                         <th>Correo</th>
                                         <th>Teléfono</th>
                                         <th>Estado</th>
@@ -180,7 +180,7 @@ function Users() {
                                                         {user.role === "ADMIN" ? "Administrador" : user.role === "STUDENT" ? "Estudiante" : "Personal"}
                                                     </span>
                                                 </td>
-                                                <td>{user.registrationNumber || user.employeeNumber || '—'}</td>
+                                                <td>{user.role === "ADMIN" ? "No aplica" : (user.registrationNumber || user.employeeNumber || '—')}</td>
                                                 <td>{user.email}</td>
                                                 <td>{user.phoneNumber || '—'}</td>
                                                 <td>

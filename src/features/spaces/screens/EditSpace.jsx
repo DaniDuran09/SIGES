@@ -308,7 +308,7 @@ function EditSpace() {
                             formData.availabilitySlots.map((slot, index) => (
                                 <div key={index} className={styles.scheduleItem}>
                                     <div>
-                                        <div className={styles.dayLabel}>{slot.daysOfWeek.join(', ')}</div>
+                                        <div className={styles.dayLabel}>{slot.daysOfWeek.map(d => dayMapping[d] || d).join(', ')}</div>
                                         <div className={styles.timeLabel}>{slot.startTime} - {slot.endTime}</div>
                                     </div>
                                     <button type="button" className={styles.deleteBtn} onClick={() => removeAvailability(index)}>

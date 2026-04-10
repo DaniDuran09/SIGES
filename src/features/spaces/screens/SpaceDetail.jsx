@@ -38,6 +38,8 @@ function SpaceDetail() {
         WEDNESDAY: "Miércoles",
         THURSDAY: "Jueves",
         FRIDAY: "Viernes",
+        SATURDAY: "Sábado",
+        SUNDAY: "Domingo"
     };
 
     return (
@@ -126,7 +128,7 @@ function SpaceDetail() {
                                     space.availabilitySlots.map((slot) => (
                                         <div key={slot.id} className={styles.scheduleItem}>
                                             <div className={styles.scheduleDay}>
-                                                <h4>{slot.daysOfWeek.map(d => dayMapping[d]).join(', ')}</h4>
+                                                <h4>{slot.daysOfWeek.map(d => dayMapping[d] || d).join(', ')}</h4>
                                                 <p>{slot.startTime} - {slot.endTime}</p>
                                             </div>
                                         </div>
