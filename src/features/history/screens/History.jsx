@@ -151,7 +151,6 @@ function History() {
                         <table className={tableStyles.table}>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Solicitante</th>
                                     <th>Recurso</th>
                                     <th>Fecha</th>
@@ -166,7 +165,6 @@ function History() {
                                         const statusInfo = getStatusStyles(item.status);
                                         return (
                                             <tr key={item.id}>
-                                                <td>#{item.id}</td>
                                                 <td className={tableStyles.name}>
                                                     {(item.petitioner?.firstName || item.user?.firstName || "Usuario")} {(item.petitioner?.lastName || item.user?.lastName || "")}
                                                 </td>

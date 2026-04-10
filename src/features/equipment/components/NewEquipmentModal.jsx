@@ -26,13 +26,16 @@ export const NewEquipmentModal = ({ onClose }) => {
     const [newAvailStartTime, setNewAvailStartTime] = useState("");
     const [newAvailEndTime, setNewAvailEndTime] = useState("");
 
+    const [showAddBuildingModal, setShowAddBuildingModal] = useState(false);
+    const [newBuildingName, setNewBuildingName] = useState("");
+
     const [alertInfo, setAlertInfo] = useState(null);
     const [errors, setErrors] = useState({});
 
     const queryClient = useQueryClient();
 
     const { data: b_buildings } = useQuery({
-        queryKey: ["getAllBuildingsForEquip"],
+        queryKey: ["getAllBuildingsForEquip",showAddBuildingModal],
         queryFn: () => apiFetch("/buildings", { method: "GET" })
     });
 
@@ -108,6 +111,27 @@ export const NewEquipmentModal = ({ onClose }) => {
         setAvailability(availability.filter((_, i) => i !== index));
     };
 
+    const mutationBuilding = useMutation({
+        mutationFn: (data) => apiFetch("/buildings", {
+            method: "POST",
+            body: JSON.stringify(data),
+        }),
+        onSuccess: () => {
+            setShowAddBuildingModal(false);
+            setNewBuildingName("");
+            queryClient.invalidateQueries({ queryKey: ["getBuildings"] });
+        },
+        onError: (error) => {
+            console.log("Error", error.message);
+        }
+    });
+
+    const handleAddBuilding = () => {
+        if (!newBuildingName.trim()) return;
+        mutationBuilding.mutate({
+            name: newBuildingName,
+        });
+    };
     const dayMapping = {
         MONDAY: "Lunes",
         TUESDAY: "Martes",
@@ -193,6 +217,7 @@ export const NewEquipmentModal = ({ onClose }) => {
                                 {errors.name && <span className={styles.errorText}>{errors.name}</span>}
                             </div>
 
+                            {/*tipos de equipos */}
                             <div className={styles.formRow}>
                                 <div className={styles.formGroup}>
                                     <label>Tipo <span className={styles.requiredStar}>*</span></label>
@@ -221,33 +246,44 @@ export const NewEquipmentModal = ({ onClose }) => {
                                 </div>
                             </div>
 
+                            {/*Nuevo edificio building*/}
                             <div className={styles.formRow}>
                                 <div className={styles.formGroup}>
-                                    <label>Edificio (Ubicación) <span className={styles.requiredStar}>*</span></label>
-                                    <div className={styles.selectWrapper}>
-                                        <select value={buildingId} onChange={(e) => setBuildingId(e.target.value)}>
-                                            <option value="" disabled>Seleccione...</option>
-                                            {b_buildings?.filter(b => b.deletedAt === null).map((b) => (
-                                                <option key={b.id} value={b.id}>
-                                                    {b.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    {errors.buildingId && <span className={styles.errorText}>{errors.buildingId}</span>}
-                                </div>
+                                    <label>
+                                        Edificio (Ubicación) <span className={styles.requiredStar}>*</span>
+                                    </label>
 
-                                <div className={styles.formGroup}>
-                                    <label>Estado inicial <span className={styles.requiredStar}>*</span></label>
-                                    <div className={styles.selectWrapper}>
-                                        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-                                            <option value="" disabled>Seleccione...</option>
-                                            <option value="AVAILABLE">Disponible</option>
-                                            <option value="MAINTENANCE">Mantenimiento</option>
-                                            <option value="IN_USE">En uso</option>
-                                        </select>
+                                    <div className={styles.inputWithButton}>
+                                        <div className={styles.selectWrapper} style={{ flex: 1 }}>
+                                            <select
+                                                value={buildingId}
+                                                onChange={(e) => setBuildingId(e.target.value)}
+                                            >
+                                                <option value="" disabled>Seleccione...</option>
+                                                {b_buildings
+                                                    ?.filter(b => b.deletedAt === null)
+                                                    .map((b) => (
+                                                        <option key={b.id} value={b.id}>
+                                                            {b.name}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            className={styles.plusButton}
+                                            onClick={() => setShowAddBuildingModal(true)}
+                                        >
+                                            <FiPlus size={20} />
+                                        </button>
                                     </div>
-                                    {errors.status && <span className={styles.errorText}>{errors.status}</span>}
+
+                                    {errors.buildingId && (
+                                        <span className={styles.errorText}>
+                {errors.buildingId}
+            </span>
+                                    )}
                                 </div>
                             </div>
 
@@ -333,6 +369,32 @@ export const NewEquipmentModal = ({ onClose }) => {
                     </button>
                 </div>
             </div>
+
+            {showAddBuildingModal && (
+                <div className={styles.overlay} style={{ zIndex: 10000 }}>
+                    <div className={styles.modal} style={{ maxWidth: '400px' }}>
+                        <div className={styles.header}>
+                            <h2>Nueva ubicación</h2>
+                            <button type="button" className={styles.closeButton} onClick={() => setShowAddBuildingModal(false)}>
+                                <FiX size={20} />
+                            </button>
+                        </div>
+                        <div className={styles.content}>
+                            <div className={styles.formGroup}>
+                                <label>Nombre <span className={styles.requiredStar}>*</span></label>
+                                <input type="text" placeholder="Ej. Edificio A" value={newBuildingName} onChange={(e) => setNewBuildingName(e.target.value)} />
+                            </div>
+                        </div>
+                        <div className={styles.footer}>
+                            <button type="button" className={styles.cancelButton} onClick={() => setShowAddBuildingModal(false)}>Cancelar</button>
+                            <button type="button" className={styles.submitButton} onClick={handleAddBuilding} disabled={mutationBuilding.isPending || !newBuildingName.trim()}>
+                                {mutationBuilding.isPending ? "Agregando..." : "Agregar"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
 
 
             {showAddTypeModal && (
