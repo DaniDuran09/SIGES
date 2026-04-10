@@ -150,43 +150,52 @@ function History() {
                     <div className={tableStyles.wrapper}>
                         <table className={tableStyles.table}>
                             <thead>
-                                <tr>
-                                    <th>Solicitante</th>
-                                    <th>Recurso</th>
-                                    <th>Fecha</th>
-                                    <th>Horario</th>
-                                    <th>Estado</th>
-                                    <th>Tipo</th>
-                                </tr>
+                            <tr>
+                                <th>Solicitante</th>
+                                <th>Recurso</th>
+                                <th>Fecha</th>
+                                <th>Horario</th>
+                                <th>Asistentes</th>
+                                <th>Estado</th>
+                                <th>Tipo</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {b_history?.content?.length > 0 ? (
-                                    b_history.content.map((item) => {
-                                        const statusInfo = getStatusStyles(item.status);
-                                        return (
-                                            <tr key={item.id}>
-                                                <td className={tableStyles.name}>
-                                                    {(item.petitioner?.firstName || item.user?.firstName || "Usuario")} {(item.petitioner?.lastName || item.user?.lastName || "")}
-                                                </td>
-                                                <td>{item.reservable?.name}</td>
-                                                <td>{item.date}</td>
-                                                <td>{item.startTime} - {item.endTime}</td>
-                                                <td>
-                                                    <span className={`${tableStyles.badge} ${statusInfo.className}`}>
-                                                        {statusInfo.text}
-                                                    </span>
-                                                </td>
-                                                <td>{item.type === 'GROUP' ? 'Grupal' : 'Individual'}</td>
-                                            </tr>
-                                        );
-                                    })
-                                ) : (
-                                    <tr>
-                                        <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
-                                            No se encontraron reservaciones
-                                        </td>
-                                    </tr>
-                                )}
+                            {b_history?.content?.length > 0 ? (
+                                b_history.content.map((item) => {
+                                    const statusInfo = getStatusStyles(item.status);
+
+                                    const companions = item.companions || 0;
+                                    const totalAsistentes = 1 + companions;
+
+                                    return (
+                                        <tr key={item.id}>
+                                            <td className={tableStyles.name}>
+                                                {(item.petitioner?.firstName || item.user?.firstName || "Usuario")}{" "}
+                                                {(item.petitioner?.lastName || item.user?.lastName || "")}
+                                            </td>
+                                            <td>{item.reservable?.name}</td>
+                                            <td>{item.date}</td>
+                                            <td>{item.startTime} - {item.endTime}</td>
+
+                                            <td>{totalAsistentes}</td>
+
+                                            <td>
+              <span className={`${tableStyles.badge} ${statusInfo.className}`}>
+                {statusInfo.text}
+              </span>
+                                            </td>
+                                            <td>{item.type === 'GROUP' ? 'Grupal' : 'Individual'}</td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
+                                        No se encontraron reservaciones
+                                    </td>
+                                </tr>
+                            )}
                             </tbody>
                         </table>
                     </div>
