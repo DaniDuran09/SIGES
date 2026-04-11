@@ -32,14 +32,17 @@ function ReservationDetail() {
 
     const [modalData, setModalData] = useState({
         isOpen: false,
-        type: '', // 'APPROVE', 'REJECT', 'CANCEL', 'EDIT_NOTE'
+        type: '', // 'APPROVE', 'REJECT', 'CANCEL', 'EDIT_NOTE', 'START', 'FINISH'
         title: '',
         label: '',
         inputValue: '',
-        noteId: null
+        noteId: null,
+        isLateReturn: false,
+        error: ''
     });
 
     const [chatInput, setChatInput] = useState('');
+    const [alertInfo, setAlertInfo] = useState(null);
 
     const approveMutation = useMutation({
         mutationFn: (observation) => apiFetch(`/reservations/${id}/approve`, {
@@ -100,6 +103,17 @@ function ReservationDetail() {
         }
     });
 
+    const startMutation = useMutation({
+        mutationFn: () => apiFetch(`/reservations/${id}/start`, { method: "PATCH" }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
+            queryClient.invalidateQueries({ queryKey: ["GetRequests"] });
+            setModalData({ ...modalData, isOpen: false });
+            setAlertInfo({ type: "success", text: "Reservación iniciada existosamente (entregada)" });
+            setTimeout(() => setAlertInfo(null), 3000);
+        }
+    });
+
     const finishMutation = useMutation({
         mutationFn: (returnedLate) => apiFetch(`/reservations/${id}/finish`, {
             method: "PATCH",
@@ -108,7 +122,9 @@ function ReservationDetail() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["GetReservation", id] });
             queryClient.invalidateQueries({ queryKey: ["GetRequests"] });
-            alert("Reservación marcada con entrega tardía");
+            setModalData({ ...modalData, isOpen: false });
+            setAlertInfo({ type: "success", text: "Reservación finalizada (devuelta)" });
+            setTimeout(() => setAlertInfo(null), 3000);
         }
     });
 
@@ -205,18 +221,45 @@ function ReservationDetail() {
         });
     };
 
+    const handleStart = () => {
+        setModalData({
+            isOpen: true,
+            type: 'START',
+            title: 'Iniciar reservación',
+            label: '¿Seguro que desea iniciar la reservación (entregar los recursos)?',
+            inputValue: '',
+            error: ''
+        });
+    };
+
+    const handleFinish = () => {
+        setModalData({
+            isOpen: true,
+            type: 'FINISH',
+            title: 'Finalizar reservación',
+            label: '¿Seguro que desea finalizar la reservación (devolver los recursos)?',
+            inputValue: '',
+            isLateReturn: false,
+            error: ''
+        });
+    };
+
     const handleModalSubmit = () => {
         if (modalData.type === 'APPROVE') {
             approveMutation.mutate(modalData.inputValue);
         } else if (modalData.type === 'REJECT') {
-            if (!modalData.inputValue.trim()) return alert("Debe ingresar un motivo");
+            if (!modalData.inputValue.trim()) return setModalData({ ...modalData, error: "Debe ingresar un motivo" });
             rejectMutation.mutate(modalData.inputValue);
         } else if (modalData.type === 'CANCEL') {
-            if (!modalData.inputValue.trim()) return alert("Debe ingresar un motivo");
+            if (!modalData.inputValue.trim()) return setModalData({ ...modalData, error: "Debe ingresar un motivo" });
             cancelMutation.mutate(modalData.inputValue);
         } else if (modalData.type === 'EDIT_NOTE') {
-            if (!modalData.inputValue.trim()) return alert("El comentario no puede estar vacío");
+            if (!modalData.inputValue.trim()) return setModalData({ ...modalData, error: "El comentario no puede estar vacío" });
             updateNoteMutation.mutate({ noteId: modalData.noteId, comment: modalData.inputValue });
+        } else if (modalData.type === 'START') {
+            startMutation.mutate();
+        } else if (modalData.type === 'FINISH') {
+            finishMutation.mutate(modalData.isLateReturn || false);
         }
     };
 
@@ -235,6 +278,12 @@ function ReservationDetail() {
                     </button>
                 </div>
             </div>
+
+            {alertInfo && (
+                <Alert severity={alertInfo.type} style={{ marginBottom: '20px', borderRadius: '12px' }}>
+                    {alertInfo.text}
+                </Alert>
+            )}
 
             {reservation.petitioner?.lateReturnsCount > 0 && (
                 <Alert severity="warning" style={{ marginBottom: '20px', borderRadius: '12px' }}>
@@ -328,16 +377,43 @@ function ReservationDetail() {
                                 </span>
                             </div>
 
-                            {reservation.status === 'APPROVED' && (
-                                <div className={styles.realDatesRow}>
-                                    <div className={styles.dateInputGroup}>
-                                        <label>Fecha de entrega</label>
-                                        <input type="date" />
-                                    </div>
-                                    <div className={styles.dateInputGroup}>
-                                        <label>Fecha devolución</label>
-                                        <input type="date" />
-                                    </div>
+                            {(reservation.status === 'APPROVED' || reservation.status === 'IN_PROGRESS') && (
+                                <div className={styles.realDatesRow} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                    {reservation.status === 'APPROVED' && (
+                                        <div className={styles.dateInputGroup} style={{ borderBottom: '1px solid #E5E7EB', paddingBottom: '16px' }}>
+                                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Fecha de entrega</label>
+                                            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                                <input type="date" style={{ flex: 1 }} defaultValue={new Date().toISOString().split('T')[0]} />
+                                                <button
+                                                    className={styles.btnApprove}
+                                                    style={{ padding: '8px 24px', margin: 0, width: 'auto' }}
+                                                    onClick={handleStart}
+                                                    disabled={startMutation.isPending}
+                                                >
+                                                    {startMutation.isPending ? "Espere..." : "Guardar"}
+                                                </button>
+                                            </div>
+                                            <span style={{ fontSize: '12px', color: '#6B7280', marginTop: '4px', display: 'block' }}>Al guardar, la reserva pasará a 'En progreso'.</span>
+                                        </div>
+                                    )}
+
+                                    {reservation.status === 'IN_PROGRESS' && (
+                                        <div className={styles.dateInputGroup}>
+                                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Fecha devolución</label>
+                                            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                                <input type="date" style={{ flex: 1 }} defaultValue={new Date().toISOString().split('T')[0]} />
+                                                <button
+                                                    className={styles.btnApprove}
+                                                    style={{ padding: '8px 24px', margin: 0, width: 'auto' }}
+                                                    onClick={handleFinish}
+                                                    disabled={finishMutation.isPending}
+                                                >
+                                                    {finishMutation.isPending ? "Espere..." : "Guardar"}
+                                                </button>
+                                            </div>
+                                            <span style={{ fontSize: '12px', color: '#6B7280', marginTop: '4px', display: 'block' }}>Al guardar, la reserva pasará a 'Completada'.</span>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -485,11 +561,7 @@ function ReservationDetail() {
                     {reservation.status === 'FINISHED' && !reservation.returnedLate && (
                         <button
                             className={styles.btnDeny}
-                            onClick={() => {
-                                if (window.confirm("¿Seguro que desea marcar esta reservación con entrega tardía?")) {
-                                    finishMutation.mutate(true);
-                                }
-                            }}
+                            onClick={handleFinish}
                             disabled={finishMutation.isPending}
                             style={{ width: 'auto', padding: '0 20px' }}
                         >
@@ -504,13 +576,34 @@ function ReservationDetail() {
                     <div className={styles.modalContent}>
                         <h3>{modalData.title}</h3>
                         <p className={styles.modalLabel}>{modalData.label}</p>
-                        <textarea
-                            className={styles.modalInput}
-                            value={modalData.inputValue}
-                            onChange={(e) => setModalData({ ...modalData, inputValue: e.target.value })}
-                            placeholder="Escribe aquí..."
-                            autoFocus
-                        />
+
+                        {!['START', 'FINISH'].includes(modalData.type) && (
+                            <textarea
+                                className={styles.modalInput}
+                                value={modalData.inputValue}
+                                onChange={(e) => setModalData({ ...modalData, inputValue: e.target.value, error: '' })}
+                                placeholder="Escribe aquí..."
+                                autoFocus
+                            />
+                        )}
+
+                        {modalData.type === 'FINISH' && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+                                <input
+                                    type="checkbox"
+                                    id="lateReturnCb"
+                                    checked={modalData.isLateReturn || false}
+                                    onChange={(e) => setModalData({ ...modalData, isLateReturn: e.target.checked })}
+                                    style={{ width: '18px', height: '18px', accentColor: '#EF4444', cursor: 'pointer' }}
+                                />
+                                <label htmlFor="lateReturnCb" style={{ cursor: 'pointer', fontSize: '14px', color: '#4B5563' }}>
+                                    Entregado de manera tardía
+                                </label>
+                            </div>
+                        )}
+
+                        {modalData.error && <span style={{ color: '#EF4444', fontSize: '12px', marginTop: '4px', display: 'block' }}>{modalData.error}</span>}
+
                         <div className={styles.modalActions}>
                             <button className={styles.modalBtnCancel} onClick={() => setModalData({ ...modalData, isOpen: false })}>
                                 Cancelar

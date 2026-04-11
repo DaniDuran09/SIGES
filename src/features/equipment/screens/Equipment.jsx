@@ -4,7 +4,7 @@ import tableStyles from "../styles/EquipmentData.module.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import NewEquipmentModal from "../components/NewEquipmentModal";
 import { Alert } from "@mui/material";
@@ -68,6 +68,34 @@ function Equipments() {
         },
         retry: (failureCount, error) => error.status !== 404,
     });
+
+    const itemCache = useRef({});
+
+    useEffect(() => {
+        if (!searchEquipment && b_equipments?.content) {
+            const newCache = { ...itemCache.current };
+            b_equipments.content.forEach((item, index) => {
+                const artificialId = (page * 20) + index + 1;
+                newCache[artificialId] = { ...item, _artificialId: artificialId };
+            });
+            itemCache.current = newCache;
+        }
+    }, [b_equipments, searchEquipment, page, status, type]);
+
+    // Reseteo del caché cuando cambian filtros base
+    useEffect(() => {
+        itemCache.current = {};
+    }, [status, type]);
+
+    let displayEquipments = b_equipments?.content || [];
+
+    if (searchEquipment && /^\d+$/.test(searchEquipment.trim())) {
+        const artificialId = parseInt(searchEquipment.trim());
+        const cachedItem = itemCache.current[artificialId];
+        if (cachedItem && !displayEquipments.some(e => e.id === cachedItem.id)) {
+            displayEquipments = [cachedItem, ...displayEquipments];
+        }
+    }
 
     const toggleEquipmentMutation = useMutation({
         mutationFn: async ({ id, currentlyActive }) => {
@@ -181,6 +209,7 @@ function Equipments() {
                             <table className={tableStyles.table}>
                                 <thead>
                                     <tr>
+                                        <th style={{ textAlign: "center", width: "50px" }}>#</th>
                                         <th>Nombre</th>
                                         <th>Tipo</th>
                                         <th>Nº Inventario</th>
@@ -192,9 +221,12 @@ function Equipments() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {b_equipments?.content?.length > 0 ? (
-                                        b_equipments.content.map((equipment) => (
+                                    {displayEquipments.length > 0 ? (
+                                        displayEquipments.map((equipment, index) => (
                                             <tr key={equipment.id}>
+                                                <td style={{ textAlign: 'center', color: '#6B7280', fontWeight: 'bold' }}>
+                                                    {equipment._artificialId || (page * 20) + index + 1}
+                                                </td>
                                                 <td className={tableStyles.projectName}>{equipment.name}</td>
                                                 <td>{equipment.type?.name || "—"}</td>
                                                 <td>{equipment.inventoryIdNum || "—"}</td>
@@ -244,7 +276,7 @@ function Equipments() {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                            <td colSpan="9" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
                                                 No se encontraron registros
                                             </td>
                                         </tr>

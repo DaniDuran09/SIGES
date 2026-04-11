@@ -15,14 +15,16 @@ const CatalogueTable = ({ data, onEdit, onDelete, isLoading }) => {
             <table className={styles.table}>
                 <thead>
                     <tr>
+                        <th style={{ width: '50px', textAlign: 'center' }}>#</th>
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item) => (
+                    {data.map((item, index) => (
                         <tr key={item.id}>
+                            <td style={{ textAlign: 'center', color: '#6B7280', fontWeight: 'bold' }}>{index + 1}</td>
                             <td>{item.name}</td>
                             <td>{item.description || "-"}</td>
                             <td>

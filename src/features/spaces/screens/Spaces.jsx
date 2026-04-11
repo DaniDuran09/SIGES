@@ -4,7 +4,7 @@ import styles from "../styles/Spaces.module.css";
 import tableStyles from "../styles/SpacesData.module.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client.js";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import LoaderCircle from "../../../assets/components/LoaderCircle.jsx";
 import Pagination from "../../../assets/components/Pagination";
 import PlusButton from "../../../assets/components/PlusButton.jsx";
@@ -50,6 +50,47 @@ function Spaces() {
     ];
 
     const queryKey = ["GetSpaces", searchSpace, showMode, status, type, page];
+
+    const itemCache = useRef({});
+
+    useEffect(() => {
+        if (!searchSpace && b_spaces?.content) {
+            const newCache = { ...itemCache.current };
+            // Obtenemos la lista que se muestra (con filtro local) para mapear los IDs correctamente
+            const filteredContent = b_spaces.content.filter(space => {
+                if (status === "") return true;
+                if (status === "LOANED" && space.status === "IN_USE") return true;
+                if (status === "IN_USE" && space.status === "LOANED") return true;
+                return space.status === status;
+            });
+
+            filteredContent.forEach((item, index) => {
+                const artificialId = (page * 20) + index + 1;
+                newCache[artificialId] = { ...item, _artificialId: artificialId };
+            });
+            itemCache.current = newCache;
+        }
+    }, [b_spaces, searchSpace, page, status, type, showMode]);
+
+    // Reseteo del caché cuando cambian filtros base
+    useEffect(() => {
+        itemCache.current = {};
+    }, [status, type, showMode]);
+
+    let displaySpaces = b_spaces?.content?.filter(space => {
+        if (status === "") return true;
+        if (status === "LOANED" && space.status === "IN_USE") return true;
+        if (status === "IN_USE" && space.status === "LOANED") return true;
+        return space.status === status;
+    }) || [];
+
+    if (searchSpace && /^\d+$/.test(searchSpace.trim())) {
+        const artificialId = parseInt(searchSpace.trim());
+        const cachedItem = itemCache.current[artificialId];
+        if (cachedItem && !displaySpaces.some(s => s.id === cachedItem.id)) {
+            displaySpaces = [cachedItem, ...displaySpaces];
+        }
+    }
 
     const {
         data: b_spaces,
@@ -193,6 +234,7 @@ function Spaces() {
                             <table className={tableStyles.table}>
                                 <thead>
                                     <tr>
+                                        <th style={{ textAlign: "center", width: "50px" }}>#</th>
                                         <th>Nombre</th>
                                         <th>Tipo</th>
                                         <th>Edificio</th>
@@ -204,23 +246,16 @@ function Spaces() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {b_spaces?.content?.filter(space => {
-                                        if (status === "") return true;
-                                        if (status === "LOANED" && space.status === "IN_USE") return true;
-                                        if (status === "IN_USE" && space.status === "LOANED") return true;
-                                        return space.status === status;
-                                    }).length > 0 ? (
-                                        b_spaces.content.filter(space => {
-                                            if (status === "") return true;
-                                            if (status === "LOANED" && space.status === "IN_USE") return true;
-                                            if (status === "IN_USE" && space.status === "LOANED") return true;
-                                            return space.status === status;
-                                        }).map((space) => {
+                                    {displaySpaces.length > 0 ? (
+                                        displaySpaces.map((space, index) => {
                                             // console.log para depurar los estados reales
                                             console.log(`Espacio: ${space.name} | Estado exacto backend: "${space.status}"`);
 
                                             return (
                                                 <tr key={space.id}>
+                                                    <td style={{ textAlign: 'center', color: '#6B7280', fontWeight: 'bold' }}>
+                                                        {space._artificialId || (page * 20) + index + 1}
+                                                    </td>
                                                     <td className={tableStyles.projectName}>{space.name}</td>
                                                     <td>{space.spaceType?.name || '—'}</td>
                                                     <td>{space.building?.name || '—'}</td>
@@ -263,7 +298,7 @@ function Spaces() {
                                         })
                                     ) : (
                                         <tr>
-                                            <td colSpan="8" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                            <td colSpan="9" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
                                                 No se encontraron registros
                                             </td>
                                         </tr>
