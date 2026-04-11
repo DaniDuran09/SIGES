@@ -93,10 +93,6 @@ function EquipmentDetail() {
                                     <span>Fecha de registro</span>
                                     <span>{equipment.createdAt ? new Date(equipment.createdAt).toLocaleDateString() : "15 Enero 2026"}</span>
                                 </div>
-                                <div className={styles.infoItem}>
-                                    <span>Tiempo de anticipación</span>
-                                    <span>{equipment.bookInAdvanceDuration || "24 horas"}</span>
-                                </div>
                             </div>
                         </div>
 
@@ -133,10 +129,10 @@ function EquipmentDetail() {
                         </div>
                         */}
 
-                        <HistoryList 
-                            resourceId={id} 
-                            resourceName={equipment.name} 
-                            reservableType="EQUIPMENT" 
+                        <HistoryList
+                            resourceId={id}
+                            resourceName={equipment.name}
+                            reservableType="EQUIPMENT"
                         />
 
                         <div className={styles.detailBox} style={{ marginTop: '48px' }}>

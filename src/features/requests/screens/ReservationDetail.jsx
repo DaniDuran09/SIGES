@@ -303,7 +303,7 @@ function ReservationDetail() {
                                     <div className={styles.infoRow}>
                                         <span className={styles.infoLabel}>Asistentes</span>
                                         <span className={styles.infoValue}>
-                                            {reservation.companions || 0} personas
+                                            {reservation.companions + 1 || 0} personas
                                         </span>
                                     </div>
                                 </>
@@ -442,7 +442,9 @@ function ReservationDetail() {
 
                         {reservation.rejectionReason && (
                             <div className={styles.infoBlock} style={{ borderLeft: '4px solid #EF4444' }}>
-                                <h3 className={styles.blockTitle} style={{ color: '#EF4444' }}>Motivo de rechazo</h3>
+                                <h3 className={styles.blockTitle} style={{ color: '#EF4444' }}>
+                                    {reservation.status === 'CANCELLED' ? 'Motivo de cancelación' : 'Motivo de rechazo'}
+                                </h3>
                                 <div className={styles.purposeBlock} style={{ backgroundColor: '#FEF2F2', borderLeft: 'none' }}>
                                     {reservation.rejectionReason}
                                 </div>

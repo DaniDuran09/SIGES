@@ -98,49 +98,49 @@ function SideBar() {
                         </div>
                     </MenuItem>
 
-                    <MenuItem active={location.pathname === "/requests"} onClick={() => navigate("/requests")}>
+                    <MenuItem active={location.pathname.startsWith("/requests")} onClick={() => navigate("/requests")}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <HiOutlineClipboardDocumentList className={styles.icon} />
                             {!collapsed && <p>Solicitudes</p>}
                         </div>
                     </MenuItem>
 
-                    <MenuItem active={location.pathname === "/spaces"} onClick={() => navigate("/spaces")}>
+                    <MenuItem active={location.pathname.startsWith("/spaces")} onClick={() => navigate("/spaces")}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <PiBuildingsBold className={styles.icon} />
                             {!collapsed && <p>Espacios</p>}
                         </div>
                     </MenuItem>
 
-                    <MenuItem active={location.pathname === "/equipment"} onClick={() => navigate("/equipment")}>
+                    <MenuItem active={location.pathname.startsWith("/equipment")} onClick={() => navigate("/equipment")}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <AiOutlineLaptop className={styles.icon} />
                             {!collapsed && <p>Equipos</p>}
                         </div>
                     </MenuItem>
 
-                    <MenuItem active={location.pathname === "/users"} onClick={() => navigate("/users")}>
+                    <MenuItem active={location.pathname.startsWith("/users")} onClick={() => navigate("/users")}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <LuUsers className={styles.icon} />
                             {!collapsed && <p>Usuarios</p>}
                         </div>
                     </MenuItem>
 
-                    <MenuItem active={location.pathname === "/history"} onClick={() => navigate("/history")}>
+                    <MenuItem active={location.pathname.startsWith("/history")} onClick={() => navigate("/history")}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <HiOutlineDocumentText className={styles.icon} />
                             {!collapsed && <p>Historial</p>}
                         </div>
                     </MenuItem>
 
-                    <MenuItem active={location.pathname === "/configuration"} onClick={() => navigate("/configuration")}>
+                    <MenuItem active={location.pathname.startsWith("/configuration")} onClick={() => navigate("/configuration")}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <BsGear className={styles.icon} />
                             {!collapsed && <p>Configuración</p>}
                         </div>
                     </MenuItem>
-                    
-                    <MenuItem active={location.pathname === "/catalogue"} onClick={() => navigate("/catalogue")}>
+
+                    <MenuItem active={location.pathname.startsWith("/catalogue")} onClick={() => navigate("/catalogue")}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <FiGrid className={styles.icon} />
                             {!collapsed && <p>Catálogo</p>}

@@ -31,8 +31,6 @@ function EditEquipment() {
     const [formData, setFormData] = useState({
         name: "",
         typeId: "",
-        bookInAdvanceDuration: "",
-        advanceUnit: "HOURS",
         status: "",
         inventoryIdNum: "",
         description: "",
@@ -59,29 +57,11 @@ function EditEquipment() {
     useEffect(() => {
         if (equipment) {
             console.log("Equipment data loaded:", equipment);
-            let durationPart = "";
-            let unitPart = "HOURS";
-
-            if (equipment.bookInAdvanceDuration) {
-                const dur = equipment.bookInAdvanceDuration;
-                if (dur.includes("M")) {
-                    durationPart = dur.replace(/\D/g, "");
-                    unitPart = "MINUTES";
-                } else if (dur.includes("H")) {
-                    durationPart = dur.replace(/\D/g, "");
-                    unitPart = "HOURS";
-                } else if (dur.includes("D")) {
-                    durationPart = dur.replace(/\D/g, "");
-                    unitPart = "DAYS";
-                }
-            }
 
             setFormData({
                 name: equipment.name,
                 typeId: equipment.type?.id || "",
                 buildingId: equipment.building?.id || "",
-                bookInAdvanceDuration: durationPart,
-                advanceUnit: unitPart,
                 status: equipment.status === 'IN_USE' ? 'LOANED' : (equipment.status || "AVAILABLE"),
                 inventoryIdNum: equipment.inventoryIdNum,
                 description: equipment.description,
@@ -106,7 +86,7 @@ function EditEquipment() {
 
     const handleAddAvailability = () => {
         if (selectedDays.length === 0 || !newAvailStartTime || !newAvailEndTime) return;
-        
+
         // Validation: Start time must be before end time
         if (newAvailStartTime >= newAvailEndTime) {
             alert("La hora de inicio debe ser anterior a la hora de fin");
@@ -153,11 +133,6 @@ function EditEquipment() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        let bookInAdvanceDurationFormatted = "";
-        if (formData.advanceUnit === "MINUTES") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}M`;
-        else if (formData.advanceUnit === "HOURS") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}H`;
-        else if (formData.advanceUnit === "DAYS") bookInAdvanceDurationFormatted = `P${formData.bookInAdvanceDuration}D`;
-
         // Normalize availability slots (ensure HH:mm format and filter invalid ones)
         const normalizedAvailability = (formData.availabilitySlots || [])
             .filter(slot => slot.startTime < slot.endTime)
@@ -174,7 +149,6 @@ function EditEquipment() {
             studentsAvailable: formData.availableForStudents,
             availableForStudents: formData.availableForStudents,
             inventoryNum: formData.inventoryIdNum,
-            bookInAdvanceDuration: bookInAdvanceDurationFormatted,
             equipmentTypeId: parseInt(formData.typeId) || equipment?.type?.id || 0,
             buildingId: parseInt(formData.buildingId) || equipment?.building?.id || 0,
             availability: normalizedAvailability,
@@ -188,9 +162,9 @@ function EditEquipment() {
 
     return (
         <div className={styles.container}>
-            <Snackbar 
-                open={!!successMessage} 
-                autoHideDuration={6000} 
+            <Snackbar
+                open={!!successMessage}
+                autoHideDuration={6000}
                 onClose={() => setSuccessMessage("")}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
@@ -237,18 +211,6 @@ function EditEquipment() {
                                 <option value="">Seleccionar tipo</option>
                                 {types?.filter(t => t.deletedAt === null).map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                             </select>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label>Tiempo de anticipación <span className={styles.requiredStar}>*</span></label>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                                <input style={{ flex: 1.5 }} type="number" name="bookInAdvanceDuration" value={formData.bookInAdvanceDuration} onChange={handleChange} required />
-                                <select style={{ flex: 1 }} name="advanceUnit" value={formData.advanceUnit} onChange={handleChange}>
-                                    <option value="MINUTES">Minutos</option>
-                                    <option value="HOURS">Horas</option>
-                                    <option value="DAYS">Días</option>
-                                </select>
-                            </div>
                         </div>
 
                         {/* Row 2 */}
