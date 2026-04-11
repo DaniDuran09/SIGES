@@ -4,7 +4,7 @@ import { FiRefreshCw, FiEye } from "react-icons/fi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import NewUserModal from "../components/NewUserModal";
 import { Alert } from "@mui/material";
 import Pagination from "../../../assets/components/Pagination";
@@ -51,7 +51,45 @@ function Users() {
             }),
         retry: (failureCount, error) => error.status !== 404,
     });
+    const itemCache = useRef({});
 
+    useEffect(() => {
+        // Si cambian los filtros (excepto página y búsqueda), reseteamos el caché
+        // porque el ID artificial (#1, #2...) cambia su significado.
+        if (!search) {
+            const isFirstLoadOfFilters = !b_users?.content;
+            if (isFirstLoadOfFilters) return;
+
+            // Si cambiamos de filtro (pero no de página), reseteamos el caché para evitar mezclar
+            // Nota: Podríamos ser más precisos detectando qué cambió, pero resetear al cambiar filtros es más seguro.
+        }
+    }, [state, type]);
+
+    useEffect(() => {
+        if (!search && b_users?.content) {
+            const newCache = { ...itemCache.current };
+            b_users.content.forEach((user, index) => {
+                const artificialId = (page * 20) + index + 1;
+                newCache[artificialId] = { ...user, _artificialId: artificialId };
+            });
+            itemCache.current = newCache;
+        }
+    }, [b_users, search, page, state, type]);
+
+    // Reseteo preventivo del caché cuando cambian filtros base
+    useEffect(() => {
+        itemCache.current = {};
+    }, [state, type]);
+
+    let displayUsers = b_users?.content || [];
+
+    if (search && /^\d+$/.test(search.trim())) {
+        const artificialId = parseInt(search.trim());
+        const cachedItem = itemCache.current[artificialId];
+        if (cachedItem && !displayUsers.some(u => u.id === cachedItem.id)) {
+            displayUsers = [cachedItem, ...displayUsers];
+        }
+    }
     const toggleUserMutation = useMutation({
         mutationFn: async ({ id, currentlyActive }) => {
             const endpoint = currentlyActive ? `/users/${id}` : `/users/${id}/restore`;
@@ -162,6 +200,7 @@ function Users() {
                             <table className={tableStyles.table}>
                                 <thead>
                                     <tr>
+                                        <th style={{ textAlign: "center", width: "50px" }}>#</th>
                                         <th>Nombre y apellido</th>
                                         <th>Tipo</th>
                                         <th>Matrícula/N.°Empleado</th>
@@ -171,9 +210,12 @@ function Users() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {b_users?.content?.length > 0 ? (
-                                        b_users.content.map((user) => (
+                                    {displayUsers.length > 0 ? (
+                                        displayUsers.map((user, index) => (
                                             <tr key={user.id} onClick={() => navigate(`/users/edit/${user.id}`)} style={{ cursor: "pointer" }}>
+                                                <td style={{ textAlign: 'center', color: '#6B7280', fontWeight: 'bold' }}>
+                                                    {user._artificialId || (page * 20) + index + 1}
+                                                </td>
                                                 <td className={tableStyles.projectName}>{user.firstName + " " + user.lastName}</td>
                                                 <td>
                                                     <span className={`${tableStyles.badge} ${tableStyles[user.role]}`}>
@@ -197,7 +239,7 @@ function Users() {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="6" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
+                                            <td colSpan="7" style={{ textAlign: "center", padding: "40px", color: "#64748B" }}>
                                                 No se encontraron registros
                                             </td>
                                         </tr>

@@ -1,7 +1,7 @@
 import { FiEye, FiRefreshCw } from "react-icons/fi";
 import styles from "../styles/Requests.module.css";
 import tableStyles from "../styles/RequestsData.module.css";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../../api/client";
@@ -50,12 +50,41 @@ function Requests() {
         retry: (failureCount, error) => error.status !== 404,
     });
 
+    const itemCache = useRef({});
+
+    useEffect(() => {
+        if (!search && b_requests?.content) {
+            const newCache = { ...itemCache.current };
+            b_requests.content.forEach((item, index) => {
+                const artificialId = (page * 20) + index + 1;
+                newCache[artificialId] = { ...item, _artificialId: artificialId };
+            });
+            itemCache.current = newCache;
+        }
+    }, [b_requests, search, page, status, tipo, fechaDesde]);
+
+    // Reseteo del caché cuando cambian filtros base
+    useEffect(() => {
+        itemCache.current = {};
+    }, [status, tipo, fechaDesde]);
+
     // Filtro manual en frontend ya que el backend no lo soporta nativamente
-    const displayRequests = b_requests?.content?.filter(item => {
+    let displayRequestsBase = b_requests?.content?.filter(item => {
         if (!tipo) return true;
         const itemType = item.reservableType || item.reservable?.reservableType;
         return itemType === tipo;
     }) || [];
+
+    const displayRequests = [...displayRequestsBase];
+
+    // Union con el ID artificial si existe en cache
+    if (search && /^\d+$/.test(search.trim())) {
+        const artificialId = parseInt(search.trim());
+        const cachedItem = itemCache.current[artificialId];
+        if (cachedItem && !displayRequests.some(r => r.id === cachedItem.id)) {
+            displayRequests.unshift(cachedItem);
+        }
+    }
 
 
     const getStatusInfo = (status) => {
@@ -140,6 +169,7 @@ function Requests() {
                         <table className={tableStyles.table}>
                             <thead>
                                 <tr>
+                                    <th style={{ textAlign: "center", width: "50px" }}>#</th>
                                     <th>Usuarios</th>
                                     <th>Recurso</th>
                                     <th>Fecha Reservación</th>
@@ -151,12 +181,15 @@ function Requests() {
                             </thead>
                             <tbody>
                                 {displayRequests?.length > 0 ? (
-                                    displayRequests.map((item) => {
+                                    displayRequests.map((item, index) => {
                                         const statusInfo = getStatusInfo(item.status);
                                         const reservationDate = item.date ? new Date(item.date + 'T00:00:00') : null;
 
                                         return (
                                             <tr key={item.id}>
+                                                <td style={{ textAlign: 'center', color: '#6B7280', fontWeight: 'bold' }}>
+                                                    {item._artificialId || (page * 20) + index + 1}
+                                                </td>
                                                 <td className={tableStyles.usuario}>
                                                     {(item.petitioner?.firstName || item.user?.firstName)} {(item.petitioner?.lastName || item.user?.lastName)}
                                                 </td>
@@ -183,7 +216,7 @@ function Requests() {
                                     })
                                 ) : (
                                     <tr>
-                                        <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
+                                        <td colSpan="8" style={{ textAlign: "center", padding: "40px" }}>
                                             No se encontraron reservaciones
                                         </td>
                                     </tr>
