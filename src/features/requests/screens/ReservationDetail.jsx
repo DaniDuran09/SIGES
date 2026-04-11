@@ -129,6 +129,8 @@ function ReservationDetail() {
 
     if (!reservation) return null;
 
+    const isSpace = reservation.reservableType === 'SPACE' || reservation.reservable?.reservableType === 'SPACE';
+
     const translateStatus = (status) => {
         const mapping = {
             PENDING: 'Pendiente',
@@ -138,7 +140,7 @@ function ReservationDetail() {
             COMPLETED: 'Completada',
             FINISHED: 'Completada',
             CANCELLED: 'Cancelada',
-            IN_PROGRESS: 'En curso'
+            IN_PROGRESS: 'En progreso'
         };
         return mapping[status] || status;
     };
@@ -273,33 +275,39 @@ function ReservationDetail() {
                             <div className={styles.infoRow}>
                                 <span className={styles.infoLabel}>Tipo recurso</span>
                                 <span className={styles.infoValue}>
-                                    {reservation.reservable?.reservableType === 'SPACE' ? 'Espacio' : 'Equipo'}
+                                    {(reservation.reservableType === 'SPACE' || reservation.reservable?.reservableType === 'SPACE') ? 'Espacio' : 'Equipo'}
                                 </span>
                             </div>
-                            <div className={styles.infoRow}>
-                                <span className={styles.infoLabel}>Capacidad</span>
-                                <span className={styles.infoValue}>
-                                    {reservation.reservable?.spaceAttached?.capacity || reservation.reservable?.capacity || '—'} {reservation.reservable?.reservableType === 'SPACE' ? 'personas' : ''}
-                                </span>
-                            </div>
+                            {isSpace && (
+                                <div className={styles.infoRow}>
+                                    <span className={styles.infoLabel}>Capacidad</span>
+                                    <span className={styles.infoValue}>
+                                        {reservation.reservable?.spaceAttached?.capacity || reservation.reservable?.capacity || '—'} personas
+                                    </span>
+                                </div>
+                            )}
                         </div>
 
                         {/* DETALLES */}
                         <div className={styles.infoBlock}>
                             <h3 className={styles.blockTitle}>Detalles</h3>
                             {/* In standard reservation JSON, purpose might be in notes or inferred from type, adding placeholder if null */}
-                            <div className={styles.infoRow}>
-                                <span className={styles.infoLabel}>Tipo de reserva</span>
-                                <span className={styles.infoValue}>
-                                    {reservation.type === 'GROUP' ? 'Reunión de grupo' : 'Individual'}
-                                </span>
-                            </div>
-                            <div className={styles.infoRow}>
-                                <span className={styles.infoLabel}>Asistentes</span>
-                                <span className={styles.infoValue}>
-                                    {reservation.companions || 0} personas
-                                </span>
-                            </div>
+                            {isSpace && (
+                                <>
+                                    <div className={styles.infoRow}>
+                                        <span className={styles.infoLabel}>Tipo de reserva</span>
+                                        <span className={styles.infoValue}>
+                                            {reservation.type === 'GROUP' ? 'Reunión de grupo' : 'Individual'}
+                                        </span>
+                                    </div>
+                                    <div className={styles.infoRow}>
+                                        <span className={styles.infoLabel}>Asistentes</span>
+                                        <span className={styles.infoValue}>
+                                            {reservation.companions + 1 || 0} personas
+                                        </span>
+                                    </div>
+                                </>
+                            )}
                             <div className={styles.infoRow}>
                                 <span className={styles.infoLabel}>Estado</span>
                                 <span className={styles.infoValue}>
@@ -434,7 +442,9 @@ function ReservationDetail() {
 
                         {reservation.rejectionReason && (
                             <div className={styles.infoBlock} style={{ borderLeft: '4px solid #EF4444' }}>
-                                <h3 className={styles.blockTitle} style={{ color: '#EF4444' }}>Motivo de rechazo</h3>
+                                <h3 className={styles.blockTitle} style={{ color: '#EF4444' }}>
+                                    {reservation.status === 'CANCELLED' ? 'Motivo de cancelación' : 'Motivo de rechazo'}
+                                </h3>
                                 <div className={styles.purposeBlock} style={{ backgroundColor: '#FEF2F2', borderLeft: 'none' }}>
                                     {reservation.rejectionReason}
                                 </div>

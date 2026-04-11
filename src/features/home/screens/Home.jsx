@@ -42,7 +42,7 @@ function Home() {
             subtitle: "Generar un nuevo reporte",
             icon: <FiUser size={50} />,
             color: '#FFF4D4',
-            onClick: () => { '' }//setUserModalVisible(true)
+            onClick: () => setUserModalVisible(true)
         }
     ];
 

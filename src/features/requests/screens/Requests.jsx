@@ -39,7 +39,7 @@ function Requests() {
             };
             if (search) params.q = search;
             if (status) params.statuses = status;
-            if (tipo) params.reservableType = tipo;
+            // Omitimos 'tipo' ya que el backend no soporta filtrar por reservableType en este endpoint
             if (fechaDesde) params.dateFrom = fechaDesde;
 
             return apiFetch("/reservations", {
@@ -50,6 +50,14 @@ function Requests() {
         retry: (failureCount, error) => error.status !== 404,
     });
 
+    // Filtro manual en frontend ya que el backend no lo soporta nativamente
+    const displayRequests = b_requests?.content?.filter(item => {
+        if (!tipo) return true;
+        const itemType = item.reservableType || item.reservable?.reservableType;
+        return itemType === tipo;
+    }) || [];
+
+
     const getStatusInfo = (status) => {
         switch (status) {
             case 'PENDING': return { className: tableStyles.pendiente, text: 'Pendiente' };
@@ -59,6 +67,7 @@ function Requests() {
             case 'COMPLETED':
             case 'FINISHED': return { className: tableStyles.completada, text: 'Completada' };
             case 'CANCELLED': return { className: tableStyles.completada, text: 'Cancelada' };
+            case 'IN_PROGRESS': return { className: tableStyles.pendiente, text: 'En progreso' };
             default: return { className: tableStyles.completada, text: status };
         }
     };
@@ -106,6 +115,12 @@ function Requests() {
                             <FiRefreshCw />
                         </button>
 
+                        <Filter
+                            value={tipo}
+                            onChange={(e) => { setTipo(e.target.value); setPage(0); }}
+                            options={opcionesTipo}
+                        />
+
                         <input
                             type="date"
                             className={styles.filterInput}
@@ -113,14 +128,6 @@ function Requests() {
                             value={fechaDesde}
                             onChange={(e) => { setFechaDesde(e.target.value); setPage(0); }}
                         />
-
-                        {/*
-                        <Filter
-                            value={tipo}
-                            onChange={(e) => { setTipo(e.target.value); setPage(0); }}
-                            options={opcionesTipo}
-                        />
-                        */}
                     </div>
                 </div>
             </div>
@@ -143,8 +150,8 @@ function Requests() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {b_requests?.content?.length > 0 ? (
-                                    b_requests.content.map((item) => {
+                                {displayRequests?.length > 0 ? (
+                                    displayRequests.map((item) => {
                                         const statusInfo = getStatusInfo(item.status);
                                         const reservationDate = item.date ? new Date(item.date + 'T00:00:00') : null;
 
@@ -160,7 +167,7 @@ function Requests() {
                                                         : 'No definida'}
                                                 </td>
                                                 <td>{item.startTime} - {item.endTime}</td>
-                                                <td>{item.reservableType === 'EQUIPMENT' ? 'Equipo' : 'Espacio'}</td>
+                                                <td>{(item.reservableType === 'EQUIPMENT' || item.reservable?.reservableType === 'EQUIPMENT') ? 'Equipo' : 'Espacio'}</td>
                                                 <td>
                                                     <span className={`${tableStyles.badge} ${statusInfo.className}`}>
                                                         {statusInfo.text}

@@ -56,20 +56,24 @@ function EditSpace() {
 
     useEffect(() => {
         if (space) {
-            let durationPart = "";
+            let durationPart = "0";
             let unitPart = "HOURS";
 
             if (space.bookInAdvanceDuration) {
                 const dur = space.bookInAdvanceDuration;
-                if (dur.includes("M")) {
-                    durationPart = dur.replace(/\D/g, "");
-                    unitPart = "MINUTES";
-                } else if (dur.includes("H")) {
-                    durationPart = dur.replace(/\D/g, "");
-                    unitPart = "HOURS";
-                } else if (dur.includes("D")) {
-                    durationPart = dur.replace(/\D/g, "");
+                const daysMatch = dur.match(/(\d+)D/);
+                const hoursMatch = dur.match(/(\d+)H/);
+                const minutesMatch = dur.match(/(\d+)M/);
+
+                if (daysMatch) {
+                    durationPart = daysMatch[1];
                     unitPart = "DAYS";
+                } else if (hoursMatch) {
+                    durationPart = hoursMatch[1];
+                    unitPart = "HOURS";
+                } else if (minutesMatch) {
+                    durationPart = minutesMatch[1];
+                    unitPart = "MINUTES";
                 }
             }
 
@@ -308,7 +312,7 @@ function EditSpace() {
                             formData.availabilitySlots.map((slot, index) => (
                                 <div key={index} className={styles.scheduleItem}>
                                     <div>
-                                        <div className={styles.dayLabel}>{slot.daysOfWeek.join(', ')}</div>
+                                        <div className={styles.dayLabel}>{slot.daysOfWeek.map(d => dayMapping[d] || d).join(', ')}</div>
                                         <div className={styles.timeLabel}>{slot.startTime} - {slot.endTime}</div>
                                     </div>
                                     <button type="button" className={styles.deleteBtn} onClick={() => removeAvailability(index)}>

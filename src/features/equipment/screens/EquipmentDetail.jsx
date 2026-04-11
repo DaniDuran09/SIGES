@@ -16,6 +16,16 @@ function EquipmentDetail() {
         retry: (count, err) => err.status !== 404 && count < 2
     });
 
+    const dayMapping = {
+        MONDAY: "Lunes",
+        TUESDAY: "Martes",
+        WEDNESDAY: "Miércoles",
+        THURSDAY: "Jueves",
+        FRIDAY: "Viernes",
+        SATURDAY: "Sábado",
+        SUNDAY: "Domingo"
+    };
+
     if (isPending) return <LoaderCircle />;
 
     if (error || !equipment) {
@@ -83,10 +93,6 @@ function EquipmentDetail() {
                                     <span>Fecha de registro</span>
                                     <span>{equipment.createdAt ? new Date(equipment.createdAt).toLocaleDateString() : "15 Enero 2026"}</span>
                                 </div>
-                                <div className={styles.infoItem}>
-                                    <span>Tiempo de anticipación</span>
-                                    <span>{equipment.bookInAdvanceDuration || "24 horas"}</span>
-                                </div>
                             </div>
                         </div>
 
@@ -123,10 +129,10 @@ function EquipmentDetail() {
                         </div>
                         */}
 
-                        <HistoryList 
-                            resourceId={id} 
-                            resourceName={equipment.name} 
-                            reservableType="EQUIPMENT" 
+                        <HistoryList
+                            resourceId={id}
+                            resourceName={equipment.name}
+                            reservableType="EQUIPMENT"
                         />
 
                         <div className={styles.detailBox} style={{ marginTop: '48px' }}>
@@ -143,7 +149,7 @@ function EquipmentDetail() {
                             equipment.availabilitySlots.map(slot => (
                                 <div key={slot.id} className={styles.observationBox} style={{ background: 'white', border: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div>
-                                        <strong>{slot.daysOfWeek.join(", ")}</strong>
+                                        <strong>{slot.daysOfWeek.map(d => dayMapping[d] || d).join(", ")}</strong>
                                         <p>{slot.startTime} - {slot.endTime}</p>
                                     </div>
                                 </div>

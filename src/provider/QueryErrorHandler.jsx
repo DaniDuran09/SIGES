@@ -7,13 +7,26 @@ export function QueryErrorHandler() {
     const { logout } = useAuth();
 
     useEffect(() => {
-        const unsubscribe = queryClient.getQueryCache().subscribe(event => {
-            if (event?.query?.state?.error?.message === "Error, no tienes permiso para realizar esta acción") {
+        const handleError = (error) => {
+            if (error?.status === 403) {
                 logout();
             }
+        };
+
+        const unsubscribeQueries = queryClient.getQueryCache().subscribe((event) => {
+            const error = event?.query?.state?.error;
+            if (error) handleError(error);
         });
 
-        return unsubscribe;
+        const unsubscribeMutations = queryClient.getMutationCache().subscribe((event) => {
+            const error = event?.mutation?.state?.error;
+            if (error) handleError(error);
+        });
+
+        return () => {
+            unsubscribeQueries();
+            unsubscribeMutations();
+        };
     }, [queryClient, logout]);
 
     return null;
