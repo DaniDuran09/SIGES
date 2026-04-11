@@ -37,6 +37,7 @@ function EditEquipment() {
         inventoryIdNum: "",
         description: "",
         availableForStudents: true,
+        buildingId: "",
         availabilitySlots: []
     });
 
@@ -50,8 +51,14 @@ function EditEquipment() {
         queryFn: () => apiFetch("/equipment-types", { method: "GET" }),
     });
 
+    const { data: buildings } = useQuery({
+        queryKey: ["buildings"],
+        queryFn: () => apiFetch("/buildings", { method: "GET" }),
+    });
+
     useEffect(() => {
         if (equipment) {
+            console.log("Equipment data loaded:", equipment);
             let durationPart = "";
             let unitPart = "HOURS";
 
@@ -72,9 +79,10 @@ function EditEquipment() {
             setFormData({
                 name: equipment.name,
                 typeId: equipment.type?.id || "",
+                buildingId: equipment.building?.id || "",
                 bookInAdvanceDuration: durationPart,
                 advanceUnit: unitPart,
-                status: equipment.status === 'IN_USE' ? 'LOANED' : equipment.status,
+                status: equipment.status === 'IN_USE' ? 'LOANED' : (equipment.status || "AVAILABLE"),
                 inventoryIdNum: equipment.inventoryIdNum,
                 description: equipment.description,
                 availableForStudents: equipment.availableForStudents,
@@ -98,6 +106,13 @@ function EditEquipment() {
 
     const handleAddAvailability = () => {
         if (selectedDays.length === 0 || !newAvailStartTime || !newAvailEndTime) return;
+        
+        // Validation: Start time must be before end time
+        if (newAvailStartTime >= newAvailEndTime) {
+            alert("La hora de inicio debe ser anterior a la hora de fin");
+            return;
+        }
+
         const newItem = {
             dateFrom: new Date().toISOString().split('T')[0],
             startTime: newAvailStartTime,
@@ -108,7 +123,6 @@ function EditEquipment() {
             ...prev,
             availabilitySlots: [...(prev.availabilitySlots || []), newItem]
         }));
-        console.log("newItem", newItem);
         setShowAddAvailModal(false);
         setSelectedDays([]);
         setNewAvailStartTime("");
@@ -144,20 +158,28 @@ function EditEquipment() {
         else if (formData.advanceUnit === "HOURS") bookInAdvanceDurationFormatted = `PT${formData.bookInAdvanceDuration}H`;
         else if (formData.advanceUnit === "DAYS") bookInAdvanceDurationFormatted = `P${formData.bookInAdvanceDuration}D`;
 
+        // Normalize availability slots (ensure HH:mm format and filter invalid ones)
+        const normalizedAvailability = (formData.availabilitySlots || [])
+            .filter(slot => slot.startTime < slot.endTime)
+            .map(slot => ({
+                ...slot,
+                startTime: slot.startTime.substring(0, 5),
+                endTime: slot.endTime.substring(0, 5)
+            }));
+
         const payload = {
             name: formData.name.trim(),
-            status: formData.status,
             description: formData.description.trim(),
+            status: formData.status,
             studentsAvailable: formData.availableForStudents,
-            availability: formData.availabilitySlots,
-            exceptions: [],
+            availableForStudents: formData.availableForStudents,
             inventoryNum: formData.inventoryIdNum,
             bookInAdvanceDuration: bookInAdvanceDurationFormatted,
-            equipmentTypeId: parseInt(formData.typeId),
+            equipmentTypeId: parseInt(formData.typeId) || equipment?.type?.id || 0,
+            buildingId: parseInt(formData.buildingId) || equipment?.building?.id || 0,
+            availability: normalizedAvailability,
+            exceptions: equipment?.exceptions || [],
         };
-        if (equipment?.building?.id) {
-            payload.buildingId = equipment.building.id;
-        }
 
         mutation.mutate(payload);
     };
@@ -166,7 +188,12 @@ function EditEquipment() {
 
     return (
         <div className={styles.container}>
-            <Snackbar open={!!successMessage} autoHideDuration={3000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+            <Snackbar 
+                open={!!successMessage} 
+                autoHideDuration={6000} 
+                onClose={() => setSuccessMessage("")}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
                 <Alert severity="success" sx={{ width: '100%' }}>{successMessage}</Alert>
             </Snackbar>
 
@@ -192,6 +219,16 @@ function EditEquipment() {
                         <div className={styles.formGroup}>
                             <label>Nombre del equipo <span className={styles.requiredStar}>*</span></label>
                             <input name="name" value={formData.name} onChange={handleChange} required />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label>Ubicación <span className={styles.requiredStar}>*</span></label>
+                            <select name="buildingId" value={formData.buildingId} onChange={handleChange} required>
+                                <option value="">Seleccionar edificio</option>
+                                {buildings?.filter(b => b.deletedAt === null).map(b => (
+                                    <option key={b.id} value={b.id}>{b.name}</option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className={styles.formGroup}>
@@ -254,7 +291,7 @@ function EditEquipment() {
                         {/* Row 3 */}
                         <div className={`${styles.formGroup} ${styles.twoThirds}`}>
                             <label>Descripción</label>
-                            <textarea name="description" rows="5" value={formData.description} onChange={handleChange} placeholder="Describa el equipo..." />
+                            <textarea name="description" rows="4" value={formData.description} onChange={handleChange} placeholder="Describa el equipo..." />
                         </div>
                     </div>
 
