@@ -52,6 +52,30 @@ function Spaces() {
     const queryKey = ["GetSpaces", searchSpace, showMode, status, type, page];
 
     const itemCache = useRef({});
+    const {
+        data: b_spaces,
+        isPending: b_spacesIsPending,
+        error: b_spacesIsError,
+        refetch
+    } = useQuery({
+        queryKey: queryKey,
+        queryFn: async () => {
+            const params = {
+                page: page,
+                size: 20
+            };
+            if (searchSpace) params.searchQuery = searchSpace;
+            if (showMode) params.showMode = showMode;
+            if (status !== "") params.status = status;
+            if (type !== "") params.spaceTypeId = type;
+
+            return await apiFetch("/spaces", {
+                method: "GET",
+                params: params,
+            });
+        },
+        retry: (failureCount, error) => error.status !== 404,
+    });
 
     useEffect(() => {
         if (!searchSpace && b_spaces?.content) {
@@ -92,30 +116,7 @@ function Spaces() {
         }
     }
 
-    const {
-        data: b_spaces,
-        isPending: b_spacesIsPending,
-        error: b_spacesIsError,
-        refetch
-    } = useQuery({
-        queryKey: queryKey,
-        queryFn: async () => {
-            const params = {
-                page: page,
-                size: 20
-            };
-            if (searchSpace) params.searchQuery = searchSpace;
-            if (showMode) params.showMode = showMode;
-            if (status !== "") params.status = status;
-            if (type !== "") params.spaceTypeId = type;
 
-            return await apiFetch("/spaces", {
-                method: "GET",
-                params: params,
-            });
-        },
-        retry: (failureCount, error) => error.status !== 404,
-    });
 
     const toggleSpaceMutation = useMutation({
         mutationFn: async ({ id, currentlyActive }) => {
