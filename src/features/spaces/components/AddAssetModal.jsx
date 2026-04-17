@@ -51,7 +51,7 @@ function AddAssetModal({ spaceId, onClose }) {
             name: name.trim(),
             description: description.trim(),
             inventoryNum: inventoryNum.trim(),
-            typeId: typeId ? parseInt(typeId) : 0,
+            typeId: typeId ? parseInt(typeId) : null,
         });
     };
 

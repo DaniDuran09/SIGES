@@ -5,6 +5,7 @@ import { apiFetch } from "../../../api/client";
 import { FiArrowLeft, FiPlus, FiTrash2, FiSave, FiX } from "react-icons/fi";
 import LoaderCircle from "../../../assets/components/LoaderCircle";
 import { Alert, Snackbar } from "@mui/material";
+import CreateAssetModal from "../components/CreateAssetModal";
 import styles from "./EditSpace.module.css";
 
 function EditSpace() {
@@ -14,7 +15,7 @@ function EditSpace() {
     const [successMessage, setSuccessMessage] = useState("");
 
     const [showAddAvailModal, setShowAddAvailModal] = useState(false);
-    const [newEquipment, setNewEquipment] = useState("");
+    const [showAssetModal, setShowAssetModal] = useState(false);
     const [pendingAddEquipments, setPendingAddEquipments] = useState([]);
     const [pendingRemoveEquipments, setPendingRemoveEquipments] = useState([]);
 
@@ -58,12 +59,12 @@ function EditSpace() {
         name: name
     }));
     const allEquipments = [...spaceAssets, ...spaceEquipmentStrings];
-    
+
     const visibleEquipments = allEquipments.filter(e => !pendingRemoveEquipments.includes(e.id));
-    const allVisible = [...visibleEquipments, ...pendingAddEquipments.map((eq, i) => ({
-         id: `new-eq-${i}`,
-         name: eq,
-         isNew: true
+    const allVisible = [...visibleEquipments, ...pendingAddEquipments.map((eqObj, i) => ({
+        id: `new-eq-${i}`,
+        name: eqObj.name,
+        isNew: true
     }))];
 
     const { data: types } = useQuery({
@@ -125,7 +126,7 @@ function EditSpace() {
                     await Promise.all(pendingAddEquipments.map(eq =>
                         apiFetch(`/spaces/${id}/assets`, {
                             method: "POST",
-                            body: JSON.stringify({ name: eq, description: "", inventoryNum: "", typeId: 0 })
+                            body: JSON.stringify(eq)
                         })
                     ));
                 } catch (e) {
@@ -175,11 +176,9 @@ function EditSpace() {
         setNewAvailEndTime("");
     };
 
-    const handleAddEquipment = () => {
-        if (newEquipment.trim() && !allVisible.some(e => e.name.toLowerCase() === newEquipment.trim().toLowerCase())) {
-            setPendingAddEquipments(prev => [...prev, newEquipment.trim()]);
-            setNewEquipment("");
-        }
+    const handleAddEquipment = (eqObj) => {
+        setPendingAddEquipments(prev => [...prev, eqObj]);
+        setShowAssetModal(false);
     };
 
     const handleRemoveEquipment = (id) => {
@@ -366,25 +365,13 @@ function EditSpace() {
                         <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                             <label>Equipos incluidos</label>
                             <div className={styles.inputWithButton}>
-                                <input
-                                    type="text"
-                                    placeholder="Añadir equipo..."
-                                    value={newEquipment}
-                                    onChange={(e) => setNewEquipment(e.target.value)}
-                                    onKeyPress={(e) => {
-                                        if (e.key === 'Enter') {
-                                            e.preventDefault();
-                                            handleAddEquipment();
-                                        }
-                                    }}
-                                />
                                 <button
                                     type="button"
-                                    className={styles.plusButton}
-                                    onClick={handleAddEquipment}
-                                    disabled={!newEquipment.trim()}
+                                    className={styles.submitButton}
+                                    style={{ width: 'auto', padding: '10px 20px', borderRadius: '8px' }}
+                                    onClick={() => setShowAssetModal(true)}
                                 >
-                                    <FiPlus size={20} />
+                                    <FiPlus size={16} /> Añadir Equipamiento
                                 </button>
                             </div>
                             {allVisible.length > 0 && (
@@ -525,6 +512,13 @@ function EditSpace() {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {showAssetModal && (
+                <CreateAssetModal
+                    onClose={() => setShowAssetModal(false)}
+                    onAdd={handleAddEquipment}
+                />
             )}
         </div>
     );

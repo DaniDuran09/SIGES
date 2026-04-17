@@ -4,6 +4,7 @@ import { FiX, FiPlus, FiCalendar, FiTrash2 } from 'react-icons/fi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '../../../api/client';
 import { Alert } from '@mui/material';
+import CreateAssetModal from "./CreateAssetModal";
 
 export const NewSpaceModal = ({ onClose }) => {
     const [showAddTypeModal, setShowAddTypeModal] = useState(false);
@@ -20,7 +21,7 @@ export const NewSpaceModal = ({ onClose }) => {
     const [spaceDescription, setSpaceDescription] = useState("");
     const [spaceRestricted, setSpaceRestricted] = useState(true);
 
-    const [newEquipment, setNewEquipment] = useState("");
+    const [showAssetModal, setShowAssetModal] = useState(false);
     const [equipmentList, setEquipmentList] = useState([]);
 
     const [advanceTime, setAdvanceTime] = useState("");
@@ -120,12 +121,7 @@ export const NewSpaceModal = ({ onClose }) => {
                         await Promise.all(equipmentList.map(eq => 
                             apiFetch(`/spaces/${createdSpace.id}/assets`, {
                                 method: "POST",
-                                body: JSON.stringify({
-                                    name: eq,
-                                    description: "",
-                                    inventoryNum: "",
-                                    typeId: 0
-                                })
+                                body: JSON.stringify(eq)
                             })
                         ));
                     }
@@ -145,11 +141,9 @@ export const NewSpaceModal = ({ onClose }) => {
         }
     });
 
-    const handleAddEquipment = () => {
-        if (newEquipment.trim() && !equipmentList.includes(newEquipment.trim())) {
-            setEquipmentList([...equipmentList, newEquipment.trim()]);
-            setNewEquipment("");
-        }
+    const handleAddEquipment = (eqObj) => {
+        setEquipmentList(prev => [...prev, eqObj]);
+        setShowAssetModal(false);
     };
 
     const handleRemoveEquipment = (index) => {
@@ -355,21 +349,20 @@ export const NewSpaceModal = ({ onClose }) => {
                             <div className={styles.formGroup}>
                                 <label>Equipos incluidos</label>
                                 <div className={styles.inputWithButton}>
-                                    <input style={{ flex: 1 }} type="text" placeholder="Ej. Proyector, Pizarrón interactivo..." value={newEquipment} onChange={(e) => setNewEquipment(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddEquipment(); } }} />
                                     <button
                                         type="button"
-                                        className={styles.plusButton}
-                                        onClick={handleAddEquipment}
-                                        disabled={!newEquipment.trim()}
+                                        className={styles.submitButton}
+                                        style={{ width: 'auto', padding: '10px 20px', borderRadius: '8px' }}
+                                        onClick={() => setShowAssetModal(true)}
                                     >
-                                        <FiPlus size={20} />
+                                        <FiPlus size={16} /> Añadir Equipamiento Definitivo
                                     </button>
                                 </div>
                                 {equipmentList.length > 0 && (
                                     <ul className={styles.tagList}>
-                                        {equipmentList.map((eq, index) => (
+                                        {equipmentList.map((item, index) => (
                                             <li key={index} className={styles.tagItem}>
-                                                {eq}
+                                                {item.name}
                                                 <button type="button" onClick={() => handleRemoveEquipment(index)}><FiX size={14} /></button>
                                             </li>
                                         ))}
@@ -557,6 +550,13 @@ export const NewSpaceModal = ({ onClose }) => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {showAssetModal && (
+                <CreateAssetModal
+                    onClose={() => setShowAssetModal(false)}
+                    onAdd={handleAddEquipment}
+                />
             )}
         </div>
     );

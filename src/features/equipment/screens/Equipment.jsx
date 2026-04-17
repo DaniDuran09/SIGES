@@ -53,10 +53,9 @@ function Equipments() {
         queryKey: queryKey,
         queryFn: async () => {
             const params = {
-                searchQuery: searchEquipment || undefined,
+                searchQuery: searchEquipment,
                 page: page,
-                size: 20,
-                showMode: "ALL"
+                size: 20
             };
             if (status !== "") params.status = status;
             if (type !== "") params.equipmentTypeId = type;
@@ -72,9 +71,10 @@ function Equipments() {
     const itemCache = useRef({});
 
     useEffect(() => {
-        if (!searchEquipment && b_equipments?.content) {
+        const content = b_equipments?.content || (Array.isArray(b_equipments) ? b_equipments : null);
+        if (!searchEquipment && content) {
             const newCache = { ...itemCache.current };
-            b_equipments.content.forEach((item, index) => {
+            content.forEach((item, index) => {
                 const artificialId = (page * 20) + index + 1;
                 newCache[artificialId] = { ...item, _artificialId: artificialId };
             });
@@ -87,7 +87,7 @@ function Equipments() {
         itemCache.current = {};
     }, [status, type]);
 
-    let displayEquipments = b_equipments?.content || [];
+    let displayEquipments = b_equipments?.content || (Array.isArray(b_equipments) ? b_equipments : []);
 
     if (searchEquipment && /^\d+$/.test(searchEquipment.trim())) {
         const artificialId = parseInt(searchEquipment.trim());
