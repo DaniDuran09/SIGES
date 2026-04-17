@@ -96,16 +96,23 @@ function EquipmentDetail() {
                             </div>
                         </div>
 
-                        {/* Specs */}
-                        <div className={`${styles.detailBox} ${styles.specsSection}`} style={{ marginTop: '48px' }}>
-                            <h3 style={{ color: '#6B7280' }}>Especificaciones Técnicas +</h3>
-                            <div className={styles.tags}>
-                                <span className={styles.tag}>Proyector 4k</span>
-                                <span className={styles.tag}>Sistema de audio</span>
-                                <span className={styles.tag}>Aire acondicionado</span>
-                                <span className={styles.tag}>Micrófonos inalámbricos (4)</span>
-                            </div>
+                        {/* Schedule */}
+                        <div className={styles.detailBox} style={{ marginTop: '48px' }}>
+                            <h3 style={{ color: '#6B7280' }}>DISPONIBILIDAD DE HORARIOS</h3>
+                            {equipment.availabilitySlots?.length > 0 ? (
+                                equipment.availabilitySlots.map(slot => (
+                                    <div key={slot.id} className={styles.observationBox} style={{ background: 'white', border: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderRadius: '8px', marginTop: '12px' }}>
+                                        <div>
+                                            <strong style={{ display: 'block', marginBottom: '4px' }}>{slot.daysOfWeek.map(d => dayMapping[d] || d).join(", ")}</strong>
+                                            <p style={{ margin: 0 }}>{slot.startTime} - {slot.endTime}</p>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p style={{ color: '#6B7280', fontSize: '0.9em', marginTop: '16px' }}>No hay horarios definidos</p>
+                            )}
                         </div>
+
                     </div>
 
                     {/* Right Column: Stats & Description */}
@@ -142,22 +149,6 @@ function EquipmentDetail() {
 
                     </div>
 
-                    {/* Bottom: Schedule (Full Width) */}
-                    <div className={`${styles.detailBox} ${styles.scheduleSection}`} style={{ gridColumn: '1 / -1', borderTop: '1px solid #f3f4f6', paddingTop: '32px' }}>
-                        <h3 style={{ color: '#6B7280' }}>Disponibilidad de Horarios</h3>
-                        {equipment.availabilitySlots?.length > 0 ? (
-                            equipment.availabilitySlots.map(slot => (
-                                <div key={slot.id} className={styles.observationBox} style={{ background: 'white', border: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div>
-                                        <strong>{slot.daysOfWeek.map(d => dayMapping[d] || d).join(", ")}</strong>
-                                        <p>{slot.startTime} - {slot.endTime}</p>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No hay horarios configurados.</p>
-                        )}
-                    </div>
                 </div>
             </div>
         </div>

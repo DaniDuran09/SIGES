@@ -107,7 +107,32 @@ export const NewSpaceModal = ({ onClose }) => {
             method: "POST",
             body: JSON.stringify(data),
         }),
-        onSuccess: () => {
+        onSuccess: async (data, variables) => {
+            if (equipmentList.length > 0) {
+                try {
+                    const spacesPage = await apiFetch("/spaces?size=1000", { method: "GET" });
+                    const createdSpace = spacesPage?.content?.find(s => 
+                        s.name.trim().toLowerCase() === variables.name.trim().toLowerCase() &&
+                        s.building?.id === variables.buildingId
+                    );
+
+                    if (createdSpace?.id) {
+                        await Promise.all(equipmentList.map(eq => 
+                            apiFetch(`/spaces/${createdSpace.id}/assets`, {
+                                method: "POST",
+                                body: JSON.stringify({
+                                    name: eq,
+                                    description: "",
+                                    inventoryNum: "",
+                                    typeId: 0
+                                })
+                            })
+                        ));
+                    }
+                } catch (error) {
+                    console.error("Error al registrar equipos en el espacio", error);
+                }
+            }
             queryClient.invalidateQueries({ queryKey: ["GetSpaces"] });
             setAlertInfo({ type: 'success', text: 'Espacio registrado exitosamente' });
             setTimeout(() => {

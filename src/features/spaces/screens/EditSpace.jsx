@@ -14,6 +14,9 @@ function EditSpace() {
     const [successMessage, setSuccessMessage] = useState("");
 
     const [showAddAvailModal, setShowAddAvailModal] = useState(false);
+    const [newEquipment, setNewEquipment] = useState("");
+    const [pendingAddEquipments, setPendingAddEquipments] = useState([]);
+    const [pendingRemoveEquipments, setPendingRemoveEquipments] = useState([]);
 
     const dayMapping = {
         MONDAY: "Lunes",
@@ -43,6 +46,25 @@ function EditSpace() {
         queryKey: ["GetSpaceForEdit", id],
         queryFn: () => apiFetch(`/spaces/${id}`, { method: "GET" }),
     });
+
+    const { data: assetsPage } = useQuery({
+        queryKey: ["GetSpaceAssets", id],
+        queryFn: () => apiFetch("/spaces/assets", { method: "GET", params: { spaceId: id, size: 100 } }),
+    });
+
+    const spaceAssets = assetsPage?.content || space?.assets || [];
+    const spaceEquipmentStrings = (space?.equipment || []).map((name, index) => ({
+        id: `str-eq-${index}`,
+        name: name
+    }));
+    const allEquipments = [...spaceAssets, ...spaceEquipmentStrings];
+    
+    const visibleEquipments = allEquipments.filter(e => !pendingRemoveEquipments.includes(e.id));
+    const allVisible = [...visibleEquipments, ...pendingAddEquipments.map((eq, i) => ({
+         id: `new-eq-${i}`,
+         name: eq,
+         isNew: true
+    }))];
 
     const { data: types } = useQuery({
         queryKey: ["GetSpaceTypes"],
@@ -97,8 +119,34 @@ function EditSpace() {
             method: "PUT",
             body: JSON.stringify(updatedData)
         }),
-        onSuccess: () => {
+        onSuccess: async () => {
+            if (pendingAddEquipments.length > 0) {
+                try {
+                    await Promise.all(pendingAddEquipments.map(eq =>
+                        apiFetch(`/spaces/${id}/assets`, {
+                            method: "POST",
+                            body: JSON.stringify({ name: eq, description: "", inventoryNum: "", typeId: 0 })
+                        })
+                    ));
+                } catch (e) {
+                    console.error("Error al publicar assets nuevos", e);
+                }
+            }
+
+            const assetsToRemove = pendingRemoveEquipments.filter(rid => !String(rid).startsWith('str-eq-'));
+            if (assetsToRemove.length > 0) {
+                try {
+                    await Promise.all(assetsToRemove.map(assetId =>
+                        apiFetch(`/spaces/assets/${assetId}/deactivate`, { method: "PATCH" })
+                    ));
+                } catch (e) {
+                    console.error("Error al desactivar assets", e);
+                }
+            }
+
             queryClient.invalidateQueries(["GetSpaceForEdit", id]);
+            queryClient.invalidateQueries(["GetSpaceDetail", id]);
+            queryClient.invalidateQueries(["GetSpaceAssets", id]);
             queryClient.invalidateQueries(["GetSpaces"]);
             setSuccessMessage("Espacio actualizado correctamente");
             setTimeout(() => navigate("/spaces"), 1500);
@@ -125,6 +173,22 @@ function EditSpace() {
         setSelectedDays([]);
         setNewAvailStartTime("");
         setNewAvailEndTime("");
+    };
+
+    const handleAddEquipment = () => {
+        if (newEquipment.trim() && !allVisible.some(e => e.name.toLowerCase() === newEquipment.trim().toLowerCase())) {
+            setPendingAddEquipments(prev => [...prev, newEquipment.trim()]);
+            setNewEquipment("");
+        }
+    };
+
+    const handleRemoveEquipment = (id) => {
+        if (String(id).startsWith("new-eq-")) {
+            const index = parseInt(id.replace("new-eq-", ""));
+            setPendingAddEquipments(prev => prev.filter((_, i) => i !== index));
+        } else {
+            setPendingRemoveEquipments(prev => [...prev, id]);
+        }
     };
 
     const toggleDay = (day) => {
@@ -167,7 +231,7 @@ function EditSpace() {
             spaceTypeId: parseInt(formData.spaceTypeId) || space?.spaceType?.id || 0,
             bookInAdvanceDuration: bookInAdvanceDurationFormatted,
             capacity: parseInt(formData.capacity) || 0,
-            equipment: space?.equipment || [],
+            equipment: (space?.equipment || []).filter((eq, index) => !pendingRemoveEquipments.includes(`str-eq-${index}`)),
             status: formData.status
         };
 
@@ -297,6 +361,47 @@ function EditSpace() {
                                 value={formData.description}
                                 onChange={handleChange}
                             />
+                        </div>
+
+                        <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                            <label>Equipos incluidos</label>
+                            <div className={styles.inputWithButton}>
+                                <input
+                                    type="text"
+                                    placeholder="Añadir equipo..."
+                                    value={newEquipment}
+                                    onChange={(e) => setNewEquipment(e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            handleAddEquipment();
+                                        }
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className={styles.plusButton}
+                                    onClick={handleAddEquipment}
+                                    disabled={!newEquipment.trim()}
+                                >
+                                    <FiPlus size={20} />
+                                </button>
+                            </div>
+                            {allVisible.length > 0 && (
+                                <ul className={styles.tagList}>
+                                    {allVisible.map((item, index) => (
+                                        <li key={`asset-${item.id || item.name}-${index}`} className={styles.tagItem}>
+                                            {item.name}
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveEquipment(item.id)}
+                                            >
+                                                <FiX size={14} />
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
                     </div>
 

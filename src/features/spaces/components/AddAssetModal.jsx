@@ -28,6 +28,7 @@ function AddAssetModal({ spaceId, onClose }) {
             }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["GetSpaceDetail", String(spaceId)] });
+            queryClient.invalidateQueries({ queryKey: ["GetSpaceAssets", String(spaceId)] });
             setAlertInfo({ type: "success", text: "Equipamiento agregado correctamente" });
             setTimeout(() => onClose(), 1500);
         },
