@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { timeStamp } from 'node:console';
 
 test('test', async ({ page }) => {
   const now = new Date();
