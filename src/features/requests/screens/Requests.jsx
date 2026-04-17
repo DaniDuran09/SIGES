@@ -18,11 +18,17 @@ function Requests() {
     const [status, setStatus] = useState("");
     const [tipo, setTipo] = useState("");
     const [fechaDesde, setFechaDesde] = useState("");
+    const [sortOrder, setSortOrder] = useState("createdAt,desc");
 
     const opcionesTipo = [
         { value: "", text: "Tipo: Todos" },
         { value: "EQUIPMENT", text: "Equipo" },
         { value: "SPACE", text: "Espacio" }
+    ];
+
+    const sortOptions = [
+        { value: "createdAt,desc", text: "Más nuevas" },
+        { value: "createdAt,asc", text: "Más viejas" }
     ];
 
     const {
@@ -31,12 +37,12 @@ function Requests() {
         error,
         refetch
     } = useQuery({
-        queryKey: ["GetRequests", search, status, page, tipo, fechaDesde],
+        queryKey: ["GetRequests", search, status, page, tipo, fechaDesde, sortOrder],
         queryFn: () => {
             const params = {
                 page: page,
                 size: 20,
-                sort: "createdAt,desc"
+                sort: sortOrder
             };
             if (search) params.q = search;
             if (status) params.statuses = status;
@@ -156,6 +162,13 @@ function Requests() {
                             value={tipo}
                             onChange={(e) => { setTipo(e.target.value); setPage(0); }}
                             options={opcionesTipo}
+                        />
+
+                        <Filter
+                            label="Orden:"
+                            value={sortOrder}
+                            onChange={(e) => { setSortOrder(e.target.value); setPage(0); }}
+                            options={sortOptions}
                         />
 
                         <input
