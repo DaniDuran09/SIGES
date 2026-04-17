@@ -37,18 +37,21 @@ function Users() {
         refetch
     } = useQuery({
         queryKey: queryKey,
-        queryFn: () =>
-            apiFetch("/users", {
+        queryFn: () => {
+            const params = {
+                showMode: state,
+                sort: ['firstName,asc', 'lastName,asc'],
+                userTypes: type,
+                page: page,
+                size: 20
+            };
+            if (search) params.q = search;
+
+            return apiFetch("/users", {
                 method: "GET",
-                params: {
-                    showMode: state,
-                    sort: ['firstName,asc', 'lastName,asc'],
-                    userTypes: type,
-                    q: search,
-                    page: page,
-                    size: 20
-                },
-            }),
+                params: params,
+            });
+        },
         retry: (failureCount, error) => error.status !== 404,
     });
     const itemCache = useRef({});

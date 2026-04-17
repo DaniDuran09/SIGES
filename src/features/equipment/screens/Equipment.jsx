@@ -53,10 +53,11 @@ function Equipments() {
         queryKey: queryKey,
         queryFn: async () => {
             const params = {
-                searchQuery: searchEquipment,
+                searchQuery: searchEquipment || undefined,
                 page: page,
                 size: 20
             };
+            if (searchEquipment) params.searchQuery = searchEquipment;
             if (status !== "") params.status = status;
             if (type !== "") params.equipmentTypeId = type;
 

@@ -11,8 +11,11 @@ export const apiFetch = async (endpoint, options = {}) => {
     if (params) {
         const query = new URLSearchParams();
         Object.entries(params).forEach(([key, value]) => {
+            if (value === null || value === undefined) return;
             if (Array.isArray(value)) {
-                value.forEach(v => query.append(key, v));
+                value.forEach(v => {
+                    if (v !== null && v !== undefined) query.append(key, v);
+                });
             } else {
                 query.append(key, value);
             }
