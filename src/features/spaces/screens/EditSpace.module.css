@@ -142,6 +142,70 @@
     grid-column: 1 / -1;
 }
 
+/* Equipment Input & Tags */
+.inputWithButton {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.plusButton {
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #64748B;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.plusButton:hover {
+    background: #F8FAFC;
+    color: #6B5B95;
+    border-color: #6B5B95;
+}
+
+.tagList {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tagItem {
+    background-color: #F1F5F9;
+    color: #475569;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tagItem button {
+    background: none;
+    border: none;
+    color: #94A3B8;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.tagItem button:hover {
+    color: #E53E3E;
+}
+
 /* Schedule Section */
 .scheduleSection {
     background: #fcfcfd;

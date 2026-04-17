@@ -19,6 +19,19 @@ function SpaceDetail() {
         queryFn: () => apiFetch(`/spaces/${id}`, { method: "GET" }),
     });
 
+    const { data: assetsPage } = useQuery({
+        queryKey: ["GetSpaceAssets", id],
+        queryFn: () => apiFetch("/spaces/assets", { method: "GET", params: { spaceId: id, size: 100 } }),
+    });
+
+    const spaceAssets = assetsPage?.content || space?.assets || [];
+    const spaceEquipmentStrings = (space?.equipment || []).map((name, index) => ({
+        id: `str-eq-${index}`,
+        name: name
+    }));
+    
+    const allEquipments = [...spaceAssets, ...spaceEquipmentStrings];
+
     if (isPending) return <LoaderCircle />;
 
     if (error) {
@@ -111,9 +124,9 @@ function SpaceDetail() {
                                 </span>
                             </h3>
                             <div className={styles.tags}>
-                                {space.assets?.length > 0 ? (
-                                    space.assets.map((asset) => (
-                                        <span key={asset.id} className={styles.tag}>{asset.name}</span>
+                                {allEquipments.length > 0 ? (
+                                    allEquipments.map((item, index) => (
+                                        <span key={`asset-${item.id || item.name}-${index}`} className={styles.tag}>{item.name}</span>
                                     ))
                                 ) : (
                                     <span className={styles.infoLabel}>No hay equipamiento registrado</span>

@@ -35,7 +35,8 @@ function Requests() {
         queryFn: () => {
             const params = {
                 page: page,
-                size: 20
+                size: 20,
+                sort: "createdAt,desc"
             };
             if (search) params.q = search;
             if (status) params.statuses = status;
@@ -52,10 +53,17 @@ function Requests() {
 
     const itemCache = useRef({});
 
+    // Hoist PENDING requests to the top while preserving createdAt,desc order
+    const sortedContent = b_requests?.content ? [...b_requests.content].sort((a, b) => {
+        if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+        if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+        return 0;
+    }) : [];
+
     useEffect(() => {
-        if (!search && b_requests?.content) {
+        if (!search && sortedContent.length > 0) {
             const newCache = { ...itemCache.current };
-            b_requests.content.forEach((item, index) => {
+            sortedContent.forEach((item, index) => {
                 const artificialId = (page * 20) + index + 1;
                 newCache[artificialId] = { ...item, _artificialId: artificialId };
             });
@@ -69,11 +77,11 @@ function Requests() {
     }, [status, tipo, fechaDesde]);
 
     // Filtro manual en frontend ya que el backend no lo soporta nativamente
-    let displayRequestsBase = b_requests?.content?.filter(item => {
+    let displayRequestsBase = sortedContent.filter(item => {
         if (!tipo) return true;
         const itemType = item.reservableType || item.reservable?.reservableType;
         return itemType === tipo;
-    }) || [];
+    });
 
     const displayRequests = [...displayRequestsBase];
 
@@ -95,7 +103,7 @@ function Requests() {
             case 'REJECTED': return { className: tableStyles.denegada, text: 'Denegada' };
             case 'COMPLETED':
             case 'FINISHED': return { className: tableStyles.completada, text: 'Completada' };
-            case 'CANCELLED': return { className: tableStyles.completada, text: 'Cancelada' };
+            case 'CANCELLED': return { className: tableStyles.cancelada, text: 'Cancelada' };
             case 'IN_PROGRESS': return { className: tableStyles.pendiente, text: 'En progreso' };
             default: return { className: tableStyles.completada, text: status };
         }
