@@ -355,7 +355,7 @@ export const NewSpaceModal = ({ onClose }) => {
                                         style={{ width: 'auto', padding: '10px 20px', borderRadius: '8px' }}
                                         onClick={() => setShowAssetModal(true)}
                                     >
-                                        <FiPlus size={16} /> Añadir Equipamiento Definitivo
+                                        <FiPlus size={16} /> Añadir
                                     </button>
                                 </div>
                                 {equipmentList.length > 0 && (

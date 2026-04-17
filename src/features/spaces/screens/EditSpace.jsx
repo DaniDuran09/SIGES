@@ -371,7 +371,7 @@ function EditSpace() {
                                     style={{ width: 'auto', padding: '10px 20px', borderRadius: '8px' }}
                                     onClick={() => setShowAssetModal(true)}
                                 >
-                                    <FiPlus size={16} /> Añadir Equipamiento
+                                    <FiPlus size={16} /> Añadir
                                 </button>
                             </div>
                             {allVisible.length > 0 && (
